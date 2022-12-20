@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PleaseComponentScans {
 
-    public PleaseComponentScan[] value();
+    PleaseComponentScan[] value();
 }

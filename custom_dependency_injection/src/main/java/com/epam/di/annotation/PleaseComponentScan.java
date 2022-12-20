@@ -8,5 +8,5 @@ import java.lang.annotation.*;
 @Repeatable(PleaseComponentScans.class)
 public @interface PleaseComponentScan {
 
-    public String path();
+    String value() default "";
 }
