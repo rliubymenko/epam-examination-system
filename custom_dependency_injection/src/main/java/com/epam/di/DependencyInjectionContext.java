@@ -3,8 +3,8 @@ package com.epam.di;
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;
 import com.epam.di.factory.BeanFactory;
+import com.epam.di.util.ClassLoaderUtil;
 import com.epam.di.util.ResourceUtil;
-import org.reflections.Reflections;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +23,7 @@ public class DependencyInjectionContext {
         } else {
             propertiesMap = ResourceUtil.getProperties(configClass.getClassLoader());
             PleaseComponentScan componentScanAnnotation = configClass.getAnnotation(PleaseComponentScan.class);
-            Reflections reflections = new Reflections(componentScanAnnotation.value());
-            typesAnnotatedWithPleaseService = reflections.getTypesAnnotatedWith(PleaseService.class);
+            typesAnnotatedWithPleaseService = ClassLoaderUtil.getClassesAnnotatedWith(componentScanAnnotation.value(), configClass.getClassLoader(), PleaseService.class);
             for (Class<?> implementationClass : typesAnnotatedWithPleaseService) {
                 Class<?>[] interfaces = implementationClass.getInterfaces();
                 Map<Class<?>, Object> implementationWithInstance = new HashMap<>();
