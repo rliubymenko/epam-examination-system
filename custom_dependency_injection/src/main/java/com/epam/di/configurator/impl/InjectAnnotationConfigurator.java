@@ -1,7 +1,8 @@
-package com.epam.di.configurator;
+package com.epam.di.configurator.impl;
 
 import com.epam.di.DependencyInjectionContext;
 import com.epam.di.annotation.PleaseInject;
+import com.epam.di.configurator.AnnotationConfigurator;
 
 import java.lang.reflect.Field;
 
