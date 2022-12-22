@@ -1,4 +1,4 @@
-package com.epam.di;
+package com.epam.di.context;
 
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;

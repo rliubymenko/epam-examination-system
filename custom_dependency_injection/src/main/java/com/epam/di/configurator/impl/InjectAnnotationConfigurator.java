@@ -1,6 +1,6 @@
 package com.epam.di.configurator.impl;
 
-import com.epam.di.DependencyInjectionContext;
+import com.epam.di.context.DependencyInjectionContext;
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.configurator.AnnotationConfigurator;
 

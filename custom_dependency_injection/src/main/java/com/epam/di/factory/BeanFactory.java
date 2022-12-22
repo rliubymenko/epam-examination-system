@@ -1,6 +1,6 @@
 package com.epam.di.factory;
 
-import com.epam.di.DependencyInjectionContext;
+import com.epam.di.context.DependencyInjectionContext;
 import com.epam.di.configurator.AnnotationConfigurator;
 import org.reflections.Reflections;
 

@@ -1,5 +1,6 @@
 package com.epam.di;
 
+import com.epam.di.context.DependencyInjectionContext;
 import com.epam.di.factory.BeanFactory;
 
 public class DependencyInjectionApplication {
