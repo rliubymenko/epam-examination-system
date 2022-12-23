@@ -16,10 +16,10 @@ public class ConnectionCreator {
 
     static {
         PROPERTY_RESOLVER = PropertyResolver.getInstance();
-        URL = PROPERTY_RESOLVER.getProperty("url");
-        USERNAME = PROPERTY_RESOLVER.getProperty("username");
-        PASSWORD = PROPERTY_RESOLVER.getProperty("password");
-        DRIVER_CLASS_NAME = PROPERTY_RESOLVER.getProperty("driver-class-name");
+        URL = PROPERTY_RESOLVER.getProperty("db.url");
+        USERNAME = PROPERTY_RESOLVER.getProperty("db.username");
+        PASSWORD = PROPERTY_RESOLVER.getProperty("db.password");
+        DRIVER_CLASS_NAME = PROPERTY_RESOLVER.getProperty("db.driver-class-name");
         try {
             Class.forName(DRIVER_CLASS_NAME);
         } catch (ClassNotFoundException e) {
