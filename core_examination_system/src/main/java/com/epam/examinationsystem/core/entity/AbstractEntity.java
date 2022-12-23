@@ -13,18 +13,18 @@ public abstract class AbstractEntity implements Serializable, Cloneable {
     @Serial
     private static final long serialVersionUID = 1234567L;
 
-    private Integer id;
+    private Long id;
     private UUID uuid;
 
     protected AbstractEntity() {
         this.uuid = UUID.randomUUID();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
