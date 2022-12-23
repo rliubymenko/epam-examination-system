@@ -6,14 +6,20 @@ import com.epam.di.factory.BeanFactory;
 
 public class DependencyInjectionApplication {
 
+    private static DependencyInjectionContext applicationContext;
+
     private DependencyInjectionApplication() {
     }
 
     public static void run(Class<?> configClass) {
         PropertyResolver.getInstance().initializeInstance(configClass.getClassLoader());
-        DependencyInjectionContext applicationContext = new DependencyInjectionContext(configClass);
+        applicationContext = new DependencyInjectionContext(configClass);
         BeanFactory beanFactory = new BeanFactory(applicationContext);
         applicationContext.setBeanFactory(beanFactory);
         applicationContext.applicationInitialization();
+    }
+
+    public static DependencyInjectionContext getConfiguredContext() {
+        return applicationContext;
     }
 }

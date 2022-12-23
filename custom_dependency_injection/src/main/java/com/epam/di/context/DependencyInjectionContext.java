@@ -2,6 +2,7 @@ package com.epam.di.context;
 
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;
+import com.epam.di.connectionpool.ConnectionPoolManager;
 import com.epam.di.factory.BeanFactory;
 import com.epam.di.util.ClassLoaderUtil;
 
@@ -44,6 +45,9 @@ public class DependencyInjectionContext {
     }
 
     public <I> I getInstance(Class<I> type) {
+        if (type.getSimpleName().equals("ConnectionPoolManager")) {
+            return (I) ConnectionPoolManager.INSTANCE;
+        }
         if (type.isAnnotationPresent(PleaseService.class)) {
             Class<? extends I> implementationClass;
             Map<Class<?>, Object> implementationWithInstanceMap = interfaceAndImplementationWithInstanceMap.get(type);
