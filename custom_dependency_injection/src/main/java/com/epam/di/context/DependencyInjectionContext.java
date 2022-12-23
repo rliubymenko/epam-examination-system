@@ -2,9 +2,9 @@ package com.epam.di.context;
 
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;
+import com.epam.di.environment.PropertyResolver;
 import com.epam.di.factory.BeanFactory;
 import com.epam.di.util.ClassLoaderUtil;
-import com.epam.di.util.ResourceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +14,15 @@ public class DependencyInjectionContext {
 
     private final Map<Class<?>, Map<Class<?>, Object>> interfaceAndImplementationWithInstanceMap = new HashMap<>();
     private final Set<Class<?>> typesAnnotatedWithPleaseService;
-    private final Map<String, String> propertiesMap;
     private BeanFactory beanFactory;
 
     public DependencyInjectionContext(Class<?> configClass) {
         if (!configClass.isAnnotationPresent(PleaseComponentScan.class)) {
             throw new RuntimeException("Please specify the package for scan by adding @PleaseComponentScan");
         } else {
-            propertiesMap = ResourceUtil.getProperties(configClass.getClassLoader());
+            ClassLoader mainClassLoader = configClass.getClassLoader();
             PleaseComponentScan componentScanAnnotation = configClass.getAnnotation(PleaseComponentScan.class);
-            typesAnnotatedWithPleaseService = ClassLoaderUtil.getClassesAnnotatedWith(componentScanAnnotation.value(), configClass.getClassLoader(), PleaseService.class);
+            typesAnnotatedWithPleaseService = ClassLoaderUtil.getClassesAnnotatedWith(componentScanAnnotation.value(), mainClassLoader, PleaseService.class);
             for (Class<?> implementationClass : typesAnnotatedWithPleaseService) {
                 Class<?>[] interfaces = implementationClass.getInterfaces();
                 Map<Class<?>, Object> implementationWithInstance = new HashMap<>();
@@ -83,10 +82,6 @@ public class DependencyInjectionContext {
         this.beanFactory = beanFactory;
     }
 
-    public Map<String, String> getPropertiesMap() {
-        return propertiesMap;
-    }
-
     private Class<?> getKeyByOldValue(Map<Class<?>, Object> implementationWithInstanceMap) {
         for (Map.Entry<Class<?>, Map<Class<?>, Object>> entry : interfaceAndImplementationWithInstanceMap.entrySet()) {
             if (entry.getValue().equals(implementationWithInstanceMap)) {
@@ -96,4 +91,3 @@ public class DependencyInjectionContext {
         return null;
     }
 }
-
