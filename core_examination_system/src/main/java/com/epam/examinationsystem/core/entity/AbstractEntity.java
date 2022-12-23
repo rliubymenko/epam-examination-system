@@ -1,5 +1,7 @@
 package com.epam.examinationsystem.core.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serial;
@@ -32,6 +34,25 @@ public abstract class AbstractEntity implements Serializable, Cloneable {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractEntity that = (AbstractEntity) o;
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(uuid, that.uuid)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(uuid)
+                .toHashCode();
     }
 
     @Override
