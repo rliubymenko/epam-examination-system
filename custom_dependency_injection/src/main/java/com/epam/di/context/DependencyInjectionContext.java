@@ -2,7 +2,6 @@ package com.epam.di.context;
 
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;
-import com.epam.di.environment.PropertyResolver;
 import com.epam.di.factory.BeanFactory;
 import com.epam.di.util.ClassLoaderUtil;
 

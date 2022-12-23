@@ -8,6 +8,9 @@ import java.sql.SQLException;
 
 public class ConnectionCreator {
 
+    private ConnectionCreator(){
+    }
+
     private static final String URL;
     private static final String USERNAME;
     private static final String PASSWORD;
