@@ -18,15 +18,20 @@
         <junit.version>5.9.0</junit.version>
         <apache.commons.lang3.version>3.12.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.4</apache.commons.collections4.version>
+        <com.epam.di.version>1.0-SNAPSHOT</com.epam.di.version>
+        <com.org.apache.maven.war.plugin>3.3.2</com.org.apache.maven.war.plugin>
+        <org.postgresql.version>42.5.1</org.postgresql.version>
     </properties>
 
     <dependencies>
+        <!-- Jakarta Servlet -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Test dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -50,6 +55,19 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commons.lang3.version}</version>
         </dependency>
+        <!-- Simple custom dependency injection framework -->
+        <dependency>
+            <groupId>com.epam.di</groupId>
+            <artifactId>custom-dependency-injection</artifactId>
+            <version>${com.epam.di.version}</version>
+        </dependency>
+        <!-- PostgreSQL -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${org.postgresql.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -57,7 +75,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
+                <version>${com.org.apache.maven.war.plugin}</version>
             </plugin>
         </plugins>
     </build>
