@@ -1,7 +1,8 @@
 package com.epam.di.factory;
 
-import com.epam.di.context.DependencyInjectionContext;
+import com.epam.di.DependencyInjectionApplication;
 import com.epam.di.configurator.AnnotationConfigurator;
+import com.epam.di.context.DependencyInjectionContext;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -27,7 +28,7 @@ public class BeanFactory {
     }
 
     private void initAnnotationConfigurators() {
-        Reflections reflections = new Reflections(context.getClass());
+        Reflections reflections = new Reflections(DependencyInjectionApplication.class.getPackageName());
         Set<Class<? extends AnnotationConfigurator>> subTypesOfAnnotationConfigurator = reflections.getSubTypesOf(AnnotationConfigurator.class);
         for (Class<? extends AnnotationConfigurator> subType : subTypesOfAnnotationConfigurator) {
             try {
