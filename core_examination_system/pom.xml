@@ -21,6 +21,7 @@
         <com.epam.di.version>1.0-SNAPSHOT</com.epam.di.version>
         <com.org.apache.maven.war.plugin>3.3.2</com.org.apache.maven.war.plugin>
         <org.postgresql.version>42.5.1</org.postgresql.version>
+        <org.apache.logging.version>2.19.0</org.apache.logging.version>
     </properties>
 
     <dependencies>
@@ -67,7 +68,22 @@
             <artifactId>postgresql</artifactId>
             <version>${org.postgresql.version}</version>
         </dependency>
-
+        <!-- Loggers -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${org.apache.logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${org.apache.logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${org.apache.logging.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
