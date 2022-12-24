@@ -3,8 +3,8 @@ package com.epam.di.connectionpool;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -15,10 +15,10 @@ public enum ConnectionPoolManager {
     private static final ReentrantLock getLock = new ReentrantLock();
     private static final ReentrantLock returnLock = new ReentrantLock();
     private final Semaphore semaphore;
-    private final BlockingQueue<ProxyConnection> availableConnections;
+    private final Queue<ProxyConnection> availableConnections;
 
     ConnectionPoolManager() {
-        availableConnections = new LinkedBlockingQueue<>(DEFAULT_CONNECTION_POOL_SIZE);
+        availableConnections = new ArrayDeque<>(DEFAULT_CONNECTION_POOL_SIZE);
         semaphore = new Semaphore(DEFAULT_CONNECTION_POOL_SIZE);
         initializeConnectionPool();
     }
@@ -34,7 +34,7 @@ public enum ConnectionPoolManager {
         try {
             getLock.lock();
             semaphore.acquire();
-            return availableConnections.take();
+            return availableConnections.poll();
         } catch (InterruptedException e) {
             throw new RuntimeException("Error while getting connection from pool");
         } finally {
@@ -50,8 +50,8 @@ public enum ConnectionPoolManager {
                 returnLock.lock();
                 if (!availableConnections.contains(connection)) {
                     availableConnections.offer((ProxyConnection) connection);
+                    semaphore.release();
                 }
-                semaphore.release();
             } finally {
                 returnLock.unlock();
             }
@@ -61,8 +61,8 @@ public enum ConnectionPoolManager {
     public void destroyPool() {
         for (int connectionIndex = 0; connectionIndex < DEFAULT_CONNECTION_POOL_SIZE; connectionIndex++) {
             try {
-                availableConnections.take().reallyClose();
-            } catch (SQLException | InterruptedException e) {
+                availableConnections.poll().reallyClose();
+            } catch (SQLException e) {
                 throw new RuntimeException("Error during destroying connection pool " + e.getLocalizedMessage());
             }
         }
