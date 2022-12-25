@@ -48,9 +48,9 @@ public class DependencyInjectionContext {
         if (type.getSimpleName().equals("ConnectionPoolManager")) {
             return (I) ConnectionPoolManager.INSTANCE;
         }
-        if (type.isAnnotationPresent(PleaseService.class)) {
-            Class<? extends I> implementationClass;
-            Map<Class<?>, Object> implementationWithInstanceMap = interfaceAndImplementationWithInstanceMap.get(type);
+        Class<? extends I> implementationClass;
+        Map<Class<?>, Object> implementationWithInstanceMap = interfaceAndImplementationWithInstanceMap.get(type);
+        if (type.isAnnotationPresent(PleaseService.class) || implementationWithInstanceMap != null) {
             if (implementationWithInstanceMap == null) {
                 implementationWithInstanceMap = interfaceAndImplementationWithInstanceMap.values()
                         .stream()
@@ -78,7 +78,7 @@ public class DependencyInjectionContext {
             }
             throw new RuntimeException("No implementation found");
         }
-        throw new RuntimeException("No @PleaseService annotation present");
+        throw new RuntimeException("No @PleaseService annotation present or type does not exist in context");
     }
 
     public void setBeanFactory(BeanFactory beanFactory) {
