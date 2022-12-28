@@ -1,9 +1,13 @@
 package com.epam.di.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -12,17 +16,23 @@ import java.util.stream.Collectors;
 
 public class ClassLoaderUtil {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ClassLoaderUtil.class);
+
     private ClassLoaderUtil() {
     }
 
     public static Set<Class<?>> getClassesAnnotatedWith(String packageName, ClassLoader classLoader, Class<? extends Annotation> annotation) {
+        String message = MessageFormat.format("Starting of the search for suitable classes marked with {0} annotation", annotation.getSimpleName());
+        LOG.debug(message);
         try {
             List<Class<?>> classes = getClasses(packageName, classLoader);
             return classes.stream()
                     .filter(clazz -> clazz.isAnnotationPresent(annotation))
                     .collect(Collectors.toSet());
         } catch (IOException e) {
-            throw new RuntimeException("Error during look up classes " + e.getLocalizedMessage());
+            message = "Error during look up classes";
+            LOG.error(message);
+            throw new RuntimeException(message, e);
         }
     }
 
@@ -61,7 +71,9 @@ public class ClassLoaderUtil {
         try {
             return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Class not found" + e.getLocalizedMessage());
+            String message = MessageFormat.format("Class {0} not found", className);
+            LOG.error(message);
+            throw new RuntimeException(message, e);
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.epam.di.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -7,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 
 public class ResourceUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceUtil.class);
 
     private ResourceUtil() {
     }
@@ -23,8 +28,10 @@ public class ResourceUtil {
                 );
             }
             return propertiesMap;
-        } catch (IOException exception) {
-            throw new RuntimeException("File not found" + exception.getLocalizedMessage());
+        } catch (IOException e) {
+            String message = "File with name application.properties not found";
+            LOG.error(message);
+            throw new RuntimeException(message, e);
         }
     }
 }

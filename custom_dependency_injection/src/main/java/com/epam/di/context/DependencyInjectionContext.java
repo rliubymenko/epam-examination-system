@@ -3,26 +3,35 @@ package com.epam.di.context;
 import com.epam.di.annotation.PleaseComponentScan;
 import com.epam.di.annotation.PleaseService;
 import com.epam.di.connectionpool.ConnectionPoolManager;
+import com.epam.di.exception.DependencyInjectionException;
 import com.epam.di.factory.BeanFactory;
+import com.epam.di.handler.PostConstructHandler;
 import com.epam.di.util.ClassLoaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class DependencyInjectionContext {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DependencyInjectionContext.class);
     private final Map<Class<?>, Map<Class<?>, Object>> interfaceAndImplementationWithInstanceMap = new HashMap<>();
     private final Set<Class<?>> typesAnnotatedWithPleaseService;
     private BeanFactory beanFactory;
 
     public DependencyInjectionContext(Class<?> configClass) {
         if (!configClass.isAnnotationPresent(PleaseComponentScan.class)) {
-            throw new RuntimeException("Please specify the package for scan by adding @PleaseComponentScan");
+            String message = "Please specify the package for scan by adding @PleaseComponentScan with the corresponding path";
+            LOG.error(message);
+            throw new DependencyInjectionException(message);
         } else {
             ClassLoader mainClassLoader = configClass.getClassLoader();
             PleaseComponentScan componentScanAnnotation = configClass.getAnnotation(PleaseComponentScan.class);
             typesAnnotatedWithPleaseService = ClassLoaderUtil.getClassesAnnotatedWith(componentScanAnnotation.value(), mainClassLoader, PleaseService.class);
+            LOG.debug("Forming InterfaceAndImplementationWithInstanceMap");
             for (Class<?> implementationClass : typesAnnotatedWithPleaseService) {
                 Class<?>[] interfaces = implementationClass.getInterfaces();
                 Map<Class<?>, Object> implementationWithInstance = new HashMap<>();
@@ -35,6 +44,7 @@ public class DependencyInjectionContext {
                     }
                 }
             }
+            LOG.debug("Forming InterfaceAndImplementationWithInstanceMap ended up");
         }
     }
 
@@ -42,9 +52,18 @@ public class DependencyInjectionContext {
         for (Class<?> serviceClass : typesAnnotatedWithPleaseService) {
             getInstance(serviceClass);
         }
+        LOG.debug("Setting the context into ObjectProvider");
+        ObjectProvider.setContext(this);
+        PostConstructHandler postConstructHandler = new PostConstructHandler(interfaceAndImplementationWithInstanceMap);
+        postConstructHandler.handle();
     }
 
     public <I> I getInstance(Class<I> type) {
+        String message = MessageFormat.format(
+                "Creation or getting the instance of corresponding class with type {0}",
+                type.getSimpleName()
+        );
+        LOG.debug(message);
         if (type.getSimpleName().equals("ConnectionPoolManager")) {
             return (I) ConnectionPoolManager.INSTANCE;
         }
@@ -76,9 +95,13 @@ public class DependencyInjectionContext {
                 }
                 return preparedInstance;
             }
-            throw new RuntimeException("No implementation found");
+            message = MessageFormat.format("No implementation found for {0}", type.getSimpleName());
+            LOG.error(message);
+            throw new DependencyInjectionException(message);
         }
-        throw new RuntimeException("No @PleaseService annotation present or type does not exist in context");
+        message = "No @PleaseService annotation present or type does not exist in context";
+        LOG.error(message);
+        throw new DependencyInjectionException(message);
     }
 
     public void setBeanFactory(BeanFactory beanFactory) {

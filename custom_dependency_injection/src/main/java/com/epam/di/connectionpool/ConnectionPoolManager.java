@@ -1,9 +1,14 @@
 package com.epam.di.connectionpool;
 
+import com.epam.di.exception.ConnectionPoolException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,6 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public enum ConnectionPoolManager {
     INSTANCE;
 
+    private final Logger LOG = LoggerFactory.getLogger(ConnectionPoolManager.class);
     private static final int DEFAULT_CONNECTION_POOL_SIZE = 32;
     private static final ReentrantLock getLock = new ReentrantLock();
     private static final ReentrantLock returnLock = new ReentrantLock();
@@ -24,27 +30,35 @@ public enum ConnectionPoolManager {
     }
 
     void initializeConnectionPool() {
+        LOG.debug("Starting ConnectionPoolManager initialization");
         for (int connectionIndex = 0; connectionIndex < DEFAULT_CONNECTION_POOL_SIZE; connectionIndex++) {
             ProxyConnection proxyConnection = new ProxyConnection(ConnectionCreator.create());
             availableConnections.add(proxyConnection);
         }
+        LOG.debug("ConnectionPoolManager has been initialized");
     }
 
     public Connection getConnection() {
         try {
+            LOG.debug("Getting connection from pool ...");
             getLock.lock();
             semaphore.acquire();
             return availableConnections.poll();
         } catch (InterruptedException e) {
-            throw new RuntimeException("Error while getting connection from pool");
+            String errorMessage = "Error while getting connection from the pool";
+            LOG.error(errorMessage);
+            throw new ConnectionPoolException(errorMessage, e);
         } finally {
             getLock.unlock();
         }
     }
 
     public void returnConnection(Connection connection) {
+        LOG.debug("Returning connection into the pool ...");
         if (!connection.getClass().isInstance(ProxyConnection.class)) {
-            throw new IllegalArgumentException("Connection you are trying to return does not belong to the current connection poll");
+            String errorMessage = "Connection you are trying to return does not belong to the current connection poll";
+            LOG.error(errorMessage);
+            throw new ConnectionPoolException(errorMessage);
         } else {
             try {
                 returnLock.lock();
@@ -59,11 +73,14 @@ public enum ConnectionPoolManager {
     }
 
     public void destroyPool() {
+        LOG.debug("Destroying connection pool ...");
         for (int connectionIndex = 0; connectionIndex < DEFAULT_CONNECTION_POOL_SIZE; connectionIndex++) {
             try {
-                availableConnections.poll().reallyClose();
+                Objects.requireNonNull(availableConnections.poll()).reallyClose();
             } catch (SQLException e) {
-                throw new RuntimeException("Error during destroying connection pool " + e.getLocalizedMessage());
+                String errorMessage = "Error during destroying connection pool";
+                LOG.error(errorMessage);
+                throw new ConnectionPoolException(errorMessage);
             }
         }
         deregisterDrivers();
@@ -74,7 +91,9 @@ public enum ConnectionPoolManager {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                throw new RuntimeException("Error when deregistration drivers");
+                String errorMessage = "Error when deregistration drivers";
+                LOG.error(errorMessage);
+                throw new ConnectionPoolException(errorMessage, e);
             }
         });
     }
