@@ -5,7 +5,6 @@ import com.epam.di.exception.DependencyInjectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -29,15 +28,14 @@ public class PostConstructHandler {
                 .flatMap(implementationWithInstanceMap -> implementationWithInstanceMap.values().stream())
                 .filter(Objects::nonNull)
                 .forEach(instance -> {
-                    Method method = findVoidMethodWithZeroParamsAndExistAnnotation(instance.getClass(), PleasePostConstruct.class);
+                    Method method = findVoidMethodWithZeroParamsAndExistPleasePostConstructAnnotation(instance.getClass());
                     invokeSuitableMethod(instance, method);
                 });
     }
 
-
-    private Method findVoidMethodWithZeroParamsAndExistAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
+    private Method findVoidMethodWithZeroParamsAndExistPleasePostConstructAnnotation(Class<?> clazz) {
         for (Method method : clazz.getDeclaredMethods()) {
-            if (method.getParameterCount() == 0 && method.getReturnType() == void.class && clazz.isAnnotationPresent(annotation)) {
+            if (method.getParameterCount() == 0 && method.getReturnType() == void.class && method.isAnnotationPresent(PleasePostConstruct.class)) {
                 String message = MessageFormat.format("Method inside {0} with @PleasePostConstruct annotation were found", clazz.getSimpleName());
                 LOG.debug(message);
                 return method;
