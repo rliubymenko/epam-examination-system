@@ -15,13 +15,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
+        <com.epam.di.version>1.0-SNAPSHOT</com.epam.di.version>
         <junit.version>5.9.0</junit.version>
         <apache.commons.lang3.version>3.12.0</apache.commons.lang3.version>
         <apache.commons.collections4.version>4.4</apache.commons.collections4.version>
-        <com.epam.di.version>1.0-SNAPSHOT</com.epam.di.version>
         <com.org.apache.maven.war.plugin>3.3.2</com.org.apache.maven.war.plugin>
         <org.postgresql.version>42.5.1</org.postgresql.version>
         <org.apache.logging.version>2.19.0</org.apache.logging.version>
+        <jstl.version>1.2</jstl.version>
     </properties>
 
     <dependencies>
@@ -83,6 +84,12 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${org.apache.logging.version}</version>
+        </dependency>
+        <!-- JSTL -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
         </dependency>
     </dependencies>
 
