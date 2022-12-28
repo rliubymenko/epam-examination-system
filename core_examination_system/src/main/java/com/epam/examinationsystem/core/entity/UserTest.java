@@ -4,12 +4,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class UserTest {
+import java.time.LocalDateTime;
+
+public class UserTest extends AbstractEntity {
 
     private User user;
     private Test test;
     private Boolean isSelected;
     private Boolean isCompleted;
+    private Integer markValue;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Integer attemptNumber;
 
     public User getUser() {
         return user;
@@ -43,36 +49,67 @@ public class UserTest {
         isCompleted = completed;
     }
 
+    public Integer getMarkValue() {
+        return markValue;
+    }
+
+    public void setMarkValue(Integer markValue) {
+        this.markValue = markValue;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getAttemptNumber() {
+        return attemptNumber;
+    }
+
+    public void setAttemptNumber(Integer attemptNumber) {
+        this.attemptNumber = attemptNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserTest userTest = (UserTest) o;
+        if (!(o instanceof UserTest userTest)) return false;
         return new EqualsBuilder()
-                .append(user.getUsername(), userTest.user.getUsername())
-                .append(test.getName(), userTest.test.getName())
-                .append(isSelected, userTest.isSelected)
-                .append(isCompleted, userTest.isCompleted)
+                .appendSuper(super.equals(o))
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(user.getUsername())
-                .append(test.getName())
-                .append(isSelected)
-                .append(isCompleted)
+                .appendSuper(super.hashCode())
+                .append(user)
                 .toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .appendSuper(super.toString())
                 .append("user", user.getUsername())
                 .append("test", test.getName())
                 .append("isSelected", isSelected)
                 .append("isCompleted", isCompleted)
+                .append("markValue", markValue)
+                .append("startTime", startTime)
+                .append("endTime", endTime)
+                .append("attemptNumber", attemptNumber)
                 .toString();
     }
 }

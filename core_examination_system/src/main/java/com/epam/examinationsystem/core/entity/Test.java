@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
+
 public class Test extends AbstractEntity {
 
     private String name;
@@ -13,6 +15,9 @@ public class Test extends AbstractEntity {
     private Integer duration;
     private Integer totalAttemptNumber;
     private Subject subject;
+    private LocalDateTime creationDate;
+    private LocalDateTime expirationDate;
+    private Integer maxAttemptNumber;
 
     public String getName() {
         return name;
@@ -62,6 +67,30 @@ public class Test extends AbstractEntity {
         this.subject = subject;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDateTime getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDateTime expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Integer getMaxAttemptNumber() {
+        return maxAttemptNumber;
+    }
+
+    public void setMaxAttemptNumber(Integer maxAttemptNumber) {
+        this.maxAttemptNumber = maxAttemptNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,13 +110,15 @@ public class Test extends AbstractEntity {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .appendSuper(super.toString())
                 .append("name", name)
                 .append("description", description)
-                .append("complexity", complexity.toString())
+                .append("complexity", complexity)
                 .append("duration", duration)
                 .append("totalAttemptNumber", totalAttemptNumber)
+                .append("maxAttemptNumber", maxAttemptNumber)
                 .append("subject", subject.getName())
+                .append("creationDate", creationDate)
+                .append("expirationDate", expirationDate)
                 .toString();
     }
 }
