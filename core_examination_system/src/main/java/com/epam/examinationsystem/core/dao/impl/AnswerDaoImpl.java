@@ -41,4 +41,9 @@ public class AnswerDaoImpl extends AbstractDao implements AnswerDao {
     public void deleteByUuid(UUID uuid) {
 
     }
+
+    @Override
+    public long count() {
+        return 0;
+    }
 }

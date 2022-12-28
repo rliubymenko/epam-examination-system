@@ -41,4 +41,9 @@ public class TestDaoImpl extends AbstractDao implements TestDao {
     public void deleteByUuid(UUID uuid) {
 
     }
+
+    @Override
+    public long count() {
+        return 0;
+    }
 }

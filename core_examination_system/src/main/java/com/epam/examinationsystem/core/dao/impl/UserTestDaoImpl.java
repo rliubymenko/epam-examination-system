@@ -33,6 +33,16 @@ public class UserTestDaoImpl extends AbstractDao implements UserTestDao {
     }
 
     @Override
+    public Optional<UserTest> findByUuid(UUID uuid) {
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean existsByUuid(UUID uuid) {
+        return false;
+    }
+
+    @Override
     public List<UserTest> findAll() {
         return null;
     }
@@ -45,6 +55,16 @@ public class UserTestDaoImpl extends AbstractDao implements UserTestDao {
     @Override
     public boolean update(UserTest entity) {
         return false;
+    }
+
+    @Override
+    public void deleteByUuid(UUID uuid) {
+
+    }
+
+    @Override
+    public long count() {
+        return 0;
     }
 
     @Override

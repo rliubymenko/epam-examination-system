@@ -19,4 +19,6 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
     boolean update(ENTITY entity);
 
     void deleteByUuid(UUID uuid);
+
+    long count();
 }

@@ -41,4 +41,9 @@ public class SubjectDaoImpl extends AbstractDao implements SubjectDao {
     public void deleteByUuid(UUID uuid) {
 
     }
+
+    @Override
+    public long count() {
+        return 0;
+    }
 }
