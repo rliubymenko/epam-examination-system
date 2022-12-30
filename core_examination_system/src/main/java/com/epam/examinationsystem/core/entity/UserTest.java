@@ -13,9 +13,9 @@ public class UserTest extends AbstractEntity {
     private Boolean isSelected;
     private Boolean isCompleted;
     private Integer markValue;
+    private Integer attemptNumber;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private Integer attemptNumber;
 
     public User getUser() {
         return user;
@@ -33,20 +33,20 @@ public class UserTest extends AbstractEntity {
         this.test = test;
     }
 
-    public Boolean getSelected() {
+    public Boolean getIsSelected() {
         return isSelected;
     }
 
-    public void setSelected(Boolean selected) {
-        isSelected = selected;
+    public void setIsSelected(Boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
-    public Boolean getCompleted() {
+    public Boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
+    public void setIsCompleted(Boolean isCompleted) {
+        this.isCompleted = isCompleted;
     }
 
     public Integer getMarkValue() {

@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.dao.common;
 import com.epam.di.annotation.PleaseConnectionManager;
 import com.epam.di.annotation.PleaseService;
 import com.epam.di.connectionpool.ConnectionPoolManager;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @PleaseService
-public class TransactionManager {
+public class TransactionManager<E extends AbstractEntity> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionManager.class);
 
@@ -18,14 +19,14 @@ public class TransactionManager {
     private ConnectionPoolManager connectionManager;
     private Connection connection;
 
-    public void begin(AbstractDao currentDao) {
+    public void begin(AbstractDao<E> currentDao) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
         currentDao.setConnection(connection);
     }
 
-    public void begin(AbstractDao currentDao, AbstractDao... daos) {
+    public void begin(AbstractDao<E> currentDao, AbstractDao<E>... daos) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
@@ -35,7 +36,7 @@ public class TransactionManager {
             LOG.error("Error while inactive auto commit", e);
         }
         currentDao.setConnection(connection);
-        for (AbstractDao dao : daos) {
+        for (AbstractDao<E> dao : daos) {
             dao.setConnection(connection);
         }
     }

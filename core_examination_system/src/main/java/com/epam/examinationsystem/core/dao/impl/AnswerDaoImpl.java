@@ -1,49 +1,83 @@
 package com.epam.examinationsystem.core.dao.impl;
 
+import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.AnswerDao;
+import com.epam.examinationsystem.core.dao.QuestionDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Answer;
+import com.epam.examinationsystem.core.enumeration.DaoConstant;
+import com.epam.examinationsystem.core.exception.DaoException;
+import com.epam.examinationsystem.core.util.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @PleaseService
-public class AnswerDaoImpl extends AbstractDao implements AnswerDao {
+public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 
-    @Override
-    public Optional<Answer> findByUuid(UUID uuid) {
-        return Optional.empty();
+    private static final String ENTITY_NAME = "answer";
+    private static final Logger LOG = LoggerFactory.getLogger(AnswerDaoImpl.class);
+
+    @PleaseInject
+    private QuestionDao questionDao;
+
+    public AnswerDaoImpl() {
+        super(LOG, ENTITY_NAME, DaoConstant.ANSWER_TABLE_NAME.getValue());
     }
 
     @Override
-    public boolean existsByUuid(UUID uuid) {
-        return false;
+    public Answer extractEntity(ResultSet resultSet) throws SQLException, DaoException {
+        Answer answer = null;
+        while (resultSet.next()) {
+            answer = DaoMapperUtil.extractAnswer(resultSet, questionDao);
+        }
+        return answer;
     }
 
     @Override
-    public List<Answer> findAll() {
-        return null;
+    public List<Answer> extractEntities(ResultSet resultSet) throws SQLException, DaoException {
+        List<Answer> answers = new ArrayList<>();
+        while (resultSet.next()) {
+            Answer answer = DaoMapperUtil.extractAnswer(resultSet, questionDao);
+            answers.add(answer);
+        }
+        return answers;
     }
 
     @Override
-    public boolean create(Answer entity) {
-        return false;
+    public String getInsertQuery() {
+        return QueryBuilderUtil.generateInsertQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), 3);
     }
 
     @Override
-    public boolean update(Answer entity) {
-        return false;
+    public String getUpdateQuery(Answer entity) {
+        List<String> columnNames = List.of("content", "is_correct");
+        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.ANSWER_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
     @Override
-    public void deleteByUuid(UUID uuid) {
-
+    public void populateInsertQuery(PreparedStatement preparedStatement, Answer entity) throws SQLException {
+        QueryBuilderUtil.populatePreparedStatement(
+                preparedStatement,
+                entity.getContent(),
+                entity.getIsCorrect(),
+                entity.getQuestion().getId()
+        );
     }
 
     @Override
-    public long count() {
-        return 0;
+    public void populateUpdateQuery(PreparedStatement preparedStatement, Answer entity) throws SQLException {
+        QueryBuilderUtil.populatePreparedStatement(
+                preparedStatement,
+                entity.getContent(),
+                entity.getIsCorrect()
+        );
     }
 }

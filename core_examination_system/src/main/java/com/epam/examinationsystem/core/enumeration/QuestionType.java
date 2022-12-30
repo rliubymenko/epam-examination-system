@@ -5,5 +5,10 @@ public enum QuestionType {
     SINGLE_CHOICE,
     TRUE_FALSE,
     NUMERICAL,
-    TEXT
+    TEXT;
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }
