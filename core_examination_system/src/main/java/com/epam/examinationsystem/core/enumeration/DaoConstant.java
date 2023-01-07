@@ -7,8 +7,8 @@ public enum DaoConstant {
     ROLE_TABLE_NAME("role"),
     SUBJECT_TABLE_NAME("subject"),
     TEST_TABLE_NAME("test"),
-    USER_TABLE_NAME("user"),
-    USER_TEST_TABLE_NAME("user_test");
+    USER_TABLE_NAME("epam_user"),
+    USER_TEST_TABLE_NAME("epam_user_test");
 
     private final String value;
 
