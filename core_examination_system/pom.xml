@@ -22,7 +22,9 @@
         <com.org.apache.maven.war.plugin>3.3.2</com.org.apache.maven.war.plugin>
         <org.postgresql.version>42.5.1</org.postgresql.version>
         <org.apache.logging.version>2.19.0</org.apache.logging.version>
-        <jstl.version>1.2</jstl.version>
+        <jstl.version>2.0.0</jstl.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jbcrypt.version>0.4</jbcrypt.version>
     </properties>
 
     <dependencies>
@@ -30,8 +32,20 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>${jakarta.servlet.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!-- JSTL -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+            <version>${jstl.version}</version>
+        </dependency>
+        <!-- Simple custom dependency injection framework -->
+        <dependency>
+            <groupId>com.epam.di</groupId>
+            <artifactId>custom-dependency-injection</artifactId>
+            <version>${com.epam.di.version}</version>
         </dependency>
         <!-- Test dependencies -->
         <dependency>
@@ -57,12 +71,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commons.lang3.version}</version>
         </dependency>
-        <!-- Simple custom dependency injection framework -->
-        <dependency>
-            <groupId>com.epam.di</groupId>
-            <artifactId>custom-dependency-injection</artifactId>
-            <version>${com.epam.di.version}</version>
-        </dependency>
         <!-- PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -85,11 +93,11 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${org.apache.logging.version}</version>
         </dependency>
-        <!-- JSTL -->
+        <!-- Password hashing -->
         <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>${jstl.version}</version>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>${jbcrypt.version}</version>
         </dependency>
     </dependencies>
 
