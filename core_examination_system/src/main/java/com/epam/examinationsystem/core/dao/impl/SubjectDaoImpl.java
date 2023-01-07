@@ -8,9 +8,9 @@ import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,22 +32,6 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 
     public SubjectDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue());
-    }
-
-    @Override
-    public Subject getById(Long id) throws DaoException {
-        Subject subject;
-        LoggerUtil.findByIdStartLogging(LOG, ENTITY_NAME, id);
-        try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByIdQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), id);
-            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                subject = extractEntity(resultSet);
-            }
-        } catch (SQLException e) {
-            String message = LoggerUtil.findByIdErrorLogging(LOG, ENTITY_NAME, id);
-            throw new DaoException(message, e);
-        }
-        return subject;
     }
 
     @Override

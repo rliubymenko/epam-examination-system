@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface RoleDao extends CommonDao<Role> {
 
     Optional<Role> findByUserType(UserType userType) throws DaoException;
-
-    Role getById(Long id) throws DaoException;
 }

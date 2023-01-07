@@ -7,9 +7,9 @@ import com.epam.examinationsystem.core.entity.Role;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.enumeration.UserType;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,27 +33,11 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
     }
 
     @Override
-    public Role getById(Long id) throws DaoException {
-        Role role;
-        LoggerUtil.findByIdStartLogging(LOG, ENTITY_NAME, id);
-        try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByIdQuery(DaoConstant.ROLE_TABLE_NAME.getValue(), id);
-            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                role = extractEntity(resultSet);
-            }
-        } catch (SQLException e) {
-            String message = LoggerUtil.findByIdErrorLogging(LOG, ENTITY_NAME, id);
-            throw new DaoException(message, e);
-        }
-        return role;
-    }
-
-    @Override
     public Optional<Role> findByUserType(UserType userType) throws DaoException {
         Optional<Role> maybeRole;
         LoggerUtil.findByUserTypeStartLogging(LOG, ENTITY_NAME, userType);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.ROLE_TABLE_NAME.getValue(), "name", userType.toString());
+            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.ROLE_TABLE_NAME.getValue(), "name", userType.toString(), true);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 Role role = extractEntity(resultSet);
                 maybeRole = Optional.ofNullable(role);

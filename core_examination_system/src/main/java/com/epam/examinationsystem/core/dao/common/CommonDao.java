@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.dao.common;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.exception.DaoException;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +11,8 @@ import java.util.UUID;
 public interface CommonDao<ENTITY extends AbstractEntity> {
 
     Optional<ENTITY> findByUuid(UUID uuid) throws DaoException;
+
+    ENTITY getById(Long id) throws DaoException;
 
     boolean existsByUuid(UUID uuid) throws DaoException;
 
@@ -22,4 +25,7 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
     boolean deleteByUuid(UUID uuid) throws DaoException;
 
     long count() throws DaoException;
+
+    // --- Method for transaction manager
+    void setConnection(Connection connection);
 }

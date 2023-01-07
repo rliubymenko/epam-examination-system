@@ -19,14 +19,15 @@ public class TransactionManager<E extends AbstractEntity> {
     private ConnectionPoolManager connectionManager;
     private Connection connection;
 
-    public void begin(AbstractDao<E> currentDao) {
+    public void begin(CommonDao<E> currentDao) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
         currentDao.setConnection(connection);
     }
 
-    public void begin(AbstractDao<E> currentDao, AbstractDao<E>... daos) {
+    @SafeVarargs
+    public final void begin(CommonDao<E> currentDao, CommonDao... daos) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
@@ -36,7 +37,18 @@ public class TransactionManager<E extends AbstractEntity> {
             LOG.error("Error while inactive auto commit", e);
         }
         currentDao.setConnection(connection);
-        for (AbstractDao<E> dao : daos) {
+        for (CommonDao dao : daos) {
+            dao.setConnection(connection);
+        }
+    }
+
+    @SafeVarargs
+    public final void beginWithAutoCommit(CommonDao<E> currentDao, CommonDao... daos) {
+        if (connection == null) {
+            connection = connectionManager.getConnection();
+        }
+        currentDao.setConnection(connection);
+        for (CommonDao dao : daos) {
             dao.setConnection(connection);
         }
     }

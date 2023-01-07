@@ -8,9 +8,9 @@ import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,30 +32,6 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements QuestionDa
 
     public QuestionDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.QUESTION_TABLE_NAME.getValue());
-    }
-
-    @Override
-    public Question getById(Long id) throws DaoException {
-        Question question;
-        LoggerUtil.findByIdStartLogging(LOG, ENTITY_NAME, id);
-        try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByIdQuery(DaoConstant.QUESTION_TABLE_NAME.getValue(), id);
-            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                question = extractEntity(resultSet);
-            }
-        } catch (SQLException e) {
-            String message = LoggerUtil.findByIdErrorLogging(LOG, ENTITY_NAME, id);
-            throw new DaoException(message, e);
-        }
-        return question;
-    }
-
-    public Question extractQuestionWithoutUser(ResultSet resultSet) throws SQLException, DaoException {
-        Question question = null;
-        while (resultSet.next()) {
-            question = DaoMapperUtil.extractQuestion(resultSet, testDao);
-        }
-        return question;
     }
 
     @Override

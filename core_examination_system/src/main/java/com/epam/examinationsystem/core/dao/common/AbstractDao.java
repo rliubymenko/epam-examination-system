@@ -3,7 +3,7 @@ package com.epam.examinationsystem.core.dao.common;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.util.LoggerUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 
 import java.sql.*;
@@ -43,6 +43,22 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
             throw new DaoException(message, e);
         }
         return maybeEntity;
+    }
+
+    @Override
+    public E getById(Long id) throws DaoException {
+        E entity;
+        LoggerUtil.findByIdStartLogging(log, entityName, id);
+        try (Statement statement = connection.createStatement()) {
+            String findQuery = QueryBuilderUtil.generateFindByIdQuery(tableName, id);
+            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
+                entity = extractEntity(resultSet);
+            }
+        } catch (SQLException e) {
+            String message = LoggerUtil.findByIdErrorLogging(log, entityName, id);
+            throw new DaoException(message, e);
+        }
+        return entity;
     }
 
     @Override
@@ -89,7 +105,7 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
             long lastGeneratedId = resultSet.getLong(1);
-            entity.setId(lastGeneratedId);
+            entity = getById(lastGeneratedId);
         } catch (SQLException e) {
             String message = LoggerUtil.createEntityErrorLogging(log, entityName);
             throw new DaoException(message, e);

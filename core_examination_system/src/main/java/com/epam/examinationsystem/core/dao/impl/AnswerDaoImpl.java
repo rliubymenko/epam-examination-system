@@ -8,8 +8,8 @@ import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Answer;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.DaoMapperUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

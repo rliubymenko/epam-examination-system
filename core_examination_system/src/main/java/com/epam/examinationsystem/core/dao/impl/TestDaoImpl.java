@@ -8,9 +8,9 @@ import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
-import com.epam.examinationsystem.core.util.QueryBuilderUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
+import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
         try (Statement statement = connection.createStatement()) {
             String findQuery = QueryBuilderUtil.generateFindByIdQuery(DaoConstant.TEST_TABLE_NAME.getValue(), id);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                test = extractEntityWithoutSubject(resultSet);
+                test = extractTestWithoutSubject(resultSet);
             }
         } catch (SQLException e) {
             String message = LoggerUtil.findByIdErrorLogging(LOG, ENTITY_NAME, id);
@@ -50,7 +50,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
         return test;
     }
 
-    public Test extractEntityWithoutSubject(ResultSet resultSet) throws SQLException {
+    public Test extractTestWithoutSubject(ResultSet resultSet) throws SQLException {
         Test test = null;
         while (resultSet.next()) {
             test = DaoMapperUtil.extractTestWithoutSubject(resultSet);
