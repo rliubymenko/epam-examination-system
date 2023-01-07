@@ -1,4 +1,4 @@
-package com.epam.examinationsystem.core.util;
+package com.epam.examinationsystem.core.util.db;
 
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 
@@ -24,10 +24,13 @@ public class QueryBuilderUtil {
     }
 
     public static String generateFindByIdQuery(String tableName, Long id) {
-        return "SELECT * FROM " + tableName + " WHERE id = " + '\'' + id + '\'' + ";";
+        return "SELECT * FROM " + tableName + " WHERE id = " + id + ";";
     }
 
-    public static String generateFindByQuery(String tableName, String propertyName, String propertyValue) {
+    public static String generateFindByQuery(String tableName, String propertyName, String propertyValue, boolean isWrapped) {
+        if (isWrapped) {
+            return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
+        }
         return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + propertyValue + ";";
     }
 
@@ -84,7 +87,7 @@ public class QueryBuilderUtil {
 
     public static void populatePreparedStatement(PreparedStatement preparedStatement, Object... fields) throws SQLException {
         for (int index = 0; index < fields.length; index++) {
-            populatePreparedStatement(preparedStatement, fields[index], index);
+            populatePreparedStatement(preparedStatement, fields[index], index + 1);
         }
     }
 
@@ -106,7 +109,7 @@ public class QueryBuilderUtil {
             preparedStatement.setString(index, field.toString());
         }
         switch (type) {
-            case "String" -> preparedStatement.setString(index, (String) field);
+            case "String" -> preparedStatement.setString(index, field.toString());
             case "Boolean" -> preparedStatement.setBoolean(index, (Boolean) field);
             case "Short" -> preparedStatement.setShort(index, (Short) field);
             case "Integer" -> preparedStatement.setInt(index, (Integer) field);

@@ -5,16 +5,20 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.UUID;
+
 public class Role extends AbstractEntity {
 
-    private UserType name;
+    private final UserType name;
+
+    public Role(RoleBuilder builder) {
+        super.id = builder.id;
+        super.uuid = builder.uuid;
+        this.name = builder.name;
+    }
 
     public UserType getName() {
         return name;
-    }
-
-    public void setName(UserType name) {
-        this.name = name;
     }
 
     @Override
@@ -41,5 +45,35 @@ public class Role extends AbstractEntity {
                 .appendSuper(super.toString())
                 .append("name", name.toString())
                 .toString();
+    }
+
+    public static RoleBuilder builder() {
+        return new RoleBuilder();
+    }
+
+    public static class RoleBuilder {
+
+        private Long id;
+        private UUID uuid;
+        private UserType name;
+
+        public RoleBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public RoleBuilder setUuid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public RoleBuilder setName(UserType name) {
+            this.name = name;
+            return this;
+        }
+
+        public Role build() {
+            return new Role(this);
+        }
     }
 }

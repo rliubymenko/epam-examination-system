@@ -8,13 +8,13 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-public abstract class AbstractEntity implements Serializable, Cloneable {
+public abstract class AbstractEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1234567L;
 
-    private Long id;
-    private UUID uuid;
+    protected Long id;
+    protected UUID uuid;
 
     protected AbstractEntity() {
         this.uuid = UUID.randomUUID();
@@ -24,16 +24,8 @@ public abstract class AbstractEntity implements Serializable, Cloneable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public UUID getUuid() {
         return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
     }
 
     @Override

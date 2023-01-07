@@ -4,34 +4,32 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.UUID;
+
 public class Subject extends AbstractEntity {
 
-    private String name;
-    private String description;
-    private User user;
+    private final String name;
+    private final String description;
+    private final User user;
+
+    public Subject(SubjectBuilder builder) {
+        super.id = builder.id;
+        super.uuid = builder.uuid;
+        this.name = builder.name;
+        this.description = builder.description;
+        this.user = builder.user;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override
@@ -60,5 +58,47 @@ public class Subject extends AbstractEntity {
                 .append("description", description)
                 .append("user", user.getUsername())
                 .toString();
+    }
+
+    public static SubjectBuilder builder() {
+        return new SubjectBuilder();
+    }
+
+    public static class SubjectBuilder {
+
+        private Long id;
+        private UUID uuid;
+        private String name;
+        private String description;
+        private User user;
+
+        public SubjectBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public SubjectBuilder setUuid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public SubjectBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public SubjectBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public SubjectBuilder setUser(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Subject build() {
+            return new Subject(this);
+        }
     }
 }

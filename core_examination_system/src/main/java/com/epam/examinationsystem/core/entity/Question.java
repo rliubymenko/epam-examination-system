@@ -5,43 +5,38 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.UUID;
+
 public class Question extends AbstractEntity {
 
-    private QuestionType type;
-    private String content;
-    private String description;
-    private Test test;
+    private final QuestionType type;
+    private final String content;
+    private final String description;
+    private final Test test;
+
+    private Question(QuestionBuilder builder) {
+        super.id = builder.id;
+        super.uuid = builder.uuid;
+        this.type = builder.type;
+        this.content = builder.content;
+        this.description = builder.description;
+        this.test = builder.test;
+    }
 
     public QuestionType getType() {
         return type;
-    }
-
-    public void setType(QuestionType type) {
-        this.type = type;
     }
 
     public String getContent() {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Test getTest() {
         return test;
-    }
-
-    public void setTest(Test test) {
-        this.test = test;
     }
 
     @Override
@@ -69,5 +64,53 @@ public class Question extends AbstractEntity {
                 .append("description", description)
                 .append("test", test.getName())
                 .toString();
+    }
+
+    public static QuestionBuilder builder() {
+        return new QuestionBuilder();
+    }
+
+    public static class QuestionBuilder {
+
+        private Long id;
+        private UUID uuid;
+        private QuestionType type;
+        private String content;
+        private String description;
+        private Test test;
+
+        public QuestionBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public QuestionBuilder setUuid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public QuestionBuilder setType(QuestionType type) {
+            this.type = type;
+            return this;
+        }
+
+        public QuestionBuilder setContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public QuestionBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public QuestionBuilder setTest(Test test) {
+            this.test = test;
+            return this;
+        }
+
+        public Question build() {
+            return new Question(this);
+        }
     }
 }

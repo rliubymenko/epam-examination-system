@@ -4,70 +4,60 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.UUID;
+
 public class User extends AbstractEntity {
 
-    private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private Boolean isActivated;
-    private Role role;
+    private final String username;
+    private final String password;
+    private final String email;
+    private final String firstName;
+    private final String lastName;
+    private final Boolean isActivated;
+    private final Role role;
+
+    private User(UserBuilder builder) {
+        super.id = builder.id;
+        super.uuid = builder.uuid;
+        this.username = builder.username;
+        this.password = builder.password;
+        this.email = builder.email;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.isActivated = builder.isActivated;
+        this.role = builder.role;
+    }
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Boolean getIsActivated() {
         return isActivated;
     }
 
-    public void setIsActivated(Boolean isActivated) {
-        this.isActivated = isActivated;
-    }
-
     public Role getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public static UserBuilder builder() {
+        return new UserBuilder();
     }
 
     @Override
@@ -100,5 +90,79 @@ public class User extends AbstractEntity {
                 .append("isActivated", isActivated)
                 .append("role", role.getName())
                 .toString();
+    }
+
+    public static class UserBuilder {
+
+        private Long id;
+        private UUID uuid;
+        private String username;
+        private String password;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private Boolean isActivated;
+        private Role role;
+
+        public UserBuilder setId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder setUuid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        public UserBuilder setUsername(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public UserBuilder setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserBuilder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserBuilder setFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public UserBuilder setLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public UserBuilder setIsActivated(Boolean isActivated) {
+            this.isActivated = isActivated;
+            return this;
+        }
+
+        public UserBuilder setRole(Role role) {
+            this.role = role;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+
+//        public User fromUserDto(UserDto userDto) {
+//            return this
+//                    .setUuid(userDto.getUuid().toString())
+//                    .setUsername(userDto.getUsername())
+//                    .setPassword(userDto.getPassword())
+//                    .setEmail(userDto.getEmail())
+//                    .setFirstName(userDto.getFirstName())
+//                    .setLastName(userDto.getLastName())
+//                    .setRole(userDto.getRole().getName().toString())
+//                    .build();
+//        }
     }
 }
