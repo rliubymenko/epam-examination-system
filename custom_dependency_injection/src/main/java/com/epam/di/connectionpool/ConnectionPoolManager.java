@@ -55,7 +55,7 @@ public enum ConnectionPoolManager {
 
     public void returnConnection(Connection connection) {
         LOG.debug("Returning connection into the pool ...");
-        if (!connection.getClass().isInstance(ProxyConnection.class)) {
+        if (!(connection instanceof ProxyConnection)){
             String errorMessage = "Connection you are trying to return does not belong to the current connection poll";
             LOG.error(errorMessage);
             throw new ConnectionPoolException(errorMessage);
