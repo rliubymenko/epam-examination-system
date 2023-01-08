@@ -19,9 +19,12 @@ public class ActionFactory {
         commands.put(CommandType.GET_LOCALE, ObjectProvider.getInstance(LocaleCommand.class));
         commands.put(CommandType.GET_REGISTRATION, ObjectProvider.getInstance(GetRegistrationPageCommand.class));
         commands.put(CommandType.GET_LOGIN, ObjectProvider.getInstance(GetLoginPageCommand.class));
+        commands.put(CommandType.GET_LOGOUT, ObjectProvider.getInstance(LogoutCommand.class));
+        commands.put(CommandType.GET_ADMINSUSERS, ObjectProvider.getInstance(GetAllUsersByParameters.class));
+        commands.put(CommandType.GET_ADMINSUSERSUSER, ObjectProvider.getInstance(GetEditUserPageCommand.class));
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));
-
+        commands.put(CommandType.POST_ADMINSUSERSUSER, ObjectProvider.getInstance(EditUserCommand.class));
     }
 
     public static ActionFactory getInstance() {
@@ -34,7 +37,11 @@ public class ActionFactory {
     public ActionCommand defineCommand(HttpServletRequest request) {
         String command = "";
         String path = request.getServletPath().replace("/", "");
+        String pathInfo = request.getPathInfo();
         String methodType = request.getMethod();
+        if (pathInfo != null) {
+            path += pathInfo.replace("/", "");
+        }
         if (methodType.equals(Path.GET_METHOD)) {
             command = "GET_" + path;
         }

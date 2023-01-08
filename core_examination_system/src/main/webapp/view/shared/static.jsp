@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/lib/mdb.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/lib/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/lib/toastr.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/header.css">
 <%--<script src="${pageContext.request.contextPath}/static/js/lib/bootstrap.bundle.min.js" defer></script>--%>
 <script src="${pageContext.request.contextPath}/static/js/lib/mdb.min.js" defer></script>
 <script src="${pageContext.request.contextPath}/static/js/lib/all.min.js" defer></script>

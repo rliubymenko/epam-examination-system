@@ -1,0 +1,7 @@
+.card-body {
+    padding: unset
+}
+
+.table-head, li .page-link, #dropdownSizeButton {
+    background-color: #E3F2FD !important;
+}
