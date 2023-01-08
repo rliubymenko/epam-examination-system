@@ -41,7 +41,7 @@ public class LoginCommand implements ActionCommand {
             if (PasswordEncoder.isMatched(password, userDto.getPassword())) {
                 LOG.debug("The user {} has been signed in successfully", userDto);
                 HttpSession session = request.getSession();
-                session.setAttribute(SessionConstant.USER, userDto);
+                session.setAttribute(SessionConstant.CURRENT_USER, userDto);
                 session.setAttribute(SessionConstant.IS_LOGGED_IN, true);
                 return new CommandResult(Path.HOME, true);
             }
