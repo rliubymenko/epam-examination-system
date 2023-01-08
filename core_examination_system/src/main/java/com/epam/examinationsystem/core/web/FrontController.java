@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/registration", "/login", "/locale", "/home", "/admin/*", "/tutor/*", "/student/*"})
+@WebServlet(urlPatterns = {"/registration", "/login", "/logout", "/locale", "/home", "/admins/*", "/students/*"})
 public class FrontController extends HttpServlet {
 
     @Override
