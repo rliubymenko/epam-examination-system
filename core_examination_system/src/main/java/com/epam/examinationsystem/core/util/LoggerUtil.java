@@ -1,12 +1,13 @@
 package com.epam.examinationsystem.core.util;
 
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.enumeration.UserType;
 import org.slf4j.Logger;
 
 import java.text.MessageFormat;
 import java.util.UUID;
 
-public class LoggerUtil {
+public final class LoggerUtil {
 
     private LoggerUtil() {
     }
@@ -73,6 +74,17 @@ public class LoggerUtil {
 
     public static String findAllErrorLogging(Logger log, String entityName) {
         String message = MessageFormat.format("Error occurred while trying to find all {0} entities", entityName);
+        log.error(message);
+        return message;
+    }
+
+    public static void findAllWithParametersStartLogging(Logger log, String entityName, DataTableRequest request) {
+        String message = MessageFormat.format("Finding all {0} entities by {1}", entityName, request);
+        log.debug(message);
+    }
+
+    public static String findAllWithParametersErrorLogging(Logger log, String entityName,  DataTableRequest request) {
+        String message = MessageFormat.format("Error occurred while trying to find all {0} entities by {1}", entityName, request);
         log.error(message);
         return message;
     }
