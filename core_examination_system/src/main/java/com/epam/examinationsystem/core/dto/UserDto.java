@@ -5,30 +5,25 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Optional;
+public class UserDto extends AbstractDto {
 
-public class UserDto {
-
-    private final String uuid;
     private final String username;
     private final String password;
     private final String email;
     private final String firstName;
     private final String lastName;
+    private final Boolean isActivated;
     private final String role;
 
     private UserDto(UserDtoBuilder builder) {
-        this.uuid = builder.uuid;
+        super.uuid = builder.uuid;
         this.username = builder.username;
         this.password = builder.password;
         this.email = builder.email;
         this.firstName = builder.firstName;
         this.lastName = builder.lastName;
+        this.isActivated = builder.isActivated;
         this.role = builder.role;
-    }
-
-    public String getUuid() {
-        return uuid;
     }
 
     public String getUsername() {
@@ -53,6 +48,10 @@ public class UserDto {
 
     public String getRole() {
         return role;
+    }
+
+    public Boolean getIsActivated() {
+        return isActivated;
     }
 
     public static UserDtoBuilder builder() {
@@ -84,6 +83,8 @@ public class UserDto {
                 .append("email", email)
                 .append("firstName", firstName)
                 .append("lastName", lastName)
+                .append("isActivated", isActivated)
+                .append("role", role)
                 .toString();
     }
 
@@ -95,6 +96,7 @@ public class UserDto {
         private String email;
         private String firstName;
         private String lastName;
+        private Boolean isActivated;
         private String role;
 
         public UserDtoBuilder setUuid(String uuid) {
@@ -127,6 +129,11 @@ public class UserDto {
             return this;
         }
 
+        public UserDtoBuilder setIsActivated(Boolean isActivated) {
+            this.isActivated = isActivated;
+            return this;
+        }
+
         public UserDtoBuilder setRole(String role) {
             this.role = role;
             return this;
@@ -136,16 +143,17 @@ public class UserDto {
             return new UserDto(this);
         }
 
-        public Optional<UserDto> fromUser(Optional<User> maybeUser) {
-            return maybeUser.map(user -> this
+        public UserDto fromUser(User user) {
+            return this
                     .setUuid(user.getUuid().toString())
                     .setUsername(user.getUsername())
                     .setPassword(user.getPassword())
                     .setEmail(user.getEmail())
                     .setFirstName(user.getFirstName())
                     .setLastName(user.getLastName())
+                    .setIsActivated(user.getIsActivated())
                     .setRole(user.getRole().getName().toString())
-                    .build());
+                    .build();
         }
     }
 }
