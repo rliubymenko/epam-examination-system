@@ -1,5 +1,6 @@
 package com.epam.examinationsystem.core.dao.common;
 
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.exception.DaoException;
 
@@ -17,6 +18,8 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
     boolean existsByUuid(UUID uuid) throws DaoException;
 
     List<ENTITY> findAll() throws DaoException;
+
+    List<ENTITY> findAll(DataTableRequest request) throws DaoException;
 
     boolean create(ENTITY entity) throws DaoException;
 

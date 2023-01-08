@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @PleaseService
-public class TransactionManager<E extends AbstractEntity> {
+public class TransactionManager<ENTITY extends AbstractEntity> {
 
     private static final Logger LOG = LoggerFactory.getLogger(TransactionManager.class);
 
@@ -19,7 +19,7 @@ public class TransactionManager<E extends AbstractEntity> {
     private ConnectionPoolManager connectionManager;
     private Connection connection;
 
-    public void begin(CommonDao<E> currentDao) {
+    public void begin(CommonDao<ENTITY> currentDao) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
@@ -27,7 +27,7 @@ public class TransactionManager<E extends AbstractEntity> {
     }
 
     @SafeVarargs
-    public final void begin(CommonDao<E> currentDao, CommonDao... daos) {
+    public final void begin(CommonDao<ENTITY> currentDao, CommonDao... daos) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }
@@ -43,7 +43,7 @@ public class TransactionManager<E extends AbstractEntity> {
     }
 
     @SafeVarargs
-    public final void beginWithAutoCommit(CommonDao<E> currentDao, CommonDao... daos) {
+    public final void beginWithAutoCommit(CommonDao<ENTITY> currentDao, CommonDao... daos) {
         if (connection == null) {
             connection = connectionManager.getConnection();
         }

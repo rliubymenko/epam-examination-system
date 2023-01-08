@@ -1,5 +1,6 @@
 package com.epam.examinationsystem.core.dao.common;
 
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.util.LoggerUtil;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao<E> {
+public abstract class AbstractDao<ENTITY extends AbstractEntity> implements CommonDao<ENTITY> {
 
     private final Logger log;
     private final String entityName;
@@ -29,13 +30,13 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
     }
 
     @Override
-    public Optional<E> findByUuid(UUID uuid) throws DaoException {
-        Optional<E> maybeEntity;
+    public Optional<ENTITY> findByUuid(UUID uuid) throws DaoException {
+        Optional<ENTITY> maybeEntity;
         LoggerUtil.findByUuidStartLogging(log, entityName, uuid);
         try (Statement statement = connection.createStatement()) {
             String findQuery = QueryBuilderUtil.generateFindByUuidQuery(tableName, uuid);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                E entity = extractEntity(resultSet);
+                ENTITY entity = extractEntity(resultSet);
                 maybeEntity = Optional.ofNullable(entity);
             }
         } catch (SQLException | DaoException e) {
@@ -46,8 +47,8 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
     }
 
     @Override
-    public E getById(Long id) throws DaoException {
-        E entity;
+    public ENTITY getById(Long id) throws DaoException {
+        ENTITY entity;
         LoggerUtil.findByIdStartLogging(log, entityName, id);
         try (Statement statement = connection.createStatement()) {
             String findQuery = QueryBuilderUtil.generateFindByIdQuery(tableName, id);
@@ -80,8 +81,8 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
     }
 
     @Override
-    public List<E> findAll() throws DaoException {
-        List<E> entities;
+    public List<ENTITY> findAll() throws DaoException {
+        List<ENTITY> entities;
         LoggerUtil.findAllStartLogging(log, entityName);
         try (Statement statement = connection.createStatement()) {
             String findAllQuery = QueryBuilderUtil.generateFindAllQuery(tableName);
@@ -96,7 +97,23 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
     }
 
     @Override
-    public boolean create(E entity) throws DaoException {
+    public List<ENTITY> findAll(DataTableRequest request) throws DaoException {
+        List<ENTITY> entities;
+        LoggerUtil.findAllWithParametersStartLogging(log, entityName, request);
+        try (Statement statement = connection.createStatement()) {
+            String findAllQuery = QueryBuilderUtil.generateFindAllWithParametersQuery(tableName, request);
+            try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
+                entities = extractEntities(resultSet);
+            }
+        } catch (SQLException e) {
+            String message = LoggerUtil.findAllWithParametersErrorLogging(log, entityName, request);
+            throw new DaoException(message, e);
+        }
+        return entities;
+    }
+
+    @Override
+    public boolean create(ENTITY entity) throws DaoException {
         LoggerUtil.createEntityStartLogging(log, entityName);
         String insertQuery = getInsertQuery();
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
@@ -114,7 +131,7 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
     }
 
     @Override
-    public boolean update(E entity) throws DaoException {
+    public boolean update(ENTITY entity) throws DaoException {
         LoggerUtil.updateEntityStartLogging(log, entityName, entity.getUuid());
         String updateQuery = getUpdateQuery(entity);
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
@@ -155,15 +172,15 @@ public abstract class AbstractDao<E extends AbstractEntity> implements CommonDao
         return 0;
     }
 
-    public abstract E extractEntity(ResultSet resultSet) throws SQLException, DaoException;
+    public abstract ENTITY extractEntity(ResultSet resultSet) throws SQLException, DaoException;
 
-    public abstract List<E> extractEntities(ResultSet resultSet) throws SQLException, DaoException;
+    public abstract List<ENTITY> extractEntities(ResultSet resultSet) throws SQLException, DaoException;
 
     public abstract String getInsertQuery();
 
-    public abstract String getUpdateQuery(E entity);
+    public abstract String getUpdateQuery(ENTITY entity);
 
-    public abstract void populateInsertQuery(PreparedStatement preparedStatement, E entity) throws SQLException;
+    public abstract void populateInsertQuery(PreparedStatement preparedStatement, ENTITY entity) throws SQLException;
 
-    public abstract void populateUpdateQuery(PreparedStatement preparedStatement, E entity) throws SQLException;
+    public abstract void populateUpdateQuery(PreparedStatement preparedStatement, ENTITY entity) throws SQLException;
 }
