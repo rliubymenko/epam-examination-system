@@ -1,6 +1,8 @@
 package com.epam.examinationsystem.core.util.db;
 
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,11 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
-public class QueryBuilderUtil {
-
-    private static final Pattern UUID_REGEX_PATTERN = Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+public final class QueryBuilderUtil {
 
     private QueryBuilderUtil() {
     }
@@ -50,8 +49,24 @@ public class QueryBuilderUtil {
         return "SELECT * FROM " + tableName + ";";
     }
 
+    public static String generateFindAllWithParametersQuery(String tableName, DataTableRequest request) {
+        int offset = (request.getCurrentPage() - 1) * request.getPageSize();
+        return new StringBuilder()
+                .append("SELECT * FROM ")
+                .append(tableName)
+                .append(" ORDER BY ")
+                .append(fromCamelCaseToSnakeCase(request.getSort()))
+                .append(" ")
+                .append(request.getOrder().toLowerCase())
+                .append(" LIMIT ")
+                .append(request.getPageSize())
+                .append(" OFFSET ")
+                .append(offset)
+                .append(";").toString();
+    }
+
     public static String generateDeleteQuery(String tableName, String columnName, String predicate) {
-        if (isValidUUID(predicate)) {
+        if (ParameterValidator.isValidUUID(predicate)) {
             UUID uuid = UUID.fromString(predicate);
             return "DELETE FROM " + tableName + " WHERE uuid = " + '\'' + uuid + '\'' + ";";
         }
@@ -93,11 +108,10 @@ public class QueryBuilderUtil {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    private static boolean isValidUUID(String str) {
-        if (str == null) {
-            return false;
-        }
-        return UUID_REGEX_PATTERN.matcher(str).matches();
+    private static String fromCamelCaseToSnakeCase(String field) {
+        String regex = "([a-z])([A-Z]+)";
+        String replacement = "$1_$2";
+        return field.replaceAll(regex, replacement).toLowerCase();
     }
 
     private static void populatePreparedStatement(PreparedStatement preparedStatement, Object field, int index) throws SQLException {
