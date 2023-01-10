@@ -40,12 +40,17 @@ public final class DaoMapperUtil {
     }
 
     public static Subject extractSubject(ResultSet resultSet, UserDao userDao) throws SQLException, DaoException {
+        long userId = resultSet.getLong("epam_user_id");
+        User user = null;
+        if (userId != 0) {
+            user = userDao.getById(userId);
+        }
         return Subject.builder()
                 .setId(resultSet.getLong("id"))
                 .setUuid(UUID.fromString(resultSet.getString("uuid")))
                 .setName(resultSet.getString("name"))
                 .setDescription(resultSet.getString("description"))
-                .setUser(userDao.getById(resultSet.getLong("epam_user_id")))
+                .setUser(user)
                 .build();
     }
 
