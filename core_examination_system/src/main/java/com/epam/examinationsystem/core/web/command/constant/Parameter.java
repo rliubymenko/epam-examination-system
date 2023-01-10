@@ -11,6 +11,8 @@ public interface Parameter {
     String IS_ACTIVATED = "isActivated";
     String LAST_NAME = "lastname";
     String ROLE = "role";
+    String NAME = "name";
+    String DESCRIPTION = "description";
 
     String PAGE = "page";
     String SIZE = "size";
