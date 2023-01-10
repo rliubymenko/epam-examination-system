@@ -29,7 +29,20 @@
     <div class="flex-grow-0">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
-                <fmt:message key="${cardHeader}" bundle="${locale}"/>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-start align-items-start">
+                        <fmt:message key="${cardHeader}" bundle="${locale}"/>
+                    </div>
+                    <c:if test="${allowCreate}">
+                        <div class="d-flex justify-content-end align-items-start">
+                            <a class="btn btn-sm fw-bold btn-outline-success btn-rounded"
+                               data-mdb-ripple-color="dark"
+                               href="${pageContext.request.contextPath}${createNewItemUrl}">
+                                <fmt:message key="table.create" bundle="${locale}"/>
+                            </a>
+                        </div>
+                    </c:if>
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-hover">
@@ -72,11 +85,6 @@
                 </table>
 
                 <div class="d-flex justify-content-between">
-                    <%--                    <div class="p-1">--%>
-                    <%--                        <c:if test="${allowCreate}">--%>
-                    <%--                            &lt;%&ndash;                            <a id = "add_new" type="button" class="btn btn-primary" href="${createNewItemUrl}">Add</a>&ndash;%&gt;--%>
-                    <%--                        </c:if>--%>
-                    <%--                    </div>--%>
                     <div class="d-flex justify-content-start align-items-start">
                         <div class="ps-3">
                             ${showing} ${pageData.currentShowFromEntries} ${to} ${pageData.currentShowToEntries} ${of} ${pageData.itemsSize} ${entries}
