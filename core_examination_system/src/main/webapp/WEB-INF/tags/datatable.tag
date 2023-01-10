@@ -25,8 +25,8 @@
 <c:set var="dataOrder" scope="session" value="${pageData.order}"/>
 <c:set var="currentUrl" value="${requestScope['jakarta.servlet.forward.request_uri']}"/>
 
-<div class="row d-flex justify-content-center pt-4">
-    <div class="col-8">
+<div class="d-flex justify-content-center pt-4">
+    <div class="flex-grow-0">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
                 <fmt:message key="${cardHeader}" bundle="${locale}"/>
