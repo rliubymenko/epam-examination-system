@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
+import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import com.epam.examinationsystem.core.web.command.constant.Path;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +30,7 @@ public class GetEditUserPageCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Forwarding to {}", Path.EDIT_USER_PAGE);
         String page = request.getHeader(Path.CURRENT_PAGE);
-        String uuid = request.getParameter("uuid");
+        String uuid = request.getParameter(Parameter.UUID);
         if (ParameterValidator.isValidUUID(uuid)) {
             try {
                 Optional<UserDto> user = userService.findByUuid(UUID.fromString(uuid));

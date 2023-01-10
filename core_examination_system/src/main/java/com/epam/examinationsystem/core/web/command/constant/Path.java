@@ -2,10 +2,12 @@ package com.epam.examinationsystem.core.web.command.constant;
 
 public interface Path {
 
-    String HOME = "home";
-    String REGISTRATION = "registration";
-    String LOGIN = "login";
-    String EDIT_USER = "admins/users/user";
+    String ROOT = "/";
+    String HOME = "/home";
+    String REGISTRATION = "/registration";
+    String LOGIN = "/login";
+    String USERS = "/admins/users";
+    String EDIT_USER = "/admins/users/user";
 
 
     String POST_METHOD = "POST";

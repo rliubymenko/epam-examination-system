@@ -45,8 +45,11 @@ public class RegistrationCommand implements ActionCommand {
             if (!ParameterValidator.isValidEmail(email) || userService.existsByEmail(email)) {
                 inconsistencies.add("email");
             }
-            if (!ParameterValidator.isValidPassword(password, repeatedPassword)) {
+            if (!ParameterValidator.isValidPassword(password)) {
                 inconsistencies.add("password");
+            }
+            if (!password.equals(repeatedPassword)) {
+                inconsistencies.add("repeatedPassword");
             }
             if (!ParameterValidator.isValidFirstName(firstName)) {
                 inconsistencies.add("firstName");

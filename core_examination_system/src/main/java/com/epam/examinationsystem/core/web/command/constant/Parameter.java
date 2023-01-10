@@ -2,6 +2,7 @@ package com.epam.examinationsystem.core.web.command.constant;
 
 public interface Parameter {
 
+    String UUID = "uuid";
     String USERNAME = "username";
     String PASSWORD = "password";
     String REPEATED_PASSWORD = "repeatedPassword";
