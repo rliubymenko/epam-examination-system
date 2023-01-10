@@ -42,7 +42,9 @@
                                     <span class="input-group-text" id="usernameGroup">@</span>
                                     <input
                                             type="text"
-                                            class="form-control form-control-lg"
+                                            class="${not empty inconsistencies && inconsistencies.contains('username') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                             id="username"
                                             name="username"
                                             aria-label="Username"
@@ -51,13 +53,13 @@
                                             required
                                     />
                                     <div class="invalid-feedback">
-                                        <fmt:message key="registration.invalid_username"/>
-                                    </div>
-                                    <c:if test="${not empty inconsistencies && inconsistencies.contains('username')}">
-                                        <div class="invalid-feedback" style="display: block!important;">
+                                        <c:if test="${empty inconsistencies}">
+                                            <fmt:message key="registration.invalid_username"/>
+                                        </c:if>
+                                        <c:if test="${not empty inconsistencies && inconsistencies.contains('username')}">
                                             <fmt:message key="registration.invalid_used_username"/>
-                                        </div>
-                                    </c:if>
+                                        </c:if>
+                                    </div>
                                 </div>
 
                                 <div class="form-outline mb-4">
@@ -65,28 +67,32 @@
                                             type="email"
                                             id="email"
                                             name="email"
-                                            class="form-control form-control-lg"
+                                            class="${not empty inconsistencies && inconsistencies.contains('email') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                             required
                                     />
                                     <label class="form-label" for="email">
                                         <fmt:message key="registration.email"/>
                                     </label>
                                     <div class="invalid-feedback">
-                                        <fmt:message key="registration.invalid_email"/>
-                                    </div>
-                                    <c:if test="${not empty inconsistencies && inconsistencies.contains('email')}">
-                                        <div class="invalid-feedback" style="display: block!important;">
+                                        <c:if test="${empty inconsistencies}">
+                                            <fmt:message key="registration.invalid_email"/>
+                                        </c:if>
+                                        <c:if test="${not empty inconsistencies && inconsistencies.contains('email')}">
                                             <fmt:message key="registration.invalid_used_email"/>
-                                        </div>
-                                    </c:if>
+                                        </c:if>
+                                    </div>
                                 </div>
 
-                                <div class="form-outline mb-4">
+                                <div id="password-div" class="form-outline mb-4">
                                     <input
                                             type="password"
                                             id="password"
                                             name="password"
-                                            class="form-control form-control-lg"
+                                            class="${not empty inconsistencies && inconsistencies.contains('password') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                             required
                                             pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,50}"
                                     />
@@ -94,20 +100,22 @@
                                         <fmt:message key="registration.password"/>
                                     </label>
                                     <div class="invalid-feedback">
-                                        <fmt:message key="registration.invalid_password"/>
-                                    </div>
-                                    <c:if test="${not empty inconsistencies && inconsistencies.contains('password')}">
-                                        <div class="invalid-feedback" style="display: block!important;">
+                                        <c:if test="${empty inconsistencies}">
+                                            <fmt:message key="registration.invalid_password"/>
+                                        </c:if>
+                                        <c:if test="${not empty inconsistencies && inconsistencies.contains('password')}">
                                             <fmt:message key="registration.incorrect_password"/>
-                                        </div>
-                                    </c:if>
+                                        </c:if>
+                                    </div>
                                 </div>
 
                                 <div id="repeated-password-div" class="form-outline mb-4">
                                     <input type="password"
                                            id="repeated-password"
                                            name="repeatedPassword"
-                                           class="form-control form-control-lg"
+                                           class="${not empty inconsistencies && inconsistencies.contains('repeatedPassword') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                            required
                                            pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,50}"
                                     />
@@ -115,7 +123,12 @@
                                         <fmt:message key="registration.repeat_password"/>
                                     </label>
                                     <div class="invalid-feedback">
-                                        <fmt:message key="registration.invalid_passwords_match"/>
+                                        <c:if test="${empty inconsistencies}">
+                                            <fmt:message key="registration.invalid_password"/>
+                                        </c:if>
+                                        <c:if test="${not empty inconsistencies && inconsistencies.contains('repeatedPassword')}">
+                                            <fmt:message key="registration.invalid_passwords_match"/>
+                                        </c:if>
                                     </div>
                                 </div>
 
@@ -124,9 +137,11 @@
                                             type="text"
                                             id="firstname"
                                             name="firstname"
-                                            class="form-control form-control-lg"
+                                            class="${not empty inconsistencies && inconsistencies.contains('firstName') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                             required
-                                            pattern="[А-Яа-яA-Za-z]{1,30}"
+                                            pattern="([А-Яа-яЁёЇїІіЄєҐґ'A-Za-z]){1,30}"
                                     />
                                     <label class="form-label" for="firstname">
                                         <fmt:message key="registration.firstname"/>
@@ -134,20 +149,17 @@
                                     <div class="invalid-feedback">
                                         <fmt:message key="registration.invalid_firstname"/>
                                     </div>
-                                    <c:if test="${not empty inconsistencies && inconsistencies.contains('firstname')}">
-                                        <div class="invalid-feedback" style="display: block!important;">
-                                            <fmt:message key="registration.invalid_firstname"/>
-                                        </div>
-                                    </c:if>
                                 </div>
                                 <div class="form-outline mb-4">
                                     <input
                                             type="text"
                                             id="lastname"
                                             name="lastname"
-                                            class="form-control form-control-lg"
+                                            class="${not empty inconsistencies && inconsistencies.contains('lastName') ?
+                                            'is-invalid form-control form-control-lg' :
+                                            'form-control form-control-lg'}"
                                             required
-                                            pattern="[А-Яа-яA-Za-z]{1,50}"
+                                            pattern="([А-Яа-яЁёЇїІіЄєҐґ'A-Za-z]){1,50}"
                                     />
                                     <label class="form-label" for="lastname">
                                         <fmt:message key="registration.lastname"/>
@@ -155,13 +167,7 @@
                                     <div class="invalid-feedback">
                                         <fmt:message key="registration.invalid_lastname"/>
                                     </div>
-                                    <c:if test="${not empty inconsistencies && inconsistencies.contains('lastname')}">
-                                        <div class="invalid-feedback" style="display: block!important;">
-                                            <fmt:message key="registration.invalid_lastname"/>
-                                        </div>
-                                    </c:if>
                                 </div>
-
                                 <div class="d-flex justify-content-center">
                                     <button type="submit"
                                             class="btn btn-success btn-block btn-lg gradient-submit-btn text-body">
@@ -184,7 +190,6 @@
         </div>
     </div>
 </section>
-
 
 
 </body>

@@ -3,24 +3,16 @@ const forms = document.querySelectorAll('.needs-validation');
 
 Array.prototype.slice.call(forms).forEach((form) => {
 
+    const passwordContainer = document.getElementById("password-div");
+    const repeatedPasswordContainer = document.getElementById("repeated-password-div");
     form.addEventListener('submit', (event) => {
-
-        const password = document.getElementById("password");
-        const repeatedPassword = document.getElementById("repeated-password");
-        const repeatedPasswordContainer = document.getElementById("repeated-password-div");
-
-        const isPasswordsNotMatch = password.value !== repeatedPassword.value;
-
-        if (!form.checkValidity() || isPasswordsNotMatch) {
+        if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
-            if (isPasswordsNotMatch) {
-                repeatedPasswordContainer
-                    .querySelector(".invalid-feedback")
-                    .setAttribute("style", "display: block !important;");
-            }
-            repeatedPasswordContainer.setAttribute('style', 'margin-top: 3rem !important;');
+            passwordContainer.setAttribute('style', 'margin-bottom: 3rem !important;');
+            repeatedPasswordContainer.setAttribute('style', 'margin-bottom: 3rem !important;');
         } else {
+            passwordContainer.removeAttribute('style');
             repeatedPasswordContainer.removeAttribute('style');
         }
         form.classList.add('was-validated');
