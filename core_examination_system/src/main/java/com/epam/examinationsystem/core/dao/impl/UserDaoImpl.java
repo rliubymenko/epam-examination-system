@@ -72,6 +72,19 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
+    public boolean updateWithoutPassword(User user) throws DaoException {
+        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, user.getUuid());
+        String updateQuery = getUpdateWithoutPasswordQuery(user);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            populateUpdateWithoutPasswordQuery(preparedStatement, user);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            String message = LoggerUtil.updateEntityErrorLogging(LOG, ENTITY_NAME, user.getUuid());
+            throw new DaoException(message, e);
+        }
+    }
+
+    @Override
     public User extractEntity(ResultSet resultSet) throws SQLException, DaoException {
         User user = null;
         while (resultSet.next()) {
@@ -101,6 +114,11 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
+    public String getUpdateWithoutPasswordQuery(User user) {
+        List<String> columnNames = List.of("username", "email", "first_name", "last_name", "is_activated");
+        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
+    }
+
     @Override
     public void populateInsertQuery(PreparedStatement preparedStatement, User user) throws SQLException {
         QueryBuilderUtil.populatePreparedStatement(
@@ -121,6 +139,17 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 preparedStatement,
                 user.getUsername(),
                 user.getPassword(),
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getIsActivated()
+        );
+    }
+
+    public void populateUpdateWithoutPasswordQuery(PreparedStatement preparedStatement, User user) throws SQLException {
+        QueryBuilderUtil.populatePreparedStatement(
+                preparedStatement,
+                user.getUsername(),
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),

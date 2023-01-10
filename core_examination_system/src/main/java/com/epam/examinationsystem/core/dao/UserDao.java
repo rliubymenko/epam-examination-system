@@ -11,4 +11,6 @@ public interface UserDao extends CommonDao<User> {
     Optional<User> findByUsername(String username) throws DaoException;
 
     Optional<User> findByEmail(String email) throws DaoException;
+
+    boolean updateWithoutPassword(User user) throws DaoException;
 }
