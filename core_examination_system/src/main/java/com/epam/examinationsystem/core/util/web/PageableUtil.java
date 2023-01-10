@@ -1,6 +1,11 @@
 package com.epam.examinationsystem.core.util.web;
 
+import com.epam.examinationsystem.core.dao.common.CommonDao;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
+import com.epam.examinationsystem.core.datatable.DataTableResponse;
+import com.epam.examinationsystem.core.dto.AbstractDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
+import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -25,5 +30,25 @@ public final class PageableUtil {
         String sortString = StringUtils.isNotBlank(sort) ? sort.strip() : DEFAULT_SORT_VALUE;
         String orderString = StringUtils.isNotBlank(order) ? order.strip() : DEFAULT_ORDER_VALUE;
         return new DataTableRequest(pageNumber, sizeNumber, sortString, orderString);
+    }
+
+    public static <ENTITY extends AbstractEntity, DTO extends AbstractDto> DataTableResponse<DTO> calculatePageableData(
+            DataTableRequest request, CommonDao<ENTITY> dao) throws DaoException {
+
+        DataTableResponse<DTO> response = new DataTableResponse<>();
+        long count = dao.count();
+        long entriesFrom = ((long) (request.getCurrentPage() - 1) * request.getPageSize()) + 1;
+        long entriesTo = Math.min((long) request.getCurrentPage() * request.getPageSize(), count);
+        long totalPageSize;
+        if (count % request.getPageSize() == 0) {
+            totalPageSize = count / request.getPageSize();
+        } else {
+            totalPageSize = count / request.getPageSize() + 1;
+        }
+        response.setEntriesFrom(entriesFrom);
+        response.setEntriesTo(entriesTo);
+        response.setTotalPageSize(totalPageSize);
+        response.setEntitiesSize(count);
+        return response;
     }
 }
