@@ -12,6 +12,8 @@ public interface UserService {
 
     boolean createStudent(UserDto userDto) throws ServiceException;
 
+    boolean update(UserDto userDto) throws ServiceException;
+
     Optional<UserDto> findByUsername(String username) throws ServiceException;
 
     Optional<UserDto> findByUuid(UUID uuid) throws ServiceException;

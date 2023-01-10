@@ -146,4 +146,39 @@ public class UserServiceImpl implements UserService {
             transactionManager.end();
         }
     }
+
+    @Override
+    public boolean update(UserDto userDto) throws ServiceException {
+        LOG.debug("Updating user by user dto {}", userDto);
+        transactionManager.begin(userDao, roleDao);
+        try {
+            boolean isUpdated = false;
+            UUID uuid = UUID.fromString(userDto.getUuid());
+            Optional<User> maybeUser = userDao.findByUuid(uuid);
+            if (maybeUser.isPresent()) {
+                User.UserBuilder userBuilder = User.builder()
+                        .setId(maybeUser.get().getId())
+                        .setUuid(maybeUser.get().getUuid())
+                        .setUsername(userDto.getUsername())
+                        .setEmail(userDto.getEmail())
+                        .setFirstName(userDto.getFirstName())
+                        .setLastName(userDto.getLastName())
+                        .setIsActivated(userDto.getIsActivated())
+                        .setRole(maybeUser.get().getRole());
+                if (userDto.getPassword().equals(maybeUser.get().getPassword())) {
+                    isUpdated = userDao.updateWithoutPassword(userBuilder.build());
+                } else {
+                    userBuilder.setPassword(PasswordEncoder.encrypt(userDto.getPassword()));
+                    isUpdated = userDao.update(userBuilder.build());
+                }
+            }
+            transactionManager.commit();
+            return isUpdated;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
 }
