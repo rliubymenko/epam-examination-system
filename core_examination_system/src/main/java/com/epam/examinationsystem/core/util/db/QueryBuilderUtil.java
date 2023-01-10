@@ -26,11 +26,12 @@ public final class QueryBuilderUtil {
         return "SELECT * FROM " + tableName + " WHERE id = " + id + ";";
     }
 
-    public static String generateFindByQuery(String tableName, String propertyName, String propertyValue, boolean isWrapped) {
-        if (isWrapped) {
-            return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
-        }
+    public static String generateFindByQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + propertyValue + ";";
+    }
+
+    public static String generateFindByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
+        return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
     }
 
     public static String generateCountQuery(String tableName) {
@@ -43,6 +44,10 @@ public final class QueryBuilderUtil {
 
     public static String generateCountByQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT COUNT(*) as count FROM " + tableName + " WHERE " + propertyName + " = " + propertyValue + ";";
+    }
+
+    public static String generateCountByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
+        return "SELECT COUNT(*) as count FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
     }
 
     public static String generateFindAllQuery(String tableName) {

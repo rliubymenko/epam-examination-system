@@ -11,8 +11,8 @@ import com.epam.examinationsystem.core.entity.User;
 import com.epam.examinationsystem.core.entity.UserTest;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         String userId = String.valueOf(user.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, USER_ID, userId);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId, false);
+            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 UserTest entity = extractEntity(resultSet);
                 maybeUserTest = Optional.ofNullable(entity);
@@ -71,7 +71,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         String testId = String.valueOf(test.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, TEST_ID, testId);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId, false);
+            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 UserTest entity = extractEntity(resultSet);
                 maybeUserTest = Optional.ofNullable(entity);

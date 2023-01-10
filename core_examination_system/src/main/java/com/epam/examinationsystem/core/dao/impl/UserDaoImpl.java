@@ -42,7 +42,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Optional<User> maybeUser;
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, USERNAME, username);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TABLE_NAME.getValue(), USERNAME, username, true);
+            String findQuery = QueryBuilderUtil.generateFindByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), USERNAME, username);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 User user = extractEntity(resultSet);
                 maybeUser = Optional.ofNullable(user);
@@ -59,7 +59,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Optional<User> maybeUser;
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, EMAIL, email);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TABLE_NAME.getValue(), EMAIL, email, true);
+            String findQuery = QueryBuilderUtil.generateFindByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), EMAIL, email);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 User user = extractEntity(resultSet);
                 maybeUser = Optional.ofNullable(user);

@@ -8,8 +8,8 @@ import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,7 @@ import java.util.List;
 public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 
     private static final String ENTITY_NAME = "subject";
+    private static final String NAME = "name";
     private static final Logger LOG = LoggerFactory.getLogger(SubjectDaoImpl.class);
 
     @PleaseInject
@@ -32,6 +33,24 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 
     public SubjectDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue());
+    }
+
+    @Override
+    public boolean existsByName(String name) throws DaoException {
+        long count = 0;
+        LoggerUtil.existByStartLogging(LOG, ENTITY_NAME, NAME, name);
+        try (Statement statement = connection.createStatement()) {
+            String countQuery = QueryBuilderUtil.generateCountByWrappedValueQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), NAME, name);
+            try (ResultSet resultSet = statement.executeQuery(countQuery)) {
+                if (resultSet.next()) {
+                    count = resultSet.getLong("count");
+                }
+            }
+        } catch (SQLException e) {
+            String message = LoggerUtil.existByErrorLogging(LOG, ENTITY_NAME, NAME, name);
+            throw new DaoException(message, e);
+        }
+        return count == 1;
     }
 
     @Override
@@ -55,12 +74,12 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), 3);
+        return QueryBuilderUtil.generateInsertQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), 2);
     }
 
     @Override
     public String getUpdateQuery(Subject entity) {
-        List<String> columnNames = List.of("name", "description", "epam_user_id");
+        List<String> columnNames = List.of("name", "description");
         return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.SUBJECT_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
@@ -78,8 +97,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
         QueryBuilderUtil.populatePreparedStatement(
                 preparedStatement,
                 entity.getName(),
-                entity.getDescription(),
-                entity.getUser().getId()
+                entity.getDescription()
         );
     }
 }

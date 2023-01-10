@@ -37,7 +37,7 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
         Optional<Role> maybeRole;
         LoggerUtil.findByUserTypeStartLogging(LOG, ENTITY_NAME, userType);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.ROLE_TABLE_NAME.getValue(), "name", userType.toString(), true);
+            String findQuery = QueryBuilderUtil.generateFindByWrappedValueQuery(DaoConstant.ROLE_TABLE_NAME.getValue(), "name", userType.toString());
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 Role role = extractEntity(resultSet);
                 maybeRole = Optional.ofNullable(role);
