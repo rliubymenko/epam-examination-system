@@ -1,4 +1,4 @@
-package com.epam.examinationsystem.core.util;
+package com.epam.examinationsystem.core.util.web;
 
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;

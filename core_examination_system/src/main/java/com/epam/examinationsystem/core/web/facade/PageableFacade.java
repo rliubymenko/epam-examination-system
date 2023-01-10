@@ -6,7 +6,7 @@ import com.epam.examinationsystem.core.dto.AbstractDto;
 import com.epam.examinationsystem.core.dto.pageable.HeaderData;
 import com.epam.examinationsystem.core.dto.pageable.HeaderName;
 import com.epam.examinationsystem.core.dto.pageable.PageResponseDto;
-import com.epam.examinationsystem.core.util.PageableUtil;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 
 import java.util.ArrayList;
 import java.util.List;

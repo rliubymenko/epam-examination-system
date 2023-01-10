@@ -10,7 +10,7 @@ import com.epam.examinationsystem.core.dto.pageable.HeaderName;
 import com.epam.examinationsystem.core.dto.pageable.PageResponseDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserService;
-import com.epam.examinationsystem.core.util.PageableUtil;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
 import com.epam.examinationsystem.core.web.command.constant.Path;
