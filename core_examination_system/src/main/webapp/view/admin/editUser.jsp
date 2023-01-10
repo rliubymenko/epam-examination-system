@@ -35,7 +35,7 @@
                         <span class="input-group-text" id="usernameGroup">@</span>
                         <input
                                 type="text"
-                                class="${not empty inconsistencies && inconsistencies.contains('username') ?
+                                class="${not empty inconsistencies && (inconsistencies.contains('username') || inconsistencies.contains('used_username')) ?
                                 'is-invalid form-control form-control-lg' :
                                 'form-control form-control-lg'}"
                                 id="username"
@@ -47,7 +47,12 @@
                                 required
                         />
                         <div class="invalid-feedback">
-                            <fmt:message key="user.invalid_username"/>
+                            <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('username'))}">
+                                <fmt:message key="user.invalid_username"/>
+                            </c:if>
+                            <c:if test="${not empty inconsistencies && inconsistencies.contains('used_username')}">
+                                <fmt:message key="user.invalid_used_username"/>
+                            </c:if>
                         </div>
                     </div>
 
@@ -57,7 +62,7 @@
                                 id="email"
                                 name="email"
                                 value="${user.email}"
-                                class="${not empty inconsistencies && inconsistencies.contains('email') ?
+                                class="${not empty inconsistencies && (inconsistencies.contains('email') || inconsistencies.contains('used_email')) ?
                                 'is-invalid form-control form-control-lg' :
                                 'form-control form-control-lg'}"
                                 required
@@ -66,7 +71,12 @@
                             <fmt:message key="user.email"/>
                         </label>
                         <div class="invalid-feedback">
-                            <fmt:message key="user.invalid_email"/>
+                            <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('email'))}">
+                                <fmt:message key="user.invalid_email"/>
+                            </c:if>
+                            <c:if test="${not empty inconsistencies && inconsistencies.contains('used_email')}">
+                                <fmt:message key="user.invalid_used_email"/>
+                            </c:if>
                         </div>
                     </div>
 
@@ -131,7 +141,7 @@
                             <fmt:message key="user.is_activated"/>
                         </label>
                     </div>
-                    <button type="submit" class="btn btn-secondary btn-block"><fmt:message key="table.edit"/></button>
+                    <button type="submit" class="btn btn-secondary btn-block"><fmt:message key="edit.edit"/></button>
                 </form>
             </div>
         </div>

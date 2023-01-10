@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
+import com.epam.examinationsystem.core.web.command.constant.Attribute;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import com.epam.examinationsystem.core.web.command.constant.Path;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,7 +34,9 @@ public class EditUserCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
             String uuid = request.getParameter(Parameter.UUID);
-            if (ParameterValidator.isValidUUID(uuid)) {
+            if (ParameterValidator.isValidUUID(uuid) && userService.existsByUuid(UUID.fromString(uuid))) {
+                UserDto currentUser = userService.findByUuid(UUID.fromString(uuid)).get();
+
                 Set<String> inconsistencies = new HashSet<>();
                 String username = request.getParameter(Parameter.USERNAME);
                 String email = request.getParameter(Parameter.EMAIL);
@@ -46,8 +48,14 @@ public class EditUserCommand implements ActionCommand {
                 if (!ParameterValidator.isValidUsername(username)) {
                     inconsistencies.add("username");
                 }
+                if (userService.existsByUsername(username) && !currentUser.getUsername().equals(username)) {
+                    inconsistencies.add("used_username");
+                }
                 if (!ParameterValidator.isValidEmail(email)) {
                     inconsistencies.add("email");
+                }
+                if (userService.existsByEmail(email) && !currentUser.getEmail().equals(email)) {
+                    inconsistencies.add("used_email");
                 }
                 if (!ParameterValidator.isValidFirstName(firstName)) {
                     inconsistencies.add("firstName");
@@ -60,9 +68,8 @@ public class EditUserCommand implements ActionCommand {
                 }
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid user credentials");
-                    Optional<UserDto> user = userService.findByUuid(UUID.fromString(uuid));
-                    request.setAttribute("user", user.get());
-                    request.setAttribute("inconsistencies", inconsistencies);
+                    request.setAttribute(Attribute.USER, currentUser);
+                    request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                     return new CommandResult(Path.EDIT_USER_PAGE);
                 }
                 UserDto userDto = UserDto.builder()
@@ -80,7 +87,7 @@ public class EditUserCommand implements ActionCommand {
                 }
             }
         } catch (ServiceException e) {
-            LOG.error("Error during registration has been occurred {}", e.getMessage());
+            LOG.error("Error during updating user has been occurred {}", e.getMessage());
             return new CommandResult(Path.EDIT_USER_PAGE);
         }
         return new CommandResult(Path.HOME, true);
