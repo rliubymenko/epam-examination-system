@@ -15,6 +15,7 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.PasswordEncoder;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserDto> findByUsername(String username) throws ServiceException {
         LOG.debug("Find user by username {}", username);
+        if (username == null) {
+            return Optional.empty();
+        }
         transactionManager.beginWithAutoCommit(userDao, roleDao);
         try {
             Optional<User> maybeUser = userDao.findByUsername(username);
@@ -67,6 +71,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByUsername(String username) throws ServiceException {
         LOG.debug("Check if exists by username {}", username);
+        if (username == null) {
+            return false;
+        }
         transactionManager.beginWithAutoCommit(userDao, roleDao);
         try {
             return userDao.findByUsername(username).isPresent();
@@ -80,9 +87,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) throws ServiceException {
         LOG.debug("Check if exists by email {}", email);
+        if (email == null) {
+            return false;
+        }
         transactionManager.beginWithAutoCommit(userDao, roleDao);
         try {
             return userDao.findByEmail(email).isPresent();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean existsByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Check if exists by uuid {}", uuid);
+        if (uuid == null) {
+            return false;
+        }
+        transactionManager.beginWithAutoCommit(userDao, roleDao);
+        try {
+            return userDao.existsByUuid(uuid);
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {
@@ -95,24 +121,11 @@ public class UserServiceImpl implements UserService {
         transactionManager.beginWithAutoCommit(userDao, roleDao);
         try {
             List<User> users = userDao.findAll(request);
-            long count = userDao.count();
-            long entriesFrom = ((long) (request.getCurrentPage() - 1) * request.getPageSize()) + 1;
-            long entriesTo = Math.min((long) request.getCurrentPage() * request.getPageSize(), count);
-            long totalPageSize;
-            if (count % request.getPageSize() == 0) {
-                totalPageSize = count / request.getPageSize();
-            } else {
-                totalPageSize = count / request.getPageSize() + 1;
-            }
+            DataTableResponse<UserDto> response = PageableUtil.calculatePageableData(request, userDao);
             List<UserDto> userDtos = users.stream()
                     .map(UserDto.builder()::fromUser)
                     .toList();
-            DataTableResponse<UserDto> response = new DataTableResponse<>();
             response.setDtos(userDtos);
-            response.setEntriesFrom(entriesFrom);
-            response.setEntriesTo(entriesTo);
-            response.setTotalPageSize(totalPageSize);
-            response.setEntitiesSize(count);
             return response;
         } catch (DaoException e) {
             throw new ServiceException(e);

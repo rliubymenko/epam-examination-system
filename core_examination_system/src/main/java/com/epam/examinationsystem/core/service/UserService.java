@@ -23,4 +23,6 @@ public interface UserService {
     boolean existsByUsername(String username) throws ServiceException;
 
     boolean existsByEmail(String email) throws ServiceException;
+
+    boolean existsByUuid(UUID uuid) throws ServiceException;
 }

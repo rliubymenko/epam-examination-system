@@ -20,11 +20,16 @@ public class ActionFactory {
         commands.put(CommandType.GET_REGISTRATION, ObjectProvider.getInstance(GetRegistrationPageCommand.class));
         commands.put(CommandType.GET_LOGIN, ObjectProvider.getInstance(GetLoginPageCommand.class));
         commands.put(CommandType.GET_LOGOUT, ObjectProvider.getInstance(LogoutCommand.class));
-        commands.put(CommandType.GET_ADMINSUSERS, ObjectProvider.getInstance(GetAllUsersByParameters.class));
-        commands.put(CommandType.GET_ADMINSUSERSUSER, ObjectProvider.getInstance(GetEditUserPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_USERS, ObjectProvider.getInstance(GetAllUsersByParametersCommand.class));
+        commands.put(CommandType.GET_ADMINS_USERS_USER, ObjectProvider.getInstance(GetEditUserPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_SUBJECTS, ObjectProvider.getInstance(GetAllSubjectsByParametersCommand.class));
+        commands.put(CommandType.GET_ADMINS_SUBJECTS_SUBJECT, ObjectProvider.getInstance(GetEditSubjectPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_SUBJECTS_SUBJECT_NEW, ObjectProvider.getInstance(GetNewSubjectPageCommand.class));
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));
-        commands.put(CommandType.POST_ADMINSUSERSUSER, ObjectProvider.getInstance(EditUserCommand.class));
+        commands.put(CommandType.POST_ADMINS_USERS_USER, ObjectProvider.getInstance(EditUserCommand.class));
+        commands.put(CommandType.POST_ADMINS_SUBJECTS_SUBJECT, ObjectProvider.getInstance(EditSubjectCommand.class));
+        commands.put(CommandType.POST_ADMINS_SUBJECTS_SUBJECT_NEW, ObjectProvider.getInstance(CreateSubjectCommand.class));
     }
 
     public static ActionFactory getInstance() {
@@ -40,7 +45,7 @@ public class ActionFactory {
         String pathInfo = request.getPathInfo();
         String methodType = request.getMethod();
         if (pathInfo != null) {
-            path += pathInfo.replace("/", "");
+            path += pathInfo.replace("/", "_");
         }
         if (methodType.equals(Path.GET_METHOD)) {
             command = "GET_" + path;

@@ -2,9 +2,9 @@ package com.epam.examinationsystem.core.web.command.impl;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
-import com.epam.examinationsystem.core.dto.UserDto;
+import com.epam.examinationsystem.core.dto.SubjectDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
-import com.epam.examinationsystem.core.service.UserService;
+import com.epam.examinationsystem.core.service.SubjectService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
@@ -20,27 +20,27 @@ import java.util.Optional;
 import java.util.UUID;
 
 @PleaseService
-public class GetEditUserPageCommand implements ActionCommand {
+public class GetEditSubjectPageCommand implements ActionCommand {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GetEditUserPageCommand.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GetEditSubjectPageCommand.class);
 
     @PleaseInject
-    private UserService userService;
+    private SubjectService subjectService;
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Forwarding to {}", Path.EDIT_USER_PAGE);
+        LOG.debug("Forwarding to {}", Path.EDIT_SUBJECT_PAGE);
         String page = request.getHeader(Path.CURRENT_PAGE);
         String uuid = request.getParameter(Parameter.UUID);
         if (ParameterValidator.isValidUUID(uuid)) {
             try {
-                Optional<UserDto> user = userService.findByUuid(UUID.fromString(uuid));
-                if (user.isPresent()) {
-                    request.setAttribute(Attribute.USER, user.get());
-                    return new CommandResult(Path.EDIT_USER_PAGE);
+                Optional<SubjectDto> subject = subjectService.findByUuid(UUID.fromString(uuid));
+                if (subject.isPresent()) {
+                    request.setAttribute(Attribute.SUBJECT, subject.get());
+                    return new CommandResult(Path.EDIT_SUBJECT_PAGE);
                 }
             } catch (ServiceException e) {
-                LOG.error("Error during getting user edition page has been occurred {}", e.getMessage());
+                LOG.error("Error during getting subject edition page has been occurred {}", e.getMessage());
                 return new CommandResult(page, true);
             }
         }

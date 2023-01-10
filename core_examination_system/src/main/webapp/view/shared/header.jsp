@@ -44,7 +44,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">Subjects</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/subjects">
+                                        <fmt:message key="home.subjects"/>
+                                    </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="#">Tests</a>

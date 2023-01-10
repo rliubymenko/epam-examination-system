@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
+import com.epam.examinationsystem.core.web.command.constant.Attribute;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import com.epam.examinationsystem.core.web.command.constant.Path;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,7 +60,7 @@ public class RegistrationCommand implements ActionCommand {
             }
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid user credentials");
-                request.setAttribute("inconsistencies", inconsistencies);
+                request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                 return new CommandResult(Path.REGISTRATION_PAGE);
             }
             UserDto userDto = UserDto.builder()
