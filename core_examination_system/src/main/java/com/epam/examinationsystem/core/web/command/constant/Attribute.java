@@ -7,6 +7,8 @@ public interface Attribute {
 
     String USER = "user";
     String SUBJECT = "subject";
+    String SUBJECTS = "subjects";
+    String TEST = "test";
     String INCONSISTENCIES = "inconsistencies";
     String HEADER_DATA_LIST = "headerDataList";
     String PAGE_DATA = "pageData";

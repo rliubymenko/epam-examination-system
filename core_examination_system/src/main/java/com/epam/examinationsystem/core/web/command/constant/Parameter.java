@@ -13,6 +13,14 @@ public interface Parameter {
     String ROLE = "role";
     String NAME = "name";
     String DESCRIPTION = "description";
+    String COMPLEXITY = "complexity";
+    String DURATION = "duration";
+    String TOTAL_ATTEMPT_NUMBER = "totalAttemptNumber";
+    String SUBJECT = "subject";
+    String CREATION_DATE = "creationDate";
+    String EXPIRATION_DATE = "expirationDate";
+    String MAX_ATTEMPT_NUMBER = "maxAttemptNumber";
+    String SUBJECT_UUID = "subject_uuid";
 
     String PAGE = "page";
     String SIZE = "size";
