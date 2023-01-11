@@ -102,6 +102,22 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public List<SubjectDto> findAll() throws ServiceException {
+        LOG.debug("Find all subjects");
+        transactionManager.beginWithAutoCommit(subjectDao, userDao, roleDao);
+        try {
+            return subjectDao.findAll()
+                    .stream()
+                    .map(SubjectDto.builder()::fromSubject)
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);
         if (uuid == null) {
@@ -146,6 +162,23 @@ public class SubjectServiceImpl implements SubjectService {
         try {
             return subjectDao.existsByName(name);
         } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean deleteByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Deleting subject by uuid {}", uuid);
+        transactionManager.begin(subjectDao);
+        try {
+            boolean isDeleted;
+            isDeleted = subjectDao.deleteByUuid(uuid);
+            transactionManager.commit();
+            return isDeleted;
+        } catch (DaoException e) {
+            transactionManager.rollback();
             throw new ServiceException(e);
         } finally {
             transactionManager.end();
