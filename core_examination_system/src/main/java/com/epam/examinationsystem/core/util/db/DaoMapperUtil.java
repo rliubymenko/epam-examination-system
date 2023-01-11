@@ -10,6 +10,7 @@ import org.apache.commons.lang3.EnumUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public final class DaoMapperUtil {
@@ -66,6 +67,7 @@ public final class DaoMapperUtil {
     }
 
     private static Test.TestBuilder getTest(ResultSet resultSet) throws SQLException {
+        Timestamp maybeExpirationDate = resultSet.getTimestamp("expiration_date");
         return Test.builder().setId(resultSet.getLong("id"))
                 .setUuid(UUID.fromString(resultSet.getString("uuid")))
                 .setName(resultSet.getString("name"))
@@ -74,7 +76,7 @@ public final class DaoMapperUtil {
                 .setDuration(resultSet.getInt("duration"))
                 .setTotalAttemptNumber(resultSet.getInt("total_attempt_number"))
                 .setCreationDate(resultSet.getTimestamp("creation_date").toLocalDateTime())
-                .setExpirationDate(resultSet.getTimestamp("expiration_date").toLocalDateTime())
+                .setExpirationDate(maybeExpirationDate != null ? maybeExpirationDate.toLocalDateTime() : null)
                 .setMaxAttemptNumber(resultSet.getInt("max_attempt_number"));
     }
 

@@ -120,27 +120,31 @@ public final class QueryBuilderUtil {
     }
 
     private static void populatePreparedStatement(PreparedStatement preparedStatement, Object field, int index) throws SQLException {
-        String type = field.getClass().getSimpleName();
-        if (field.getClass().isAssignableFrom(AbstractEntity.class)) {
-            preparedStatement.setLong(index, ((AbstractEntity) field).getId());
-        }
-        if (field.getClass().isAssignableFrom(Enum.class)) {
-            preparedStatement.setString(index, field.toString());
-        }
-        switch (type) {
-            case "String" -> preparedStatement.setString(index, field.toString());
-            case "Boolean" -> preparedStatement.setBoolean(index, (Boolean) field);
-            case "Short" -> preparedStatement.setShort(index, (Short) field);
-            case "Integer" -> preparedStatement.setInt(index, (Integer) field);
-            case "Long" -> preparedStatement.setLong(index, (Long) field);
-            case "Float" -> preparedStatement.setFloat(index, (Float) field);
-            case "Double" -> preparedStatement.setDouble(index, (Double) field);
-            case "LocalDate" -> preparedStatement.setTimestamp(index, Timestamp.valueOf((
-                    (LocalDate) field).atStartOfDay()
-            ));
-            case "LocalDateTime" -> preparedStatement.setTimestamp(index, Timestamp.valueOf((LocalDateTime) field));
-            case "UUID" -> preparedStatement.setObject(index, (UUID) field, Types.OTHER);
-            default -> preparedStatement.setObject(index, field.toString(), Types.OTHER);
+        if (field == null) {
+            preparedStatement.setNull(index, Types.OTHER);
+        } else {
+            String type = field.getClass().getSimpleName();
+            if (field.getClass().isAssignableFrom(AbstractEntity.class)) {
+                preparedStatement.setLong(index, ((AbstractEntity) field).getId());
+            }
+            if (field.getClass().isAssignableFrom(Enum.class)) {
+                preparedStatement.setString(index, field.toString());
+            }
+            switch (type) {
+                case "String" -> preparedStatement.setString(index, field.toString());
+                case "Boolean" -> preparedStatement.setBoolean(index, (Boolean) field);
+                case "Short" -> preparedStatement.setShort(index, (Short) field);
+                case "Integer" -> preparedStatement.setInt(index, (Integer) field);
+                case "Long" -> preparedStatement.setLong(index, (Long) field);
+                case "Float" -> preparedStatement.setFloat(index, (Float) field);
+                case "Double" -> preparedStatement.setDouble(index, (Double) field);
+                case "LocalDate" -> preparedStatement.setTimestamp(index, Timestamp.valueOf((
+                        (LocalDate) field).atStartOfDay()
+                ));
+                case "LocalDateTime" -> preparedStatement.setTimestamp(index, Timestamp.valueOf((LocalDateTime) field));
+                case "UUID" -> preparedStatement.setObject(index, (UUID) field, Types.OTHER);
+                default -> preparedStatement.setObject(index, field.toString(), Types.OTHER);
+            }
         }
     }
 }
