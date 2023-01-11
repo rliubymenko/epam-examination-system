@@ -49,7 +49,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">Tests</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/tests">
+                                        <fmt:message key="home.tests"/>
+                                    </a>
                                 </li>
                             </c:if>
                             <c:if test="${current_user.role == 'student'}">

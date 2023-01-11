@@ -40,22 +40,22 @@ public class RegistrationCommand implements ActionCommand {
             String firstName = request.getParameter(Parameter.FIRST_NAME);
             String lastName = request.getParameter(Parameter.LAST_NAME);
 
-            if (!ParameterValidator.isValidUsername(username) || userService.existsByUsername(username)) {
+            if (ParameterValidator.isNotValidUsername(username) || userService.existsByUsername(username)) {
                 inconsistencies.add("username");
             }
-            if (!ParameterValidator.isValidEmail(email) || userService.existsByEmail(email)) {
+            if (ParameterValidator.isNotValidEmail(email) || userService.existsByEmail(email)) {
                 inconsistencies.add("email");
             }
-            if (!ParameterValidator.isValidPassword(password)) {
+            if (ParameterValidator.isNotValidPassword(password)) {
                 inconsistencies.add("password");
             }
             if (!password.equals(repeatedPassword)) {
                 inconsistencies.add("repeatedPassword");
             }
-            if (!ParameterValidator.isValidFirstName(firstName)) {
+            if (ParameterValidator.isNotValidFirstName(firstName)) {
                 inconsistencies.add("firstName");
             }
-            if (!ParameterValidator.isValidLastName(lastName)) {
+            if (ParameterValidator.isNotValidLastName(lastName)) {
                 inconsistencies.add("lastName");
             }
             if (CollectionUtils.isNotEmpty(inconsistencies)) {

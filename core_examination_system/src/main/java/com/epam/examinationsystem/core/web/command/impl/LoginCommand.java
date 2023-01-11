@@ -32,7 +32,7 @@ public class LoginCommand implements ActionCommand {
         try {
             String username = request.getParameter(Parameter.USERNAME);
             String password = request.getParameter(Parameter.PASSWORD);
-            if (!ParameterValidator.isValidUsername(username) || !userService.existsByUsername(username)) {
+            if (ParameterValidator.isNotValidUsername(username) || !userService.existsByUsername(username)) {
                 LOG.error("User with current username: {} does not exist ", username);
                 request.setAttribute(Attribute.WRONG_USERNAME, true);
                 return new CommandResult(Path.LOGIN_PAGE);

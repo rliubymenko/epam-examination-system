@@ -30,7 +30,6 @@ public class GetEditUserPageCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Forwarding to {}", Path.EDIT_USER_PAGE);
-        String page = request.getHeader(Path.CURRENT_PAGE);
         String uuid = request.getParameter(Parameter.UUID);
         if (ParameterValidator.isValidUUID(uuid)) {
             try {
@@ -41,9 +40,9 @@ public class GetEditUserPageCommand implements ActionCommand {
                 }
             } catch (ServiceException e) {
                 LOG.error("Error during getting user edition page has been occurred {}", e.getMessage());
-                return new CommandResult(page, true);
+                return new CommandResult(Path.USERS, true);
             }
         }
-        return new CommandResult(page, true);
+        return new CommandResult(Path.HOME, true);
     }
 }

@@ -25,11 +25,18 @@ public class ActionFactory {
         commands.put(CommandType.GET_ADMINS_SUBJECTS, ObjectProvider.getInstance(GetAllSubjectsByParametersCommand.class));
         commands.put(CommandType.GET_ADMINS_SUBJECTS_SUBJECT, ObjectProvider.getInstance(GetEditSubjectPageCommand.class));
         commands.put(CommandType.GET_ADMINS_SUBJECTS_SUBJECT_NEW, ObjectProvider.getInstance(GetNewSubjectPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_SUBJECTS_SUBJECT_DELETE, ObjectProvider.getInstance(DeleteSubjectPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_TESTS, ObjectProvider.getInstance(GetAllTestsByParametersCommand.class));
+        commands.put(CommandType.GET_ADMINS_TESTS_TEST, ObjectProvider.getInstance(GetEditTestPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_TESTS_TEST_NEW, ObjectProvider.getInstance(GetNewTestPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_TESTS_TEST_DELETE, ObjectProvider.getInstance(DeleteTestPageCommand.class));
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));
         commands.put(CommandType.POST_ADMINS_USERS_USER, ObjectProvider.getInstance(EditUserCommand.class));
         commands.put(CommandType.POST_ADMINS_SUBJECTS_SUBJECT, ObjectProvider.getInstance(EditSubjectCommand.class));
         commands.put(CommandType.POST_ADMINS_SUBJECTS_SUBJECT_NEW, ObjectProvider.getInstance(CreateSubjectCommand.class));
+        commands.put(CommandType.POST_ADMINS_TESTS_TEST, ObjectProvider.getInstance(EditTestCommand.class));
+        commands.put(CommandType.POST_ADMINS_TESTS_TEST_NEW, ObjectProvider.getInstance(CreateTestCommand.class));
     }
 
     public static ActionFactory getInstance() {

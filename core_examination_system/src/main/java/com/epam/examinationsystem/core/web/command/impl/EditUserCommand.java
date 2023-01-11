@@ -45,22 +45,22 @@ public class EditUserCommand implements ActionCommand {
                 String lastName = request.getParameter(Parameter.LAST_NAME);
                 String isActivated = request.getParameter(Parameter.IS_ACTIVATED);
 
-                if (!ParameterValidator.isValidUsername(username)) {
+                if (ParameterValidator.isNotValidUsername(username)) {
                     inconsistencies.add("username");
                 }
                 if (userService.existsByUsername(username) && !currentUser.getUsername().equals(username)) {
                     inconsistencies.add("used_username");
                 }
-                if (!ParameterValidator.isValidEmail(email)) {
+                if (ParameterValidator.isNotValidEmail(email)) {
                     inconsistencies.add("email");
                 }
                 if (userService.existsByEmail(email) && !currentUser.getEmail().equals(email)) {
                     inconsistencies.add("used_email");
                 }
-                if (!ParameterValidator.isValidFirstName(firstName)) {
+                if (ParameterValidator.isNotValidFirstName(firstName)) {
                     inconsistencies.add("firstName");
                 }
-                if (!ParameterValidator.isValidLastName(lastName)) {
+                if (ParameterValidator.isNotValidLastName(lastName)) {
                     inconsistencies.add("lastName");
                 }
                 if (!ParameterValidator.isValidBoolean(isActivated)) {
