@@ -22,31 +22,41 @@ public final class ParameterValidator {
         return UUID_REGEX_PATTERN.matcher(str).matches();
     }
 
-    public static boolean isValidUsername(String username) {
-        return username != null;
+    public static boolean isNotValidUsername(String username) {
+        return username == null;
     }
 
     public static boolean isValidBoolean(String value) {
         return value == null || BooleanUtils.toBoolean(value);
     }
 
-    public static boolean isValidEmail(String email) {
-        return email != null && Pattern.matches(EMAIL_REGEX, email);
+    public static boolean isNotValidEmail(String email) {
+        return email == null || !Pattern.matches(EMAIL_REGEX, email);
     }
 
-    public static boolean isValidPassword(String password) {
+    public static boolean isNotValidPassword(String password) {
         return password != null && Pattern.matches(PASSWORD_REGEX, password);
     }
 
-    public static boolean isValidFirstName(String firstName) {
-        return firstName != null &&
-                (firstName.length() >= 1 && firstName.length() <= 30) &&
-                BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, firstName), Pattern.matches(UK_UA_REGEX, firstName)});
+    public static boolean isNotValidFirstName(String firstName) {
+        return firstName == null ||
+                (firstName.length() < 1 || firstName.length() > 30) ||
+                !BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, firstName), Pattern.matches(UK_UA_REGEX, firstName)});
     }
 
-    public static boolean isValidLastName(String lastName) {
-        return lastName != null &&
-                (lastName.length() >= 1 && lastName.length() <= 50) &&
-                BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, lastName), Pattern.matches(UK_UA_REGEX, lastName)});
+    public static boolean isNotValidLastName(String lastName) {
+        return lastName == null ||
+                (lastName.length() < 1 || lastName.length() > 50) ||
+                !BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, lastName), Pattern.matches(UK_UA_REGEX, lastName)});
+    }
+
+    public static boolean isNotGreaterOrEqualTo(String number, int limit) {
+        int integer = Integer.parseInt(number);
+        return integer <= limit;
+    }
+
+    public static boolean isNotGreaterThan(String number, int limit) {
+        int integer = Integer.parseInt(number);
+        return integer < limit;
     }
 }
