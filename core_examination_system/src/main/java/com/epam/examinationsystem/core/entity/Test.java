@@ -97,7 +97,6 @@ public class Test extends AbstractEntity {
                 .append("maxAttemptNumber", maxAttemptNumber)
                 .append("subject", subject.getName())
                 .append("creationDate", creationDate)
-                .append("expirationDate", expirationDate)
                 .toString();
     }
 

@@ -84,9 +84,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
 
     @Override
     public String getUpdateQuery(Test entity) {
-        List<String> columnNames = List.of(
-                "name", "description", "complexity", "duration", "total_attempt_number", "creation_date", "expiration_date", "max_attempt_number"
-        );
+        List<String> columnNames = List.of("name", "description", "complexity", "duration", "expiration_date", "max_attempt_number");
         return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.TEST_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
@@ -114,8 +112,6 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
                 entity.getDescription(),
                 entity.getComplexity(),
                 entity.getDuration(),
-                entity.getTotalAttemptNumber(),
-                entity.getCreationDate(),
                 entity.getExpirationDate(),
                 entity.getMaxAttemptNumber()
         );
