@@ -23,7 +23,8 @@
         <org.postgresql.version>42.5.1</org.postgresql.version>
         <org.apache.logging.version>2.19.0</org.apache.logging.version>
         <jstl.version>2.0.0</jstl.version>
-        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <jakarta.servlet.version>5.0.0</jakarta.servlet.version>
+        <jakarta.servlet.jsp.version>3.0.0</jakarta.servlet.jsp.version>
         <jbcrypt.version>0.4</jbcrypt.version>
     </properties>
 
@@ -33,6 +34,12 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>${jakarta.servlet.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp</groupId>
+            <artifactId>jakarta.servlet.jsp-api</artifactId>
+            <version>${jakarta.servlet.jsp.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- JSTL -->
