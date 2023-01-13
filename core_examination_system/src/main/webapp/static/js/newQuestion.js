@@ -1,0 +1,169 @@
+$(document).ready(function () {
+
+    $("#modalBtn").click(function () {
+        const selectedType = $("#questionType option:selected").attr('value');
+
+        $('#nothingSelectedDiv').removeAttr('hidden');
+        $('#textAnswerDiv').prop("hidden", true);
+        $('#numericalAnswerDiv').prop("hidden", true);
+        $('#trueFalseDiv').prop("hidden", true);
+        $('#choiceToggler').prop("hidden", true);
+        $('#singleChoiceLabel').prop("hidden", true);
+        $('#multipleChoiceLabel').prop("hidden", true);
+        $('#addAnswerBtn').prop("hidden", true);
+
+        if (selectedType === 'text') {
+
+            resetInputs();
+            $('#nothingSelectedDiv').prop("hidden", true);
+            $('#textAnswerDiv').removeAttr('hidden');
+        } else if (selectedType === 'numerical') {
+
+            resetInputs();
+            $('#nothingSelectedDiv').prop("hidden", true);
+            $('#numericalAnswerDiv').removeAttr('hidden');
+        } else if (selectedType === 'true_false') {
+
+            resetInputs();
+            $('#nothingSelectedDiv').prop("hidden", true);
+            $('#trueFalseDiv').removeAttr('hidden');
+        } else if (selectedType === 'single_choice') {
+
+            resetInputs();
+            $('#choiceCheckbox_1').attr('type', 'radio');
+            $('#nothingSelectedDiv').prop("hidden", true);
+            $('#singleChoiceLabel').removeAttr("hidden");
+            $('#choiceToggler').removeAttr('hidden');
+            $('#addAnswerBtn').removeAttr('hidden');
+        } else if (selectedType === 'multiple_choice') {
+
+            resetInputs();
+            $('#choiceCheckbox_1')
+                .attr('type', 'checkbox')
+                .attr('value', '1');
+            $('#nothingSelectedDiv').prop("hidden", true);
+            $('#multipleChoiceLabel').removeAttr("hidden");
+            $('#choiceToggler').removeAttr('hidden');
+            $('#addAnswerBtn').removeAttr('hidden');
+        } else {
+
+            resetInputs();
+            $('#nothingSelectedDiv').removeAttr('hidden');
+        }
+
+    });
+
+    cloneAndModifyInputGroupFields()
+
+    $("body").on("click", ".removeNodeBtnField", function () {
+        $(this).closest(".checkboxChoice").remove();
+    });
+
+});
+
+function resetInputs() {
+    $("input[name='answers']").val("");
+    $("input[name='answers.choice']").val("");
+    $("textarea[name='answers']").val("");
+    $("textarea[name='answers.answer']").val("");
+    document.querySelectorAll(".checkboxChoice").forEach((element, index) => {
+        if (index > 0) {
+            element.remove()
+        }
+    });
+}
+
+// Clone input group fields
+
+
+function cloneAndModifyInputGroupFields() {
+
+    $("body").on("click", ".copyNodeBtnField", function (e) {
+        const index = $(e.target).closest("#choiceToggler")
+            .find(".checkboxChoice").length + 1;
+
+        // Clone input row
+        const clonedElement = $(e.target).closest(".checkboxChoice")
+            .clone(true);
+
+        console.log(clonedElement)
+
+        // Append data and remove disabled state from remove button
+        $(e.target).closest("#choiceToggler")
+            .last()
+            .append(clonedElement)
+            .find(".removeNodeBtnField:not(:first)")
+            .prop("disabled", false);
+
+        $(e.target).closest("#choiceToggler")
+            .find(".removeNodeBtnField")
+            .first()
+            .prop("disabled", true);
+
+        // Change textarea id
+        $(e.target)
+            .closest("#choiceToggler")
+            .find(".checkboxChoice")
+            .last()
+            .find("textarea")
+            .attr("id", "choiceTextArea_" + index);
+
+        $(e.target)
+            .closest("#choiceToggler")
+            .find(".checkboxChoice")
+            .last()
+            .find("input")
+            .attr("id", "choiceCheckbox_" + index);
+    });
+}
+
+
+// Append data method by submission
+$(document).ready(function () {
+
+    $("#addAnswerBtn").click(function () {
+        const index = $("#choiceToggler").find(".checkboxChoice").length + 1;
+
+        const inputType = $("#questionType option:selected").attr('value');
+
+        $("#choiceToggler").append(`<div class="btn-group-justified checkboxChoice mt-4">
+                                            <div class="input-group">
+                                                <div class="input-group-text">
+                                                    <input id="choiceCheckbox_${index}"
+                                                           class="form-check-input"
+                                                           name="answers.choice"
+                                                           type="${inputType === 'single_choice' ? 'radio' : 'checkbox'}"
+                                                           value="${index}"
+                                                           aria-label="Button for following text input"/>
+                                                </div>
+                                                <textarea id="choiceTextArea_${index}"
+                                                          rows="4"
+                                                          name="answers.answer"
+                                                          class="form-control form-control-lg"
+                                                          aria-label="Single choice field"
+                                                ></textarea>
+                                                <div class="input-group-text">
+                                                    <button type="button"
+                                                            class="copyNodeBtnField btn btn-success">
+                                                        <i class="far fa-copy"></i>
+                                                    </button>
+
+                                                    <button type="button"
+                                                            class="removeNodeBtnField btn btn-danger"
+                                                            disabled>
+                                                        <i class="far fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>`);
+
+        $("#choiceToggler")
+            .find(".removeNodeBtnField:not(:first)")
+            .prop("disabled", false);
+
+        $("#choiceToggler").find(".removeNodeBtnField")
+            .first()
+            .prop("disabled", true);
+    });
+
+});

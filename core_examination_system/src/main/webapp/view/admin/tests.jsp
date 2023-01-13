@@ -62,7 +62,7 @@
                   </td>
                   <td>
                       <c:if test="${empty test.expirationDate}">
-                            <fmt:message key="test.unlimeted"/>
+                            <fmt:message key="test.unlimited"/>
                       </c:if>
                       <c:if test="${not empty test.expirationDate}">
                           <eslib:datetime-formatter datetime="${test.expirationDate}"/>
@@ -90,7 +90,7 @@
                              type="button"
                              class="btn btn-link btn-rounded btn-sm fw-bold"
                              data-mdb-ripple-color="dark">
-                              <fmt:message key="table.edit"/>
+                              <fmt:message key="test.add_new_question"/>
                           </a>
                           <a href="${pageContext.request.contextPath}/admins/tests/test/delete?uuid=${test.uuid}"
                              type="button"
