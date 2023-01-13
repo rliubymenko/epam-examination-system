@@ -26,6 +26,10 @@ public class AnswerDto extends AbstractDto {
         return isCorrect;
     }
 
+    public QuestionForAnswer getQuestion() {
+        return question;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

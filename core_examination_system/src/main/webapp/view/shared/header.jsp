@@ -36,21 +36,33 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <c:if test="${current_user.role == 'admin'}">
                                 <li>
-                                    <a class="dropdown-item" href="#">Personal account</a>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-user-alt pe-1"></i><fmt:message key="home.personal_account"/>
+                                    </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/users">
-                                        <fmt:message key="home.users"/>
+                                        <i class="fa-solid fa-users pe-1"></i><fmt:message key="home.users"/>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/subjects">
-                                        <fmt:message key="home.subjects"/>
+                                        <i class="fa-solid fa-book pe-1"></i><fmt:message key="home.subjects"/>
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/tests">
-                                        <fmt:message key="home.tests"/>
+                                        <i class="fa-solid fa-cubes pe-1"></i><fmt:message key="home.tests"/>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/questions">
+                                        <i class="fa-solid fa-question pe-1"></i><fmt:message key="home.questions"/>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/answers">
+                                        <i class="fa-solid fa-list-check pe-1"></i><fmt:message key="home.answers"/>
                                     </a>
                                 </li>
                             </c:if>

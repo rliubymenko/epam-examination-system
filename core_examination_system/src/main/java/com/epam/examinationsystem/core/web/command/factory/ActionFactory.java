@@ -30,7 +30,9 @@ public class ActionFactory {
         commands.put(CommandType.GET_ADMINS_TESTS_TEST, ObjectProvider.getInstance(GetEditTestPageCommand.class));
         commands.put(CommandType.GET_ADMINS_TESTS_TEST_NEW, ObjectProvider.getInstance(GetNewTestPageCommand.class));
         commands.put(CommandType.GET_ADMINS_TESTS_TEST_DELETE, ObjectProvider.getInstance(DeleteTestPageCommand.class));
+        commands.put(CommandType.GET_ADMINS_QUESTIONS, ObjectProvider.getInstance(GetAllQuestionsByParametersCommand.class));
         commands.put(CommandType.GET_ADMINS_QUESTIONS_QUESTION_NEW, ObjectProvider.getInstance(GetNewQuestionPageForTestCommand.class));
+        commands.put(CommandType.GET_ADMINS_ANSWERS, ObjectProvider.getInstance(GetAllAnswersByParametersCommand.class));
 
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));

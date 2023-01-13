@@ -6,6 +6,8 @@ import com.epam.examinationsystem.core.dao.AnswerDao;
 import com.epam.examinationsystem.core.dao.QuestionDao;
 import com.epam.examinationsystem.core.dao.TestDao;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
+import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.AnswerDto;
 import com.epam.examinationsystem.core.dto.QuestionDto;
 import com.epam.examinationsystem.core.entity.Answer;
@@ -13,6 +15,7 @@ import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.AnswerService;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,25 @@ public class AnswerServiceImpl implements AnswerService {
             return isCreated;
         } catch (DaoException e) {
             transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public DataTableResponse<AnswerDto> findAll(DataTableRequest request) throws ServiceException {
+        LOG.debug("Find all answers by {}", request);
+        transactionManager.begin(answerDao, questionDao, testDao);
+        try {
+            List<Answer> answers = answerDao.findAll(request);
+            DataTableResponse<AnswerDto> response = PageableUtil.calculatePageableData(request, testDao);
+            List<AnswerDto> answerDtos = answers.stream()
+                    .map(AnswerDto.builder()::fromAnswer)
+                    .toList();
+            response.setDtos(answerDtos);
+            return response;
+        } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {
             transactionManager.end();
