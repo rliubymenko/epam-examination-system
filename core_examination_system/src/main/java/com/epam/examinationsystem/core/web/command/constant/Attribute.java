@@ -9,6 +9,7 @@ public interface Attribute {
     String SUBJECT = "subject";
     String SUBJECTS = "subjects";
     String TEST = "test";
+    String TEST_UUID = "test_uuid";
     String INCONSISTENCIES = "inconsistencies";
     String HEADER_DATA_LIST = "headerDataList";
     String PAGE_DATA = "pageData";

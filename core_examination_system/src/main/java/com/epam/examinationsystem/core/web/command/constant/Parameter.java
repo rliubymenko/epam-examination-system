@@ -21,6 +21,16 @@ public interface Parameter {
     String EXPIRATION_DATE = "expirationDate";
     String MAX_ATTEMPT_NUMBER = "maxAttemptNumber";
     String SUBJECT_UUID = "subject_uuid";
+    String TEST_UUID = "test_uuid";
+    String QUESTION_UUID = "question_uuid";
+    String TYPE = "type";
+    String CONTENT = "content";
+    String ANSWER = "answer";
+    String TEXT_ANSWER = "textAnswer";
+    String NUMERICAL_ANSWER = "numericalAnswer";
+    String TRUE_FALSE_ANSWER = "trueFalseAnswer";
+    String ANSWERS_CHOICE = "answers.choice";
+    String ANSWERS_ANSWER = "answers.answer";
 
     String PAGE = "page";
     String SIZE = "size";

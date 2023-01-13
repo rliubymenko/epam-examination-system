@@ -26,6 +26,7 @@ public interface Path {
     String TESTS_PAGE = "/view/admin/tests.jsp";
     String EDIT_TEST_PAGE = "/view/admin/editTest.jsp";
     String NEW_TEST_PAGE = "/view/admin/newTest.jsp";
+    String NEW_QUESTION_PAGE = "/view/admin/newQuestion.jsp";
 
 
     String LANGUAGE = "lang";
