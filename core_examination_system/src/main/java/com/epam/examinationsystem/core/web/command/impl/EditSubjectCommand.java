@@ -36,13 +36,11 @@ public class EditSubjectCommand implements ActionCommand {
             if (ParameterValidator.isValidUUID(uuid) && subjectService.existsByUuid(UUID.fromString(uuid))) {
                 SubjectDto currentSubject = subjectService.findByUuid(UUID.fromString(uuid)).get();
 
-                Set<String> inconsistencies = new HashSet<>();
                 String name = request.getParameter(Parameter.NAME);
                 String description = request.getParameter(Parameter.DESCRIPTION);
 
-                if (subjectService.existsByName(name) && !currentSubject.getName().equals(name)) {
-                    inconsistencies.add("used_name");
-                }
+                Set<String> inconsistencies = performValidation(name, currentSubject);
+
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid subject data");
                     request.setAttribute(Attribute.SUBJECT, currentSubject);
@@ -64,5 +62,13 @@ public class EditSubjectCommand implements ActionCommand {
             return new CommandResult(Path.EDIT_SUBJECT_PAGE);
         }
         return new CommandResult(Path.HOME, true);
+    }
+
+    private Set<String> performValidation(String name, SubjectDto currentSubject) throws ServiceException {
+        Set<String> inconsistencies = new HashSet<>();
+        if (subjectService.existsByName(name) && !currentSubject.getName().equals(name)) {
+            inconsistencies.add("used_name");
+        }
+        return inconsistencies;
     }
 }

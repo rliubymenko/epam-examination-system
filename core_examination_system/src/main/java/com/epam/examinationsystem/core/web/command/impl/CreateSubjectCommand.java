@@ -30,7 +30,6 @@ public class CreateSubjectCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Set<String> inconsistencies = new HashSet<>();
             String name = request.getParameter(Parameter.NAME);
             String description = request.getParameter(Parameter.DESCRIPTION);
 
@@ -39,9 +38,7 @@ public class CreateSubjectCommand implements ActionCommand {
                     .setDescription(description)
                     .build();
 
-            if (subjectService.existsByName(name)) {
-                inconsistencies.add("used_name");
-            }
+            Set<String> inconsistencies = performValidation(name);
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid subject data");
                 request.setAttribute(Attribute.SUBJECT, subject);
@@ -57,5 +54,13 @@ public class CreateSubjectCommand implements ActionCommand {
             return new CommandResult(Path.NEW_SUBJECT_PAGE);
         }
         return new CommandResult(Path.HOME, true);
+    }
+
+    private Set<String> performValidation(String name) throws ServiceException {
+        Set<String> inconsistencies = new HashSet<>();
+        if (subjectService.existsByName(name)) {
+            inconsistencies.add("used_name");
+        }
+        return inconsistencies;
     }
 }

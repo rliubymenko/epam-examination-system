@@ -33,9 +33,6 @@ public class EditTestCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
-
-            Set<String> inconsistencies = new HashSet<>();
-
             String uuid = request.getParameter(Parameter.UUID);
             String name = request.getParameter(Parameter.NAME);
             String description = request.getParameter(Parameter.DESCRIPTION);
@@ -47,15 +44,7 @@ public class EditTestCommand implements ActionCommand {
             if (ParameterValidator.isValidUUID(uuid) && testService.existsByUuid(UUID.fromString(uuid))) {
                 TestDto currentTest = testService.findByUuid(UUID.fromString(uuid)).get();
 
-                if (StringUtils.isBlank(name)) {
-                    inconsistencies.add("name");
-                }
-                if (StringUtils.isBlank(name) || ParameterValidator.isNotGreaterOrEqualTo(duration, 0)) {
-                    inconsistencies.add("duration");
-                }
-                if (StringUtils.isBlank(name) || ParameterValidator.isNotGreaterThan(maxAttemptNumber, 1)) {
-                    inconsistencies.add("maxAttemptNumber");
-                }
+                Set<String> inconsistencies = performValidation(name, duration, maxAttemptNumber);
 
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid test data");
@@ -83,5 +72,19 @@ public class EditTestCommand implements ActionCommand {
             return new CommandResult(Path.EDIT_TEST_PAGE);
         }
         return new CommandResult(Path.HOME, true);
+    }
+
+    private Set<String> performValidation(String name, String duration, String maxAttemptNumber) {
+        Set<String> inconsistencies = new HashSet<>();
+        if (StringUtils.isBlank(name)) {
+            inconsistencies.add("name");
+        }
+        if (StringUtils.isBlank(duration) || ParameterValidator.isNotGreaterOrEqualTo(duration, 0)) {
+            inconsistencies.add("duration");
+        }
+        if (StringUtils.isBlank(maxAttemptNumber) || ParameterValidator.isNotGreaterThan(maxAttemptNumber, 1)) {
+            inconsistencies.add("maxAttemptNumber");
+        }
+        return inconsistencies;
     }
 }

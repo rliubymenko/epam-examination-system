@@ -37,7 +37,6 @@ public class EditUserCommand implements ActionCommand {
             if (ParameterValidator.isValidUUID(uuid) && userService.existsByUuid(UUID.fromString(uuid))) {
                 UserDto currentUser = userService.findByUuid(UUID.fromString(uuid)).get();
 
-                Set<String> inconsistencies = new HashSet<>();
                 String username = request.getParameter(Parameter.USERNAME);
                 String email = request.getParameter(Parameter.EMAIL);
                 String password = request.getParameter(Parameter.PASSWORD);
@@ -45,27 +44,8 @@ public class EditUserCommand implements ActionCommand {
                 String lastName = request.getParameter(Parameter.LAST_NAME);
                 String isActivated = request.getParameter(Parameter.IS_ACTIVATED);
 
-                if (ParameterValidator.isNotValidUsername(username)) {
-                    inconsistencies.add("username");
-                }
-                if (userService.existsByUsername(username) && !currentUser.getUsername().equals(username)) {
-                    inconsistencies.add("used_username");
-                }
-                if (ParameterValidator.isNotValidEmail(email)) {
-                    inconsistencies.add("email");
-                }
-                if (userService.existsByEmail(email) && !currentUser.getEmail().equals(email)) {
-                    inconsistencies.add("used_email");
-                }
-                if (ParameterValidator.isNotValidFirstName(firstName)) {
-                    inconsistencies.add("firstName");
-                }
-                if (ParameterValidator.isNotValidLastName(lastName)) {
-                    inconsistencies.add("lastName");
-                }
-                if (!ParameterValidator.isValidBoolean(isActivated)) {
-                    inconsistencies.add("isActivated");
-                }
+                Set<String> inconsistencies = performValidation(username, email, firstName, lastName, isActivated, currentUser);
+
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid user credentials");
                     request.setAttribute(Attribute.USER, currentUser);
@@ -91,5 +71,39 @@ public class EditUserCommand implements ActionCommand {
             return new CommandResult(Path.EDIT_USER_PAGE);
         }
         return new CommandResult(Path.HOME, true);
+    }
+
+    private Set<String> performValidation(
+            String username,
+            String email,
+            String firstName,
+            String lastName,
+            String isActivated,
+            UserDto currentUser) throws ServiceException {
+
+        Set<String> inconsistencies = new HashSet<>();
+
+        if (ParameterValidator.isNotValidUsername(username)) {
+            inconsistencies.add("username");
+        }
+        if (userService.existsByUsername(username) && !currentUser.getUsername().equals(username)) {
+            inconsistencies.add("used_username");
+        }
+        if (ParameterValidator.isNotValidEmail(email)) {
+            inconsistencies.add("email");
+        }
+        if (userService.existsByEmail(email) && !currentUser.getEmail().equals(email)) {
+            inconsistencies.add("used_email");
+        }
+        if (ParameterValidator.isNotValidFirstName(firstName)) {
+            inconsistencies.add("firstName");
+        }
+        if (ParameterValidator.isNotValidLastName(lastName)) {
+            inconsistencies.add("lastName");
+        }
+        if (!ParameterValidator.isValidBoolean(isActivated)) {
+            inconsistencies.add("isActivated");
+        }
+        return inconsistencies;
     }
 }

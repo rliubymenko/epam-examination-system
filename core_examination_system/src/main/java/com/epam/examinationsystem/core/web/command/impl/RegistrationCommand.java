@@ -31,33 +31,14 @@ public class RegistrationCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
-            Set<String> inconsistencies = new HashSet<>();
-
             String username = request.getParameter(Parameter.USERNAME);
             String email = request.getParameter(Parameter.EMAIL);
             String password = request.getParameter(Parameter.PASSWORD);
             String repeatedPassword = request.getParameter(Parameter.REPEATED_PASSWORD);
             String firstName = request.getParameter(Parameter.FIRST_NAME);
             String lastName = request.getParameter(Parameter.LAST_NAME);
+            Set<String> inconsistencies = performValidation(username, email, firstName, lastName, password, repeatedPassword);
 
-            if (ParameterValidator.isNotValidUsername(username) || userService.existsByUsername(username)) {
-                inconsistencies.add("username");
-            }
-            if (ParameterValidator.isNotValidEmail(email) || userService.existsByEmail(email)) {
-                inconsistencies.add("email");
-            }
-            if (ParameterValidator.isNotValidPassword(password)) {
-                inconsistencies.add("password");
-            }
-            if (!password.equals(repeatedPassword)) {
-                inconsistencies.add("repeatedPassword");
-            }
-            if (ParameterValidator.isNotValidFirstName(firstName)) {
-                inconsistencies.add("firstName");
-            }
-            if (ParameterValidator.isNotValidLastName(lastName)) {
-                inconsistencies.add("lastName");
-            }
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid user credentials");
                 request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
@@ -79,5 +60,35 @@ public class RegistrationCommand implements ActionCommand {
             return new CommandResult(Path.REGISTRATION_PAGE);
         }
         return new CommandResult(Path.HOME, true);
+    }
+
+    private Set<String> performValidation(
+            String username,
+            String email,
+            String firstName,
+            String lastName,
+            String password,
+            String repeatedPassword) throws ServiceException {
+
+        Set<String> inconsistencies = new HashSet<>();
+        if (ParameterValidator.isNotValidUsername(username) || userService.existsByUsername(username)) {
+            inconsistencies.add("username");
+        }
+        if (ParameterValidator.isNotValidEmail(email) || userService.existsByEmail(email)) {
+            inconsistencies.add("email");
+        }
+        if (ParameterValidator.isNotValidPassword(password)) {
+            inconsistencies.add("password");
+        }
+        if (!password.equals(repeatedPassword)) {
+            inconsistencies.add("repeatedPassword");
+        }
+        if (ParameterValidator.isNotValidFirstName(firstName)) {
+            inconsistencies.add("firstName");
+        }
+        if (ParameterValidator.isNotValidLastName(lastName)) {
+            inconsistencies.add("lastName");
+        }
+        return inconsistencies;
     }
 }
