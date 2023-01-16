@@ -5,6 +5,7 @@ import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.TestDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ public interface TestService {
     Optional<TestDto> findByUuid(UUID uuid) throws ServiceException;
 
     DataTableResponse<TestDto> findAll(DataTableRequest request) throws ServiceException;
+
+    List<TestDto> findAll() throws ServiceException;
 
     boolean existsByUuid(UUID uuid) throws ServiceException;
 

@@ -43,14 +43,13 @@ public class SubjectServiceImpl implements SubjectService {
         LOG.debug("Creating subject by dto {}", subjectDto);
         transactionManager.begin(subjectDao, userDao, roleDao);
         try {
-            boolean isCreated;
             Subject subject = Subject.builder()
                     .setName(subjectDto.getName())
                     .setDescription(subjectDto.getDescription())
                     .build();
-            isCreated = subjectDao.create(subject);
+            subjectDao.create(subject);
             transactionManager.commit();
-            return isCreated;
+            return true;
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -75,7 +74,8 @@ public class SubjectServiceImpl implements SubjectService {
                         .setName(subjectDto.getName())
                         .setDescription(subjectDto.getDescription())
                         .build();
-                isUpdated = subjectDao.update(subject);
+                subjectDao.update(subject);
+                isUpdated = true;
             }
             transactionManager.commit();
             return isUpdated;

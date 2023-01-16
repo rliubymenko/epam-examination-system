@@ -149,9 +149,9 @@ public class UserServiceImpl implements UserService {
                     .setIsActivated(true)
                     .setRole(studentRole)
                     .build();
-            boolean isCreated = userDao.create(user);
+            userDao.create(user);
             transactionManager.commit();
-            return isCreated;
+            return true;
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -179,11 +179,12 @@ public class UserServiceImpl implements UserService {
                         .setIsActivated(userDto.getIsActivated())
                         .setRole(maybeUser.get().getRole());
                 if (userDto.getPassword().equals(maybeUser.get().getPassword())) {
-                    isUpdated = userDao.updateWithoutPassword(userBuilder.build());
+                    userDao.updateWithoutPassword(userBuilder.build());
                 } else {
                     userBuilder.setPassword(PasswordEncoder.encrypt(userDto.getPassword()));
-                    isUpdated = userDao.update(userBuilder.build());
+                    userDao.update(userBuilder.build());
                 }
+                isUpdated = true;
             }
             transactionManager.commit();
             return isUpdated;

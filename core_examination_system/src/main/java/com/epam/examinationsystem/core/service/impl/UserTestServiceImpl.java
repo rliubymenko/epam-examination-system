@@ -1,18 +1,18 @@
 package com.epam.examinationsystem.core.service.impl;
 
-import com.epam.di.annotation.PleasePostConstruct;
+import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.UserTestDao;
+import com.epam.examinationsystem.core.dao.common.TransactionManager;
+import com.epam.examinationsystem.core.entity.UserTest;
 import com.epam.examinationsystem.core.service.UserTestService;
-import com.epam.di.context.ObjectProvider;
 
 @PleaseService
 public class UserTestServiceImpl implements UserTestService {
 
+    @PleaseInject
     private UserTestDao userTestDao;
 
-    @PleasePostConstruct
-    private void init() {
-        userTestDao = ObjectProvider.getInstance(UserTestDao.class);
-    }
+    @PleaseInject
+    private TransactionManager<UserTest> transactionManager;
 }

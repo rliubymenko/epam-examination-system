@@ -12,6 +12,7 @@ import com.epam.examinationsystem.core.dto.AnswerDto;
 import com.epam.examinationsystem.core.dto.QuestionDto;
 import com.epam.examinationsystem.core.entity.Answer;
 import com.epam.examinationsystem.core.entity.Question;
+import com.epam.examinationsystem.core.enumeration.QuestionType;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.AnswerService;
@@ -42,11 +43,43 @@ public class AnswerServiceImpl implements AnswerService {
     private TransactionManager<Answer> transactionManager;
 
     @Override
-    public boolean createAnswersForQuestion(List<AnswerDto> answers, QuestionDto questionDto) throws ServiceException {
+    public Optional<AnswerDto> findByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Find answer by uuid {}", uuid);
+        if (uuid == null) {
+            return Optional.empty();
+        }
+        transactionManager.begin(answerDao, questionDao, testDao);
+        try {
+            Optional<Answer> maybeAnswer = answerDao.findByUuid(uuid);
+            return maybeAnswer.map(AnswerDto.builder()::fromAnswer);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<AnswerDto> findAllByQuestionUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Find answer by question uuid {}", uuid);
+        transactionManager.begin(answerDao, questionDao, testDao);
+        try {
+            List<Answer> answersByQuestionUuid = answerDao.findAllByQuestionUuid(uuid);
+            return answersByQuestionUuid.stream()
+                    .map(AnswerDto.builder()::fromAnswer)
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public void createAnswersForQuestion(List<AnswerDto> answers, QuestionDto questionDto) throws ServiceException {
         LOG.debug("Creating answers {} for question {}", answers, questionDto);
         transactionManager.begin(answerDao, questionDao, testDao);
         try {
-            boolean isCreated = false;
             Optional<Question> question = questionDao.findByUuid(UUID.fromString(questionDto.getUuid()));
             if (question.isPresent()) {
                 for (AnswerDto answer : answers) {
@@ -57,10 +90,100 @@ public class AnswerServiceImpl implements AnswerService {
                             .build();
                     answerDao.create(currentAnswer);
                 }
-                isCreated = true;
             }
             transactionManager.commit();
-            return isCreated;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean update(AnswerDto answerDto) throws ServiceException {
+        LOG.debug("Updating answer by dto {}", answerDto);
+        transactionManager.begin(answerDao, questionDao, testDao);
+        try {
+            boolean isUpdated = false;
+            UUID uuid = UUID.fromString(answerDto.getUuid());
+            Optional<Answer> maybeAnswer = answerDao.findByUuid(uuid);
+            if (maybeAnswer.isPresent()) {
+                Answer currentAnswer = maybeAnswer.get();
+                QuestionType currentType = currentAnswer.getQuestion().getType();
+                boolean isCorrectDto = BooleanUtils.toBoolean(answerDto.getIsCorrect());
+
+                Answer toUpdate = Answer.builder()
+                        .setUuid(UUID.fromString(answerDto.getUuid()))
+                        .setContent(answerDto.getContent())
+                        .setIsCorrect(isCorrectDto)
+                        .setQuestion(currentAnswer.getQuestion())
+                        .build();
+
+                if (currentType.equals(QuestionType.SINGLE_CHOICE)) {
+                    if (isCorrectDto && !currentAnswer.getIsCorrect()) {
+                        List<Answer> answers = answerDao.findAllByQuestionUuid(currentAnswer.getQuestion().getUuid());
+                        Answer trueAnswer = answers.stream()
+                                .filter(Answer::getIsCorrect)
+                                .findFirst()
+                                .get();
+                        Answer toChange = Answer.builder()
+                                .setUuid(trueAnswer.getUuid())
+                                .setContent(trueAnswer.getContent())
+                                .setIsCorrect(false)
+                                .setQuestion(trueAnswer.getQuestion())
+                                .build();
+                        answerDao.update(toChange);
+                        answerDao.update(toUpdate);
+                        isUpdated = true;
+                    } else if (currentAnswer.getIsCorrect().equals(isCorrectDto)) {
+                        answerDao.update(toUpdate);
+                        isUpdated = true;
+                    }
+                } else {
+                    answerDao.update(toUpdate);
+                    isUpdated = true;
+                }
+            }
+            transactionManager.commit();
+            return isUpdated;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean updateAnswerAndSetNewTrueAnswer(AnswerDto answerDto, UUID newTrueAnswerUuid) throws ServiceException {
+        LOG.debug("Updating answer by uuid {} and set new true answer by uuid {}", answerDto, newTrueAnswerUuid);
+        transactionManager.begin(answerDao, questionDao, testDao);
+        try {
+            boolean isUpdated = false;
+            Optional<Answer> maybeNewTrueAnswer = answerDao.findByUuid(newTrueAnswerUuid);
+            if (maybeNewTrueAnswer.isPresent()) {
+                Answer newTrueAnswer = maybeNewTrueAnswer.get();
+                newTrueAnswer = Answer.builder()
+                        .setUuid(newTrueAnswer.getUuid())
+                        .setContent(newTrueAnswer.getContent())
+                        .setIsCorrect(true)
+                        .setQuestion(newTrueAnswer.getQuestion())
+                        .build();
+
+                Answer answer = Answer.builder()
+                        .setUuid(UUID.fromString(answerDto.getUuid()))
+                        .setContent(answerDto.getContent())
+                        .setIsCorrect(false)
+                        .setQuestion(newTrueAnswer.getQuestion())
+                        .build();
+
+                answerDao.update(newTrueAnswer);
+                answerDao.update(answer);
+                isUpdated = true;
+            }
+            transactionManager.commit();
+            return isUpdated;
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -81,6 +204,76 @@ public class AnswerServiceImpl implements AnswerService {
                     .toList();
             response.setDtos(answerDtos);
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean deleteByUuidAndQuestionUuid(UUID answerUuid, UUID questionUuid) throws ServiceException {
+        LOG.debug("Deleting answer by uuid {} and question uuid {}", answerUuid, questionUuid);
+        transactionManager.begin(answerDao, questionDao);
+        try {
+            boolean isDeleted = false;
+            Optional<Answer> maybeAnswer = answerDao.findByUuid(answerUuid);
+            Optional<Question> maybeQuestion = questionDao.findByUuid(questionUuid);
+            if (maybeQuestion.isPresent() && maybeAnswer.isPresent()) {
+                boolean answerCorrectness = maybeAnswer.get().getIsCorrect();
+                QuestionType type = maybeQuestion.get().getType();
+                if (!(type.equals(QuestionType.SINGLE_CHOICE) && answerCorrectness)) {
+                    isDeleted = answerDao.deleteByUuid(answerUuid);
+                }
+            }
+            transactionManager.commit();
+            return isDeleted;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean deleteByUuidAndSetNewTrueAnswer(UUID answerUuid, UUID newTrueAnswerUuid) throws ServiceException {
+        LOG.debug("Deleting answer by uuid {} and set new true answer by uuid {}", answerUuid, newTrueAnswerUuid);
+        transactionManager.begin(answerDao, questionDao);
+        try {
+            boolean isDeleted = false;
+            Optional<Answer> maybeAnswer = answerDao.findByUuid(answerUuid);
+            Optional<Answer> maybeNewTrueAnswer = answerDao.findByUuid(newTrueAnswerUuid);
+            if (maybeNewTrueAnswer.isPresent() && maybeAnswer.isPresent()) {
+                Answer newTrueAnswer = maybeNewTrueAnswer.get();
+                newTrueAnswer = Answer.builder()
+                        .setUuid(newTrueAnswer.getUuid())
+                        .setContent(newTrueAnswer.getContent())
+                        .setIsCorrect(true)
+                        .setQuestion(newTrueAnswer.getQuestion())
+                        .build();
+                answerDao.update(newTrueAnswer);
+                answerDao.deleteByUuid(answerUuid);
+            }
+            transactionManager.commit();
+            return isDeleted;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean existsByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Check if exists by uuid {}", uuid);
+        if (uuid == null) {
+            return false;
+        }
+        transactionManager.begin(answerDao);
+        try {
+            return answerDao.existsByUuid(uuid);
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

@@ -51,20 +51,23 @@ public class TestServiceImpl implements TestService {
         LOG.debug("Creating subject by dto {}", testDto);
         transactionManager.begin(testDao, subjectDao, userDao, roleDao);
         try {
-            boolean isCreated;
-            Subject subject = subjectDao.findByUuid(UUID.fromString(testDto.getSubject().uuid())).get();
-            Test test = Test.builder()
-                    .setName(testDto.getName())
-                    .setDescription(testDto.getDescription())
-                    .setComplexity(EnumUtils.getEnumIgnoreCase(TestComplexity.class, testDto.getComplexity()))
-                    .setDuration(Integer.valueOf(testDto.getDuration()))
-                    .setTotalAttemptNumber(0)
-                    .setCreationDate(LocalDateTime.now())
-                    .setExpirationDate(DateUtil.parseDateTime(testDto.getExpirationDate()))
-                    .setMaxAttemptNumber(Integer.valueOf(testDto.getMaxAttemptNumber()))
-                    .setSubject(subject)
-                    .build();
-            isCreated = testDao.create(test);
+            boolean isCreated = false;
+            Optional<Subject> maybeSubject = subjectDao.findByUuid(UUID.fromString(testDto.getSubject().uuid()));
+            if (maybeSubject.isPresent()) {
+                Test test = Test.builder()
+                        .setName(testDto.getName())
+                        .setDescription(testDto.getDescription())
+                        .setComplexity(EnumUtils.getEnumIgnoreCase(TestComplexity.class, testDto.getComplexity()))
+                        .setDuration(Integer.valueOf(testDto.getDuration()))
+                        .setTotalAttemptNumber(0)
+                        .setCreationDate(LocalDateTime.now())
+                        .setExpirationDate(DateUtil.parseDateTime(testDto.getExpirationDate()))
+                        .setMaxAttemptNumber(Integer.valueOf(testDto.getMaxAttemptNumber()))
+                        .setSubject(maybeSubject.get())
+                        .build();
+                testDao.create(test);
+                isCreated = true;
+            }
             transactionManager.commit();
             return isCreated;
         } catch (DaoException e) {
@@ -95,7 +98,8 @@ public class TestServiceImpl implements TestService {
                         .setExpirationDate(DateUtil.parseDateTime(testDto.getExpirationDate()))
                         .setMaxAttemptNumber(Integer.valueOf(testDto.getMaxAttemptNumber()))
                         .build();
-                isUpdated = testDao.update(test);
+                testDao.update(test);
+                isUpdated = true;
             }
             transactionManager.commit();
             return isUpdated;
@@ -149,6 +153,22 @@ public class TestServiceImpl implements TestService {
                     .toList();
             response.setDtos(testDtos);
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<TestDto> findAll() throws ServiceException {
+        LOG.debug("Find all tests");
+        transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao);
+        try {
+            return testDao.findAll()
+                    .stream()
+                    .map(TestDto.builder()::fromTest)
+                    .toList();
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

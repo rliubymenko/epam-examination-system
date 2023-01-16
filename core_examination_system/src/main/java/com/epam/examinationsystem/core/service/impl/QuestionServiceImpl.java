@@ -2,6 +2,7 @@ package com.epam.examinationsystem.core.service.impl;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
+import com.epam.examinationsystem.core.dao.AnswerDao;
 import com.epam.examinationsystem.core.dao.QuestionDao;
 import com.epam.examinationsystem.core.dao.SubjectDao;
 import com.epam.examinationsystem.core.dao.TestDao;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,14 +41,17 @@ public class QuestionServiceImpl implements QuestionService {
     private SubjectDao subjectDao;
 
     @PleaseInject
+    private AnswerDao answerDao;
+
+    @PleaseInject
     private TransactionManager<Question> transactionManager;
 
     @Override
-    public boolean create(QuestionDto questionDto) throws ServiceException {
+    public QuestionDto create(QuestionDto questionDto) throws ServiceException {
         LOG.debug("Creating question by dto {}", questionDto);
         transactionManager.begin(questionDao, testDao, subjectDao);
         try {
-            boolean isCreated = false;
+            QuestionDto result = null;
             Optional<Test> maybeTest = testDao.findByUuid(UUID.fromString(questionDto.getTest().getUuid()));
             if (maybeTest.isPresent()) {
                 Question question = Question.builder()
@@ -55,10 +60,11 @@ public class QuestionServiceImpl implements QuestionService {
                         .setType(EnumUtils.getEnumIgnoreCase(QuestionType.class, questionDto.getType()))
                         .setTest(maybeTest.get())
                         .build();
-                isCreated = questionDao.create(question);
+                Question createdQuestion = questionDao.create(question);
+                result = QuestionDto.builder().fromQuestion(createdQuestion);
             }
             transactionManager.commit();
-            return isCreated;
+            return result;
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -68,15 +74,60 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Optional<QuestionDto> findByTestUuid(UUID uuid) throws ServiceException {
-        LOG.debug("Find question by test uuid {}", uuid);
+    public boolean update(QuestionDto questionDto) throws ServiceException {
+        LOG.debug("Updating question by dto {}", questionDto);
+        transactionManager.begin(questionDao, testDao, subjectDao);
+        try {
+            boolean isUpdated = false;
+            UUID uuid = UUID.fromString(questionDto.getUuid());
+            Optional<Question> maybeQuestion = questionDao.findByUuid(uuid);
+            if (maybeQuestion.isPresent()) {
+                Question currentQuestion = maybeQuestion.get();
+                Question question = Question.builder()
+                        .setUuid(uuid)
+                        .setType(currentQuestion.getType())
+                        .setContent(questionDto.getContent())
+                        .setDescription(questionDto.getDescription())
+                        .build();
+                questionDao.update(question);
+                isUpdated = true;
+            }
+            transactionManager.commit();
+            return isUpdated;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public Optional<QuestionDto> findByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Find question by uuid {}", uuid);
         if (uuid == null) {
             return Optional.empty();
         }
         transactionManager.begin(questionDao, testDao, subjectDao);
         try {
-            Optional<Question> maybeQuestion = questionDao.findByTestUuid(uuid);
+            Optional<Question> maybeQuestion = questionDao.findByUuid(uuid);
             return maybeQuestion.map(QuestionDto.builder()::fromQuestion);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean existsByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Check if exists by uuid {}", uuid);
+        if (uuid == null) {
+            return false;
+        }
+        transactionManager.begin(questionDao);
+        try {
+            return questionDao.existsByUuid(uuid);
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {
@@ -97,6 +148,45 @@ public class QuestionServiceImpl implements QuestionService {
             response.setDtos(questionDtos);
             return response;
         } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<QuestionDto> findAllOpenToCreateAnswers() throws ServiceException {
+        LOG.debug("Find all questions appropriate for creation answers");
+        transactionManager.beginWithAutoCommit(questionDao, testDao, subjectDao, answerDao);
+        try {
+            List<Question> filteredQuestions = new ArrayList<>();
+            List<Question> questions = questionDao.findAll();
+            for (Question question : questions) {
+                if (answerDao.findAllByQuestionUuid(question.getUuid()).isEmpty()) {
+                    filteredQuestions.add(question);
+                }
+            }
+            return filteredQuestions.stream()
+                    .map(QuestionDto.builder()::fromQuestion)
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean deleteByUuid(UUID uuid) throws ServiceException {
+        LOG.debug("Deleting question by uuid {}", uuid);
+        transactionManager.begin(questionDao);
+        try {
+            boolean isDeleted;
+            isDeleted = questionDao.deleteByUuid(uuid);
+            transactionManager.commit();
+            return isDeleted;
+        } catch (DaoException e) {
+            transactionManager.rollback();
             throw new ServiceException(e);
         } finally {
             transactionManager.end();
