@@ -1,7 +1,9 @@
 package com.epam.examinationsystem.core.util.validation;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public final class ParameterValidator {
@@ -58,5 +60,9 @@ public final class ParameterValidator {
     public static boolean isNotGreaterThan(String number, int limit) {
         int integer = Integer.parseInt(number);
         return integer < limit;
+    }
+
+    public static boolean isNotEmptyArray(String[] array) {
+        return Arrays.stream(array).allMatch(StringUtils::isNotBlank);
     }
 }
