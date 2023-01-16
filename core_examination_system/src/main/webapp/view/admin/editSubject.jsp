@@ -25,7 +25,18 @@
     <div class="col-6">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
-                <fmt:message key="subject.edit"/>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-start align-items-start">
+                        <fmt:message key="subject.edit"/>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-start">
+                        <a href="${pageContext.request.contextPath}/admins/subjects"
+                           type="button"
+                           class="btn btn-success">
+                            <fmt:message key="edit.go_back_to_table"/>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <form method="post"

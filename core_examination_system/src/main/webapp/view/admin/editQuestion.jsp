@@ -2,7 +2,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-
 <!doctype html>
 
 <fmt:setLocale value="${sessionScope.locale}" scope="session"/>
@@ -10,7 +9,7 @@
 
 <html>
 <head>
-    <title>New Subject</title>
+    <title>Edit Question</title>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -28,10 +27,10 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex justify-content-start align-items-start">
-                        <fmt:message key="subject.new"/>
+                        <fmt:message key="question.edit"/>
                     </div>
                     <div class="d-flex justify-content-end align-items-start">
-                        <a href="${pageContext.request.contextPath}/admins/subjects"
+                        <a href="${pageContext.request.contextPath}/admins/questions"
                            type="button"
                            class="btn btn-success">
                             <fmt:message key="edit.go_back_to_table"/>
@@ -41,27 +40,22 @@
             </div>
             <div class="card-body">
                 <form method="post"
-                      action="${pageContext.request.contextPath}/admins/subjects/subject/new">
+                      action="${pageContext.request.contextPath}/admins/questions/question?uuid=${question.uuid}">
 
                     <div class="form-outline mb-4">
-                        <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                class="${not empty inconsistencies && inconsistencies.contains('used_name') ?
+                        <textarea id="content"
+                                  rows="10"
+                                  name="content"
+                                  class="${not empty inconsistencies && inconsistencies.contains('content') ?
                                 'is-invalid form-control form-control-lg' :
                                 'form-control form-control-lg'}"
-                                required
-                        />
-                        <label class="form-label" for="name">
-                            <fmt:message key="subject.name"/>
+                        >${question.content}</textarea>
+                        <label class="form-label" for="content">
+                            <fmt:message key="question.content"/>
                         </label>
                         <div class="invalid-feedback">
-                            <c:if test="${empty inconsistencies}">
-                                <fmt:message key="subject.invalid_name"/>
-                            </c:if>
-                            <c:if test="${not empty inconsistencies && inconsistencies.contains('used_name')}">
-                                <fmt:message key="subject.invalid_used_name"/>
+                            <c:if test="${not empty inconsistencies && inconsistencies.contains('content')}">
+                                <fmt:message key="question.invalid_content"/>
                             </c:if>
                         </div>
                     </div>
@@ -69,15 +63,18 @@
                     <div class="form-outline mb-4">
                         <textarea id="description"
                                   class="form-control form-control-lg"
-                                  rows="15"
+                                  rows="5"
                                   name="description"
-                        ></textarea>
+                        >${question.description}</textarea>
                         <label class="form-label" for="description">
-                            <fmt:message key="subject.description"/>
+                            <fmt:message key="question.description"/>
                         </label>
                     </div>
 
-                    <button type="submit" class="btn btn-secondary btn-block"><fmt:message key="edit.new"/></button>
+                    <button type="submit" class="btn btn-secondary btn-block">
+                        <fmt:message key="edit.edit"/>
+                    </button>
+
                 </form>
             </div>
         </div>

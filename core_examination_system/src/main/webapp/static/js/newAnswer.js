@@ -1,56 +1,44 @@
 $(document).ready(function () {
 
-    $("#modalBtn").click(function () {
-        const selectedType = $("#questionType option:selected").attr('value');
+    $("#questionId").change(function () {
+        const selectedType = $("#questionId option:selected").text().split("|")[0]
 
-        $('#nothingSelectedDiv').removeAttr('hidden');
         $('#textAnswerDiv').prop("hidden", true);
         $('#numericalAnswerDiv').prop("hidden", true);
-        $('#trueFalseDiv').prop("hidden", true);
         $('#choiceToggler').prop("hidden", true);
         $('#singleChoiceLabel').prop("hidden", true);
         $('#multipleChoiceLabel').prop("hidden", true);
         $('#addAnswerBtn').prop("hidden", true);
 
-        if (selectedType === 'text') {
+        if (selectedType.includes("Text")) {
 
             resetInputs();
-            $('#nothingSelectedDiv').prop("hidden", true);
             $('#textAnswerDiv').removeAttr('hidden');
-        } else if (selectedType === 'numerical') {
+        } else if (selectedType.includes('Numerical')) {
 
             resetInputs();
-            $('#nothingSelectedDiv').prop("hidden", true);
             $('#numericalAnswerDiv').removeAttr('hidden');
-        } else if (selectedType === 'true_false') {
-
-            resetInputs();
-            $('#nothingSelectedDiv').prop("hidden", true);
-            $('#trueFalseDiv').removeAttr('hidden');
-        } else if (selectedType === 'single_choice') {
+        } else if (selectedType.includes('Single choice')) {
 
             resetInputs();
             $('#choiceCheckbox_1')
                 .attr('type', 'radio')
                 .val(1);
-            $('#nothingSelectedDiv').prop("hidden", true);
             $('#singleChoiceLabel').removeAttr("hidden");
             $('#choiceToggler').removeAttr('hidden');
             $('#addAnswerBtn').removeAttr('hidden');
-        } else if (selectedType === 'multiple_choice') {
+        } else if (selectedType.includes('Multiple choice')) {
 
             resetInputs();
             $('#choiceCheckbox_1')
                 .attr('type', 'checkbox')
                 .val(1);
-            $('#nothingSelectedDiv').prop("hidden", true);
             $('#multipleChoiceLabel').removeAttr("hidden");
             $('#choiceToggler').removeAttr('hidden');
             $('#addAnswerBtn').removeAttr('hidden');
         } else {
 
             resetInputs();
-            $('#nothingSelectedDiv').removeAttr('hidden');
         }
 
     });
@@ -126,7 +114,7 @@ $(document).ready(function () {
     $("#addAnswerBtn").click(function () {
         const index = $("#choiceToggler").find(".checkboxChoice").length + 1;
 
-        const inputType = $("#questionType option:selected").attr('value');
+        const inputType = $("#questionId option:selected").text().split("|")[0]
 
         $("#choiceToggler").append(`<div class="btn-group-justified checkboxChoice mt-4">
                                             <div class="input-group">
@@ -134,7 +122,7 @@ $(document).ready(function () {
                                                     <input id="choiceCheckbox_${index}"
                                                            class="form-check-input"
                                                            name="answers.choice"
-                                                           type="${inputType === 'single_choice' ? 'radio' : 'checkbox'}"
+                                                           type="${inputType.includes('Single choice') ? 'radio' : 'checkbox'}"
                                                            value="${index}"
                                                            aria-label="Button for following text input"/>
                                                 </div>

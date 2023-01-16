@@ -23,15 +23,29 @@
 
 <jsp:include page="/view/shared/header.jsp"/>
 
+<c:set var="pathWithTestUuid" scope="session" value="${pageContext.request.contextPath}/admins/questions/question/new?test_uuid=${test_uuid}"/>
+<c:set var="pathWithoutTestUuid" scope="session" value="${pageContext.request.contextPath}/admins/questions/question/new"/>
+
 <div class="row d-flex justify-content-center pt-4">
     <div class="col-6">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
-                <fmt:message key="question.new"/>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-start align-items-start">
+                        <fmt:message key="question.new"/>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-start">
+                        <a href="${pageContext.request.contextPath}/admins/questions"
+                           type="button"
+                           class="btn btn-success">
+                            <fmt:message key="edit.go_back_to_table"/>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <form method="post"
-                      action="${pageContext.request.contextPath}/admins/questions/question/new?test_uuid=${test_uuid}">
+                      action="${empty test_uuid ? pathWithoutTestUuid : pathWithTestUuid}">
 
                     <div class="form-outline mb-4">
                         <textarea id="content"
@@ -94,6 +108,31 @@
                             </c:if>
                         </div>
                     </div>
+
+                    <c:if test="${empty test_uuid}">
+                        <div class="mb-4">
+                            <small><fmt:message key="question.test"/></small>
+                            <select id="testId" aria-label="test" name="test_uuid"
+                                    class="${not empty inconsistencies && inconsistencies.contains('test') ?
+                                'is-invalid form-select' :
+                                'form-select'}">
+                                <option value="-1" selected>
+                                    <fmt:message key="question.tests"/>
+                                </option>
+                                <c:forEach var="test" items="${tests}">
+                                    <option value="${test.uuid}">
+                                            ${test.name}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <div class="invalid-feedback">
+                                <c:if test="${not empty inconsistencies && inconsistencies.contains('test')}">
+                                    <fmt:message key="question.choose_test"/>
+                                </c:if>
+                            </div>
+                        </div>
+                    </c:if>
+
                     <button type="submit" class="btn btn-secondary btn-block">
                         <fmt:message key="edit.new"/>
                     </button>
@@ -118,7 +157,7 @@
                                     </button>
                                 </div>
                                 <div id="answerModalBody" class="modal-body">
-                                    <div class="text-center" >
+                                    <div class="text-center">
                                         <small class="text-warning">
                                             * <fmt:message key="question.valid_answers"/>
                                         </small>
@@ -205,7 +244,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <button hidden id="addAnswerBtn" type="button"
                                             class="btn btn-outline-success btn-rounded mt-4"
                                             data-mdb-ripple-color="dark">
@@ -214,7 +253,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-secondary">
-                                       <fmt:message key="question.save_question_answer"/>
+                                        <fmt:message key="question.save_question_answer"/>
                                     </button>
                                 </div>
                             </div>
