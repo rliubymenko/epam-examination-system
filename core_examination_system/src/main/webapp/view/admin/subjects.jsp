@@ -44,13 +44,19 @@
                              data-mdb-ripple-color="dark">
                               <fmt:message key="table.edit"/>
                           </a>
-                          <a href="${pageContext.request.contextPath}/admins/subjects/subject/delete?uuid=${subject.uuid}"
-                             type="button"
-                             class="btn text-danger btn-link btn-rounded btn-sm fw-bold"
-                             data-mdb-ripple-color="dark">
+                          <button type="button"
+                                  class="btn text-danger btn-link btn-rounded btn-sm fw-bold"
+                                  data-mdb-toggle="modal"
+                                  data-mdb-target="#deleteModal"
+                                  data-mdb-ripple-color="dark"
+                          >
                               <fmt:message key="table.delete"/>
-                          </a>
+                          </button>
                       </div>
+                      <es:deletionModal modalId="deleteModal"
+                                        deletionMessage="subject.deletion_message"
+                                        deletionUrl="${pageContext.request.contextPath}/admins/subjects/subject/delete?uuid=${subject.uuid}"
+                      />
                   </td>
               </tr>
           </c:forEach>
