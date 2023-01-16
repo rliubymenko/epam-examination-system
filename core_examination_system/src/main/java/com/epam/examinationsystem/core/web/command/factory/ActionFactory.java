@@ -5,6 +5,15 @@ import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.constant.Path;
 import com.epam.examinationsystem.core.web.command.enumeration.CommandType;
 import com.epam.examinationsystem.core.web.command.impl.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.GetAdminAccountPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.answer.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.question.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.subject.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.test.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.user.EditUserCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.user.GetAllUsersByParametersCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.user.GetEditUserPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.auth.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.EnumMap;
