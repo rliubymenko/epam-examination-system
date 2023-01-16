@@ -36,7 +36,7 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <c:if test="${current_user.role == 'admin'}">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/account">
                                         <i class="fas fa-user-alt pe-1"></i><fmt:message key="home.personal_account"/>
                                     </a>
                                 </li>
