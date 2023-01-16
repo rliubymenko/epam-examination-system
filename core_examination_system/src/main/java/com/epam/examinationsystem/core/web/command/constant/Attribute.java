@@ -9,6 +9,7 @@ public interface Attribute {
     String SUBJECT = "subject";
     String SUBJECTS = "subjects";
     String TEST = "test";
+    String TESTS = "tests";
     String TEST_UUID = "test_uuid";
     String INCONSISTENCIES = "inconsistencies";
     String HEADER_DATA_LIST = "headerDataList";
@@ -16,5 +17,9 @@ public interface Attribute {
     String ALLOW_CREATE = "allowCreate";
     String CARD_HEADER = "cardHeader";
     String CREATE_NEW_ITEM_URL = "createNewItemUrl";
+    String QUESTION = "question";
+    String QUESTIONS = "questions";
+    String ANSWER = "answer";
+    String ANSWERS = "answers";
 
 }

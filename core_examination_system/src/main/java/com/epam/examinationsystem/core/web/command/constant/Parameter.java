@@ -23,6 +23,7 @@ public interface Parameter {
     String SUBJECT_UUID = "subject_uuid";
     String TEST_UUID = "test_uuid";
     String QUESTION_UUID = "question_uuid";
+    String ANSWER_UUID = "answer_uuid";
     String TYPE = "type";
     String CONTENT = "content";
     String ANSWER = "answer";
@@ -31,6 +32,8 @@ public interface Parameter {
     String TRUE_FALSE_ANSWER = "trueFalseAnswer";
     String ANSWERS_CHOICE = "answers.choice";
     String ANSWERS_ANSWER = "answers.answer";
+    String NEW_TRUE_ANSWER_UUID = "new_true_answer_uuid";
+    String ERROR_CHANGE_SINGLE_CHOICE_TRUE_ANSWER = "error_change_single_choice_true_answer";
 
     String PAGE = "page";
     String SIZE = "size";
