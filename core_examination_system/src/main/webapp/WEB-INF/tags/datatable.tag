@@ -25,13 +25,45 @@
 <c:set var="dataOrder" scope="session" value="${pageData.order}"/>
 <c:set var="currentUrl" value="${requestScope['jakarta.servlet.forward.request_uri']}"/>
 
-<div class="d-flex justify-content-center pt-4">
-    <div class="flex-grow-0">
+<div class="d-flex justify-content-center pb-4 pt-3 px-5">
+    <div class="row">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
                 <div class="d-flex justify-content-between">
+
                     <div class="d-flex justify-content-start align-items-start">
                         <fmt:message key="${cardHeader}" bundle="${locale}"/>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <ul class="pagination pagination-circle justify-content-center">
+                            <li class="${pageData.showFirst ? 'page-item' : 'page-item disabled'}">
+                                <a class="page-link " href="#"
+                                   onclick="runSortWithPagination('${dataSort}', '${dataOrder}', 1, '${pageData.pageSize}', 0)"
+                                   title="<fmt:message key="table.first_page" bundle="${locale}"/>"><i
+                                        class="fa fa-fast-backward"></i></a>
+                            </li>
+                            <li class="${pageData.showPrevious ? 'page-item' : 'page-item disabled'}">
+                                <a class="page-link" href="#"
+                                   onclick="runSortWithPagination('${dataSort}', '${dataOrder}','${pageData.currentPage}', '${pageData.pageSize}', -1)"
+                                   title="<fmt:message key="table.previous_page" bundle="${locale}"/>"><i
+                                        class="fa fa-backward"></i></a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">${pageData.currentPage}</a>
+                            </li>
+                            <li class="${pageData.showNext ? 'page-item' : 'page-item disabled'}">
+                                <a class="page-link" href="#"
+                                   onclick="runSortWithPagination('${dataSort}', '${dataOrder}', '${pageData.currentPage}', '${pageData.pageSize}', 1)"
+                                   title="<fmt:message key="table.next_page" bundle="${locale}"/>"><i
+                                        class="fa fa-forward"></i></a>
+                            </li>
+                            <li class="${pageData.showLast ? 'page-item' : 'page-item disabled'}">
+                                <a class="page-link" href="#"
+                                   onclick="runSortWithPagination('${dataSort}', '${dataOrder}', '${pageData.totalPageSize}', '${pageData.pageSize}', 0)"
+                                   title="<fmt:message key="table.last_page" bundle="${locale}"/>"><i
+                                        class="fa fa-fast-forward"></i></a>
+                            </li>
+                        </ul>
                     </div>
                     <c:if test="${allowCreate}">
                         <div class="d-flex justify-content-end align-items-start">
