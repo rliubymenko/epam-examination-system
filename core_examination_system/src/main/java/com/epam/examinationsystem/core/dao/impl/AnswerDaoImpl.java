@@ -6,8 +6,10 @@ import com.epam.examinationsystem.core.dao.AnswerDao;
 import com.epam.examinationsystem.core.dao.QuestionDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Answer;
+import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
+import com.epam.examinationsystem.core.util.LoggerUtil;
 import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
@@ -16,13 +18,18 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @PleaseService
 public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 
     private static final String ENTITY_NAME = "answer";
+    private static final String QUESTION_ID = "question_id";
     private static final Logger LOG = LoggerFactory.getLogger(AnswerDaoImpl.class);
 
     @PleaseInject
@@ -30,6 +37,24 @@ public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 
     public AnswerDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.ANSWER_TABLE_NAME.getValue());
+    }
+
+    @Override
+    public List<Answer> findAllByQuestionUuid(UUID uuid) throws DaoException {
+        Question question = getQuestion(uuid);
+        List<Answer> answers;
+        String questionId = String.valueOf(question.getId());
+        LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, QUESTION_ID, questionId);
+        try (Statement statement = connection.createStatement()) {
+            String findAllQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), QUESTION_ID, questionId);
+            try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
+                answers = extractEntities(resultSet);
+            }
+        } catch (SQLException | DaoException e) {
+            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, QUESTION_ID, questionId);
+            throw new DaoException(message, e);
+        }
+        return answers;
     }
 
     @Override
@@ -79,5 +104,15 @@ public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
                 entity.getContent(),
                 entity.getIsCorrect()
         );
+    }
+
+    private Question getQuestion(UUID uuid) throws DaoException {
+        Optional<Question> maybeQuestion = questionDao.findByUuid(uuid);
+        if (maybeQuestion.isEmpty()) {
+            String message = MessageFormat.format("Cannot find question by uuid: {0}", uuid);
+            LOG.error(message);
+            throw new DaoException(message);
+        }
+        return maybeQuestion.get();
     }
 }

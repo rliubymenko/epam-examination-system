@@ -7,8 +7,8 @@ import com.epam.examinationsystem.core.entity.Role;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.enumeration.UserType;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.LoggerUtil;
+import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +56,15 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
     }
 
     @Override
-    public boolean create(Role entity) {
+    public Role create(Role entity) {
         // Role types is immutable
-        return false;
+        return null;
     }
 
     @Override
-    public boolean update(Role entity) {
+    public Role update(Role entity) {
         // Role types is immutable
-        return false;
+        return null;
     }
 
     @Override

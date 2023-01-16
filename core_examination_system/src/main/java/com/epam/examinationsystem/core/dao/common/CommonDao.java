@@ -21,9 +21,9 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
 
     List<ENTITY> findAll(DataTableRequest request) throws DaoException;
 
-    boolean create(ENTITY entity) throws DaoException;
+    ENTITY create(ENTITY entity) throws DaoException;
 
-    boolean update(ENTITY entity) throws DaoException;
+    ENTITY update(ENTITY entity) throws DaoException;
 
     boolean deleteByUuid(UUID uuid) throws DaoException;
 

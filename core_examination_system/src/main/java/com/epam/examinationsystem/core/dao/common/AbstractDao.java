@@ -113,7 +113,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     }
 
     @Override
-    public boolean create(ENTITY entity) throws DaoException {
+    public ENTITY create(ENTITY entity) throws DaoException {
         LoggerUtil.createEntityStartLogging(log, entityName);
         String insertQuery = getInsertQuery();
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
@@ -122,21 +122,21 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
             long lastGeneratedId = resultSet.getLong(1);
-            entity = getById(lastGeneratedId);
+            return getById(lastGeneratedId);
         } catch (SQLException e) {
             String message = LoggerUtil.createEntityErrorLogging(log, entityName);
             throw new DaoException(message, e);
         }
-        return true;
     }
 
     @Override
-    public boolean update(ENTITY entity) throws DaoException {
+    public ENTITY update(ENTITY entity) throws DaoException {
         LoggerUtil.updateEntityStartLogging(log, entityName, entity.getUuid());
         String updateQuery = getUpdateQuery(entity);
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
             populateUpdateQuery(preparedStatement, entity);
-            return preparedStatement.executeUpdate() != 0;
+            preparedStatement.executeUpdate();
+            return findByUuid(entity.getUuid()).get();
         } catch (SQLException e) {
             String message = LoggerUtil.updateEntityErrorLogging(log, entityName, entity.getUuid());
             throw new DaoException(message, e);

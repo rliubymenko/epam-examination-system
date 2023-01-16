@@ -6,10 +6,8 @@ import com.epam.examinationsystem.core.dao.QuestionDao;
 import com.epam.examinationsystem.core.dao.TestDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Question;
-import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
-import com.epam.examinationsystem.core.util.LoggerUtil;
 import com.epam.examinationsystem.core.util.db.DaoMapperUtil;
 import com.epam.examinationsystem.core.util.db.QueryBuilderUtil;
 import org.slf4j.Logger;
@@ -18,19 +16,13 @@ import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @PleaseService
 public class QuestionDaoImpl extends AbstractDao<Question> implements QuestionDao {
 
     private static final String ENTITY_NAME = "question";
-    private static final String TEST_ID = "test_id";
-
     private static final Logger LOG = LoggerFactory.getLogger(QuestionDaoImpl.class);
 
     @PleaseInject
@@ -38,25 +30,6 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements QuestionDa
 
     public QuestionDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.QUESTION_TABLE_NAME.getValue());
-    }
-
-    @Override
-    public Optional<Question> findByTestUuid(UUID uuid) throws DaoException {
-        Test test = getTest(uuid);
-        Optional<Question> maybeQuestion;
-        String testId = String.valueOf(test.getId());
-        LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, TEST_ID, testId);
-        try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.QUESTION_TABLE_NAME.getValue(), TEST_ID, testId);
-            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                Question entity = extractEntity(resultSet);
-                maybeQuestion = Optional.ofNullable(entity);
-            }
-        } catch (SQLException | DaoException e) {
-            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, TEST_ID, testId);
-            throw new DaoException(message, e);
-        }
-        return maybeQuestion;
     }
 
     @Override
@@ -85,7 +58,7 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements QuestionDa
 
     @Override
     public String getUpdateQuery(Question entity) {
-        List<String> columnNames = List.of("type", "content", "description", "test_id");
+        List<String> columnNames = List.of("type", "content", "description");
         return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.QUESTION_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
 
     }
@@ -109,15 +82,5 @@ public class QuestionDaoImpl extends AbstractDao<Question> implements QuestionDa
                 entity.getContent(),
                 entity.getDescription()
         );
-    }
-
-    private Test getTest(UUID uuid) throws DaoException {
-        Optional<Test> maybeTest = testDao.findByUuid(uuid);
-        if (maybeTest.isEmpty()) {
-            String message = MessageFormat.format("Cannot find test by uuid: {0}", uuid);
-            LOG.error(message);
-            throw new DaoException(message);
-        }
-        return maybeTest.get();
     }
 }
