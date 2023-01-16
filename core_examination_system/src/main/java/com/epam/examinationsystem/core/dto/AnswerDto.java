@@ -56,13 +56,17 @@ public class AnswerDto extends AbstractDto {
                 .toString();
     }
 
-    public record QuestionForAnswer(String uuid, String content) {
+    public record QuestionForAnswer(String uuid, String content, String type) {
         public String getUuid() {
             return uuid;
         }
 
         public String getContent() {
             return content;
+        }
+
+        public String getType() {
+            return type;
         }
     }
 
@@ -104,7 +108,8 @@ public class AnswerDto extends AbstractDto {
         public AnswerDto fromAnswer(Answer answer) {
             QuestionForAnswer questionForAnswer = new QuestionForAnswer(
                     answer.getQuestion().getUuid().toString(),
-                    answer.getContent()
+                    answer.getQuestion().getContent(),
+                    answer.getQuestion().getType().toString()
             );
             return this
                     .setUuid(answer.getUuid().toString())
