@@ -4,11 +4,9 @@ import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dto.AnswerDto;
 import com.epam.examinationsystem.core.dto.QuestionDto;
-import com.epam.examinationsystem.core.dto.TestDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.AnswerService;
 import com.epam.examinationsystem.core.service.QuestionService;
-import com.epam.examinationsystem.core.service.TestService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
@@ -24,94 +22,67 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 @PleaseService
-public class CreateQuestionForTestCommand implements ActionCommand {
+public class CreateAnswerCommand implements ActionCommand {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CreateQuestionForTestCommand.class);
-
-    @PleaseInject
-    private QuestionService questionService;
+    private static final Logger LOG = LoggerFactory.getLogger(CreateAnswerCommand.class);
 
     @PleaseInject
     private AnswerService answerService;
 
     @PleaseInject
-    private TestService testService;
+    private QuestionService questionService;
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String type = request.getParameter(Parameter.TYPE);
-            String content = request.getParameter(Parameter.CONTENT);
-            String description = request.getParameter(Parameter.DESCRIPTION);
-            String testUuid = request.getParameter(Parameter.TEST_UUID);
-            String queryString = request.getQueryString();
+            String questionUuid = request.getParameter(Parameter.QUESTION_UUID);
 
-            Set<String> inconsistencies = performValidation(content, type, testUuid);
+            Set<String> inconsistencies = performValidation(questionUuid);
 
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
-                LOG.error("Invalid question data");
-                List<TestDto> tests = testService.findAll();
-                request.setAttribute(Attribute.TESTS, tests);
-                if (queryString != null) {
-                    request.setAttribute(Attribute.TEST_UUID, testUuid);
-                }
+                LOG.error("Invalid answer data");
                 request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
-                return new CommandResult(Path.NEW_QUESTION_PAGE);
+                return new CommandResult(Path.NEW_ANSWER_PAGE);
             }
-            List<AnswerDto> answers = extractAnswers(request, type);
 
-            QuestionDto question = QuestionDto.builder()
-                    .setType(type)
-                    .setContent(content)
-                    .setDescription(description)
-                    .setTest(new QuestionDto.TestForQuestion(testUuid, null))
-                    .build();
-
-            QuestionDto savedQuestion = questionService.create(question);
-            LOG.debug("The question {} has been created successfully", savedQuestion);
-            answerService.createAnswersForQuestion(answers, savedQuestion);
-            LOG.debug("The answers {} has been created successfully for question {}", answers, savedQuestion);
-            if (queryString != null) {
-                return new CommandResult(Path.TESTS, true);
-            }
-            return new CommandResult(Path.QUESTIONS, true);
-
+            QuestionDto question = questionService.findByUuid(UUID.fromString(questionUuid)).get();
+            List<AnswerDto> answers = extractAnswers(request, question);
+            answerService.createAnswersForQuestion(answers, question);
+            LOG.debug("The answers {} has been created successfully for question {}", answers, question);
+            return new CommandResult(Path.ANSWERS, true);
         } catch (ServiceException e) {
-            LOG.error("Error during creating question with answers has been occurred {}", e.getMessage());
-            return new CommandResult(Path.NEW_QUESTION_PAGE);
+            LOG.error("Error during creating answers has been occurred {}", e.getMessage());
+            return new CommandResult(Path.NEW_ANSWER_PAGE);
         }
     }
 
-    private Set<String> performValidation(String content, String type, String testUuid) {
+    private Set<String> performValidation(String questionUuid) {
         Set<String> inconsistencies = new HashSet<>();
-        if (StringUtils.isBlank(content)) {
-            inconsistencies.add("content");
-        }
-        if (type.equals("-1")) {
-            inconsistencies.add("type");
-        }
-        if (testUuid.equals("-1")) {
-            inconsistencies.add("test");
+        if (questionUuid.equals("-1")) {
+            inconsistencies.add("question");
         }
         return inconsistencies;
     }
 
-    private List<AnswerDto> extractAnswers(HttpServletRequest request, String type) {
+    private List<AnswerDto> extractAnswers(HttpServletRequest request, QuestionDto question) {
         List<AnswerDto> answers = new ArrayList<>();
-        switch (type) {
+        AnswerDto.QuestionForAnswer questionForAnswer = new AnswerDto.QuestionForAnswer(
+                question.getUuid(),
+                question.getContent(),
+                question.getType()
+        );
+        switch (question.getType()) {
             case "text" -> {
                 String textAnswer = request.getParameter(Parameter.TEXT_ANSWER);
                 if (StringUtils.isNotBlank(textAnswer)) {
                     AnswerDto answer = AnswerDto.builder()
                             .setContent(textAnswer)
                             .setIsCorrect(BooleanUtils.TRUE)
+                            .setQuestion(questionForAnswer)
                             .build();
                     answers.add(answer);
                 }
@@ -122,18 +93,10 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                     AnswerDto answer = AnswerDto.builder()
                             .setContent(numericalAnswer)
                             .setIsCorrect(BooleanUtils.TRUE)
+                            .setQuestion(questionForAnswer)
                             .build();
                     answers.add(answer);
                 }
-            }
-            case "true_false" -> {
-                String trueFalseAnswer = request.getParameter(Parameter.TRUE_FALSE_ANSWER);
-                String booleanAnswerString = BooleanUtils.toStringTrueFalse(BooleanUtils.toBoolean(trueFalseAnswer));
-                AnswerDto answer = AnswerDto.builder()
-                        .setContent(booleanAnswerString)
-                        .setIsCorrect(booleanAnswerString)
-                        .build();
-                answers.add(answer);
             }
             case "single_choice" -> {
                 String rightAnswerIndex = request.getParameter(Parameter.ANSWERS_CHOICE);
@@ -146,11 +109,13 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                             answer = AnswerDto.builder()
                                     .setContent(singleChoiceAnswers[answerIndex])
                                     .setIsCorrect(BooleanUtils.TRUE)
+                                    .setQuestion(questionForAnswer)
                                     .build();
                         } else {
                             answer = AnswerDto.builder()
                                     .setContent(singleChoiceAnswers[answerIndex])
                                     .setIsCorrect(BooleanUtils.FALSE)
+                                    .setQuestion(questionForAnswer)
                                     .build();
                         }
                         answers.add(answer);
@@ -168,11 +133,13 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                             answer = AnswerDto.builder()
                                     .setContent(multipleChoiceAnswers[answerIndex])
                                     .setIsCorrect(BooleanUtils.TRUE)
+                                    .setQuestion(questionForAnswer)
                                     .build();
                         } else {
                             answer = AnswerDto.builder()
                                     .setContent(multipleChoiceAnswers[answerIndex])
                                     .setIsCorrect(BooleanUtils.FALSE)
+                                    .setQuestion(questionForAnswer)
                                     .build();
                         }
                         answers.add(answer);

@@ -37,7 +37,8 @@ public class GetAllAnswersByParametersCommand implements ActionCommand {
                 new HeaderName("#", false, null),
                 new HeaderName("answer.content", true, "content"),
                 new HeaderName("answer.is_correct", true, "is_correct"),
-                new HeaderName("answer.question", true, "question_id"),
+                new HeaderName("answer.question", false, "question_id"),
+                new HeaderName("answer.question_type", false, null),
                 new HeaderName("table.actions", false, null)
         );
     }
