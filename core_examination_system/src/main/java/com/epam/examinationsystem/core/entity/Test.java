@@ -16,7 +16,6 @@ public class Test extends AbstractEntity {
     private final Integer duration;
     private final Integer totalAttemptNumber;
     private final Subject subject;
-    private final LocalDateTime creationDate;
     private final LocalDateTime expirationDate;
     private final Integer maxAttemptNumber;
 
@@ -30,7 +29,6 @@ public class Test extends AbstractEntity {
         this.duration = builder.duration;
         this.totalAttemptNumber = builder.totalAttemptNumber;
         this.subject = builder.subject;
-        this.creationDate = builder.creationDate;
         this.expirationDate = builder.expirationDate;
         this.maxAttemptNumber = builder.maxAttemptNumber;
     }
@@ -57,10 +55,6 @@ public class Test extends AbstractEntity {
 
     public Subject getSubject() {
         return subject;
-    }
-
-    public LocalDateTime getCreationDate() {
-        return creationDate;
     }
 
     public LocalDateTime getExpirationDate() {
@@ -97,7 +91,6 @@ public class Test extends AbstractEntity {
                 .append("totalAttemptNumber", totalAttemptNumber)
                 .append("maxAttemptNumber", maxAttemptNumber)
                 .append("subject", subject.getName())
-                .append("creationDate", creationDate)
                 .toString();
     }
 
@@ -115,7 +108,6 @@ public class Test extends AbstractEntity {
         private Integer duration;
         private Integer totalAttemptNumber;
         private Subject subject;
-        private LocalDateTime creationDate;
         private LocalDateTime expirationDate;
         private Integer maxAttemptNumber;
         private LocalDateTime created;
@@ -157,11 +149,6 @@ public class Test extends AbstractEntity {
 
         public TestBuilder setSubject(Subject subject) {
             this.subject = subject;
-            return this;
-        }
-
-        public TestBuilder setCreationDate(LocalDateTime creationDate) {
-            this.creationDate = creationDate;
             return this;
         }
 

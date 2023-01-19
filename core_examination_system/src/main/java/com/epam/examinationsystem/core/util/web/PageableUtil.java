@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class PageableUtil {
 
-    public static final String DEFAULT_SORT_VALUE = "uuid";
+    public static final String DEFAULT_SORT_VALUE = "created";
     public static final String DEFAULT_ORDER_VALUE = "desc";
     private static final int DEFAULT_PAGE_NUMBER = 1;
     public static final int DEFAULT_SIZE_NUMBER = 10;

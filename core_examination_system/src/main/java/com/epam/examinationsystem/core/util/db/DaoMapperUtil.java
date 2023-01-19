@@ -78,7 +78,6 @@ public final class DaoMapperUtil {
                 .setComplexity(EnumUtils.getEnumIgnoreCase(TestComplexity.class, resultSet.getString("complexity")))
                 .setDuration(resultSet.getInt("duration"))
                 .setTotalAttemptNumber(resultSet.getInt("total_attempt_number"))
-                .setCreationDate(resultSet.getTimestamp("creation_date").toLocalDateTime())
                 .setExpirationDate(maybeExpirationDate != null ? maybeExpirationDate.toLocalDateTime() : null)
                 .setMaxAttemptNumber(resultSet.getInt("max_attempt_number"))
                 .setCreated(resultSet.getTimestamp("created").toLocalDateTime());

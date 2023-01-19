@@ -39,7 +39,7 @@ public class GetAllTestsByParametersCommand implements ActionCommand {
                 new HeaderName("test.description", true, "description"),
                 new HeaderName("test.complexity", true, "complexity"),
                 new HeaderName("test.duration", true, "duration"),
-                new HeaderName("test.creationDate", true, "creation_date"),
+                new HeaderName("test.creationDate", true, "created"),
                 new HeaderName("test.expirationDate", true, "expiration_date"),
                 new HeaderName("test.maxAttemptNumber", true, "max_attempt_number"),
                 new HeaderName("test.totalAttemptNumber", true, "total_attempt_number"),

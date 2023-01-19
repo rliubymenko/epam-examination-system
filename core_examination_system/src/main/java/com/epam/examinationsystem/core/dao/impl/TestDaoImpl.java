@@ -128,7 +128,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.TEST_TABLE_NAME.getValue(), 9);
+        return QueryBuilderUtil.generateInsertQuery(DaoConstant.TEST_TABLE_NAME.getValue(), 8);
     }
 
     @Override
@@ -147,7 +147,6 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
                 entity.getDuration(),
                 entity.getTotalAttemptNumber(),
                 entity.getSubject().getId(),
-                entity.getCreationDate(),
                 entity.getExpirationDate(),
                 entity.getMaxAttemptNumber()
         );

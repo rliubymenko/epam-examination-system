@@ -70,7 +70,6 @@ public class TestServiceImpl implements TestService {
                         .setComplexity(EnumUtils.getEnumIgnoreCase(TestComplexity.class, testDto.getComplexity()))
                         .setDuration(Integer.valueOf(testDto.getDuration()))
                         .setTotalAttemptNumber(0)
-                        .setCreationDate(LocalDateTime.now())
                         .setExpirationDate(DateUtil.parseDateTime(testDto.getExpirationDate()))
                         .setMaxAttemptNumber(Integer.valueOf(testDto.getMaxAttemptNumber()))
                         .setSubject(maybeSubject.get())

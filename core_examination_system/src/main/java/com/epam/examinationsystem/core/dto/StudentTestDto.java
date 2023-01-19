@@ -224,7 +224,7 @@ public class StudentTestDto extends AbstractDto {
                     .setComplexity(test.getComplexity().toString())
                     .setDuration(String.valueOf(test.getDuration()))
                     .setTotalAttemptNumber(String.valueOf(test.getTotalAttemptNumber()))
-                    .setCreationDate(test.getCreationDate().toString())
+                    .setCreationDate(test.getCreated().toString())
                     .setExpirationDate(test.getExpirationDate() != null ? test.getExpirationDate().toString() : null)
                     .setMaxAttemptNumber(String.valueOf(test.getMaxAttemptNumber()))
                     .setQuestions(questions)
