@@ -101,7 +101,7 @@ public class EditUserCommand implements ActionCommand {
         if (ParameterValidator.isNotValidLastName(lastName)) {
             inconsistencies.add("lastName");
         }
-        if (!ParameterValidator.isValidBoolean(isActivated)) {
+        if (ParameterValidator.isNotValidBoolean(isActivated)) {
             inconsistencies.add("isActivated");
         }
         return inconsistencies;

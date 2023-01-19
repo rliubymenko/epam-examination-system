@@ -131,7 +131,7 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                 String booleanAnswerString = BooleanUtils.toStringTrueFalse(BooleanUtils.toBoolean(trueFalseAnswer));
                 AnswerDto answer = AnswerDto.builder()
                         .setContent(booleanAnswerString)
-                        .setIsCorrect(booleanAnswerString)
+                        .setIsCorrect(BooleanUtils.TRUE)
                         .build();
                 answers.add(answer);
             }
