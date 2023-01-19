@@ -5,6 +5,7 @@ import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.SubjectDao;
 import com.epam.examinationsystem.core.dao.TestDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
+import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.exception.DaoException;
@@ -18,13 +19,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @PleaseService
 public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
 
     private static final String ENTITY_NAME = "test";
+    private static final String SUBJECT_ID = "subject_id";
     private static final Logger LOG = LoggerFactory.getLogger(TestDaoImpl.class);
 
     @PleaseInject
@@ -50,12 +55,56 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
         return test;
     }
 
+    @Override
+    public Optional<Test> findByUuidWithoutSubject(UUID uuid) throws DaoException {
+        Optional<Test> maybeTest;
+        LoggerUtil.findByUuidStartLogging(LOG, ENTITY_NAME, uuid);
+        try (Statement statement = connection.createStatement()) {
+            String findQuery = QueryBuilderUtil.generateFindByUuidQuery(DaoConstant.TEST_TABLE_NAME.getValue(), uuid);
+            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
+                Test test = extractTestWithoutSubject(resultSet);
+                maybeTest = Optional.ofNullable(test);
+            }
+        } catch (SQLException e) {
+            String message = LoggerUtil.findByUuidErrorLogging(LOG, ENTITY_NAME, uuid);
+            throw new DaoException(message, e);
+        }
+        return maybeTest;
+    }
+
+    @Override
+    public List<Test> findAllBySubjectUuid(UUID uuid) throws DaoException {
+        Subject subject = getSubject(uuid);
+        List<Test> tests;
+        String subjectId = String.valueOf(subject.getId());
+        LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, SUBJECT_ID, subjectId);
+        try (Statement statement = connection.createStatement()) {
+            String findAllQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.TEST_TABLE_NAME.getValue(), SUBJECT_ID, subjectId);
+            try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
+                tests = extractTestsWithoutSubject(resultSet);
+            }
+        } catch (SQLException e) {
+            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, SUBJECT_ID, subjectId);
+            throw new DaoException(message, e);
+        }
+        return tests;
+    }
+
     public Test extractTestWithoutSubject(ResultSet resultSet) throws SQLException {
         Test test = null;
         while (resultSet.next()) {
             test = DaoMapperUtil.extractTestWithoutSubject(resultSet);
         }
         return test;
+    }
+
+    public List<Test> extractTestsWithoutSubject(ResultSet resultSet) throws SQLException {
+        List<Test> tests = new ArrayList<>();
+        while (resultSet.next()) {
+            Test test = DaoMapperUtil.extractTestWithoutSubject(resultSet);
+            tests.add(test);
+        }
+        return tests;
     }
 
     @Override
@@ -115,5 +164,15 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
                 entity.getExpirationDate(),
                 entity.getMaxAttemptNumber()
         );
+    }
+
+    private Subject getSubject(UUID uuid) throws DaoException {
+        Optional<Subject> maybeSubject = subjectDao.findByUuid(uuid);
+        if (maybeSubject.isEmpty()) {
+            String message = MessageFormat.format("Cannot find subject by uuid: {0}", uuid);
+            LOG.error(message);
+            throw new DaoException(message);
+        }
+        return maybeSubject.get();
     }
 }
