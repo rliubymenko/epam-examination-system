@@ -81,31 +81,56 @@
                   </td>
                   <td>
                       <div class="d-flex flex-column">
-                          <a href="${pageContext.request.contextPath}/admins/tests/test?uuid=${test.uuid}"
-                             type="button"
-                             class="btn btn-link btn-rounded btn-sm fw-bold"
-                             data-mdb-ripple-color="dark">
-                              <fmt:message key="table.edit"/>
-                          </a>
-                          <a href="${pageContext.request.contextPath}/admins/questions/question/new?test_uuid=${test.uuid}"
-                             type="button"
-                             class="btn btn-link btn-rounded btn-sm fw-bold"
-                             data-mdb-ripple-color="dark">
-                              <fmt:message key="test.add_new_question"/>
-                          </a>
                           <button type="button"
-                                  class="btn text-danger btn-link btn-rounded btn-sm fw-bold"
+                                  class="btn text-success btn-link btn-rounded btn-sm fw-bold"
                                   data-mdb-toggle="modal"
-                                  data-mdb-target="#deleteModal"
+                                  data-mdb-target="#testConfirmationModal${counter.count}"
                                   data-mdb-ripple-color="dark"
                           >
-                              <fmt:message key="table.delete"/>
+                              <fmt:message key="test.start_testing"/>
                           </button>
                       </div>
-                      <es:deletionModal modalId="deleteModal"
-                                        deletionMessage="test.deletion_message"
-                                        deletionUrl="${pageContext.request.contextPath}/admins/tests/test/delete?uuid=${test.uuid}"
-                      />
+                      <div
+                              class="modal fade"
+                              id="testConfirmationModal${counter.count}"
+                              data-mdb-backdrop="static"
+                              data-mdb-keyboard="false"
+                              tabindex="-1"
+                              aria-labelledby="staticBackdropLabel"
+                              aria-hidden="true"
+                      >
+                          <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h3 class="modal-title" id="staticBackdropLabel">
+                                          <fmt:message key="test.testing_confirmation_header"/>
+                                      </h3>
+                                      <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                              aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <div class="text-center">
+                                          <h6 class="text-warning">
+                                              <fmt:message key="test.testing_warning_message"/>
+                                          </h6>
+                                          <p>
+                                              <fmt:message key="test.you_will_have"/> ${test.duration} <fmt:message
+                                                  key="test.to_complete_test"/>
+                                          </p>
+                                      </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
+                                          <fmt:message key="table.close"/>
+                                      </button>
+                                      <a href="${pageContext.request.contextPath}/students/tests/testing?uuid=${test.uuid}"
+                                         type="button" class="btn btn-success">
+                                          <fmt:message key="test.start"/>
+                                      </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
                   </td>
               </tr>
           </c:forEach>

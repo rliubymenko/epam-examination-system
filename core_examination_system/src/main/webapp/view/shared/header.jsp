@@ -71,10 +71,14 @@
                                     <a class="dropdown-item" href="#">Personal account</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">Subjects</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/students/subjects">
+                                        <i class="fa-solid fa-book pe-1"></i><fmt:message key="home.subjects"/>
+                                    </a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="#">Tests</a>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/students/tests">
+                                        <i class="fa-solid fa-cubes pe-1"></i><fmt:message key="home.tests"/>
+                                    </a>
                                 </li>
                             </c:if>
                         </ul>
