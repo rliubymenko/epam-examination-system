@@ -13,7 +13,7 @@ public class UserTest extends AbstractEntity {
     private final Test test;
     private final Boolean isSelected;
     private final Boolean isCompleted;
-    private final Integer markValue;
+    private final Float markValue;
     private final Integer attemptNumber;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
@@ -47,7 +47,7 @@ public class UserTest extends AbstractEntity {
         return isCompleted;
     }
 
-    public Integer getMarkValue() {
+    public Float getMarkValue() {
         return markValue;
     }
 
@@ -107,7 +107,7 @@ public class UserTest extends AbstractEntity {
         private Test test;
         private Boolean isSelected;
         private Boolean isCompleted;
-        private Integer markValue;
+        private Float markValue;
         private Integer attemptNumber;
         private LocalDateTime startTime;
         private LocalDateTime endTime;
@@ -142,7 +142,7 @@ public class UserTest extends AbstractEntity {
             return this;
         }
 
-        public UserTestBuilder setMarkValue(Integer markValue) {
+        public UserTestBuilder setMarkValue(Float markValue) {
             this.markValue = markValue;
             return this;
         }
