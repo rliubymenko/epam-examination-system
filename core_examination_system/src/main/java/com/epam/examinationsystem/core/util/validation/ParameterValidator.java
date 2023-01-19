@@ -28,8 +28,14 @@ public final class ParameterValidator {
         return username == null;
     }
 
-    public static boolean isValidBoolean(String value) {
-        return value == null || BooleanUtils.toBoolean(value);
+    public static boolean isNotValidBoolean(String value) {
+        return value != null ||
+                !(value.equalsIgnoreCase("true") ||
+                        value.equalsIgnoreCase("false") ||
+                        value.equalsIgnoreCase("on") ||
+                        value.equalsIgnoreCase("off") ||
+                        value.equalsIgnoreCase("yes") ||
+                        value.equalsIgnoreCase("no"));
     }
 
     public static boolean isNotValidEmail(String email) {
@@ -37,7 +43,7 @@ public final class ParameterValidator {
     }
 
     public static boolean isNotValidPassword(String password) {
-        return password != null && Pattern.matches(PASSWORD_REGEX, password);
+        return password == null || !Pattern.matches(PASSWORD_REGEX, password);
     }
 
     public static boolean isNotValidFirstName(String firstName) {

@@ -102,15 +102,17 @@ public final class DaoMapperUtil {
     }
 
     public static UserTest extractUserTest(ResultSet resultSet, UserDao userDao, TestDao testDao) throws SQLException, DaoException {
+        Timestamp maybeStartTime = resultSet.getTimestamp("start_time");
+        Timestamp maybeEndTime = resultSet.getTimestamp("end_time");
         return UserTest.builder()
                 .setId(resultSet.getLong("id"))
                 .setUuid(UUID.fromString(resultSet.getString("uuid")))
                 .setIsSelected(resultSet.getBoolean("is_selected"))
                 .setIsCompleted(resultSet.getBoolean("is_completed"))
-                .setMarkValue(resultSet.getInt("mark_value"))
+                .setMarkValue(resultSet.getFloat("mark_value"))
                 .setAttemptNumber(resultSet.getInt("attempt_number"))
-                .setStartTime(resultSet.getTimestamp("start_time").toLocalDateTime())
-                .setEndTime(resultSet.getTimestamp("end_time").toLocalDateTime())
+                .setStartTime(maybeStartTime != null ? maybeStartTime.toLocalDateTime() : null)
+                .setEndTime(maybeEndTime != null ? maybeEndTime.toLocalDateTime() : null)
                 .setUser(userDao.getById(resultSet.getLong("epam_user_id")))
                 .setTest(testDao.getById(resultSet.getLong("test_id")))
                 .build();
