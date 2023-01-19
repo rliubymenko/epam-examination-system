@@ -23,6 +23,7 @@ public class Test extends AbstractEntity {
     public Test(TestBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.name = builder.name;
         this.description = builder.description;
         this.complexity = builder.complexity;
@@ -117,6 +118,7 @@ public class Test extends AbstractEntity {
         private LocalDateTime creationDate;
         private LocalDateTime expirationDate;
         private Integer maxAttemptNumber;
+        private LocalDateTime created;
 
         public TestBuilder setId(Long id) {
             this.id = id;
@@ -170,6 +172,11 @@ public class Test extends AbstractEntity {
 
         public TestBuilder setMaxAttemptNumber(Integer maxAttemptNumber) {
             this.maxAttemptNumber = maxAttemptNumber;
+            return this;
+        }
+
+        public TestBuilder setCreated(LocalDateTime created) {
+            this.created = created;
             return this;
         }
 

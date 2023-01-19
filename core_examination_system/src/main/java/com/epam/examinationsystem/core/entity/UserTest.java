@@ -21,6 +21,7 @@ public class UserTest extends AbstractEntity {
     public UserTest(UserTestBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.user = builder.user;
         this.test = builder.test;
         this.isSelected = builder.isSelected;
@@ -111,6 +112,7 @@ public class UserTest extends AbstractEntity {
         private Integer attemptNumber;
         private LocalDateTime startTime;
         private LocalDateTime endTime;
+        private LocalDateTime created;
 
         public UserTestBuilder setId(Long id) {
             this.id = id;
@@ -159,6 +161,11 @@ public class UserTest extends AbstractEntity {
 
         public UserTestBuilder setEndTime(LocalDateTime endTime) {
             this.endTime = endTime;
+            return this;
+        }
+
+        public UserTestBuilder setCreated(LocalDateTime created) {
+            this.created = created;
             return this;
         }
 

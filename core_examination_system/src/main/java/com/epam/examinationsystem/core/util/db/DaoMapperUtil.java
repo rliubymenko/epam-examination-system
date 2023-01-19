@@ -23,6 +23,7 @@ public final class DaoMapperUtil {
                 .setId(resultSet.getLong("id"))
                 .setUuid(UUID.fromString(resultSet.getString("uuid")))
                 .setName(EnumUtils.getEnumIgnoreCase(UserType.class, resultSet.getString("name")))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public final class DaoMapperUtil {
                 .setLastName(resultSet.getString("last_name"))
                 .setIsActivated(resultSet.getBoolean("is_activated"))
                 .setRole(roleDao.getById(resultSet.getLong("role_id")))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 
@@ -52,6 +54,7 @@ public final class DaoMapperUtil {
                 .setName(resultSet.getString("name"))
                 .setDescription(resultSet.getString("description"))
                 .setUser(user)
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 
@@ -77,7 +80,8 @@ public final class DaoMapperUtil {
                 .setTotalAttemptNumber(resultSet.getInt("total_attempt_number"))
                 .setCreationDate(resultSet.getTimestamp("creation_date").toLocalDateTime())
                 .setExpirationDate(maybeExpirationDate != null ? maybeExpirationDate.toLocalDateTime() : null)
-                .setMaxAttemptNumber(resultSet.getInt("max_attempt_number"));
+                .setMaxAttemptNumber(resultSet.getInt("max_attempt_number"))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime());
     }
 
     public static Question extractQuestion(ResultSet resultSet, TestDao testDao) throws SQLException, DaoException {
@@ -88,6 +92,7 @@ public final class DaoMapperUtil {
                 .setContent(resultSet.getString("content"))
                 .setDescription(resultSet.getString("description"))
                 .setTest(testDao.getById(resultSet.getLong("test_id")))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 
@@ -98,6 +103,7 @@ public final class DaoMapperUtil {
                 .setContent(resultSet.getString("content"))
                 .setIsCorrect(resultSet.getBoolean("is_correct"))
                 .setQuestion(questionDao.getById(resultSet.getLong("question_id")))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 
@@ -115,6 +121,7 @@ public final class DaoMapperUtil {
                 .setEndTime(maybeEndTime != null ? maybeEndTime.toLocalDateTime() : null)
                 .setUser(userDao.getById(resultSet.getLong("epam_user_id")))
                 .setTest(testDao.getById(resultSet.getLong("test_id")))
+                .setCreated(resultSet.getTimestamp("created").toLocalDateTime())
                 .build();
     }
 }

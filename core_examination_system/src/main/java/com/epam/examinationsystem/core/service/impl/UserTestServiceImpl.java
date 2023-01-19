@@ -14,7 +14,7 @@ import com.epam.examinationsystem.core.entity.UserTest;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserTestService;
-import com.epam.examinationsystem.core.util.DateUtil;
+import com.epam.examinationsystem.core.util.validation.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

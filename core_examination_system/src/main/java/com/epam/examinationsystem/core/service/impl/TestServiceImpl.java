@@ -15,7 +15,7 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.QuestionService;
 import com.epam.examinationsystem.core.service.TestService;
-import com.epam.examinationsystem.core.util.DateUtil;
+import com.epam.examinationsystem.core.util.validation.DateUtil;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;

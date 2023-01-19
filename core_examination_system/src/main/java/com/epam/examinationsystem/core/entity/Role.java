@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Role extends AbstractEntity {
@@ -14,6 +15,7 @@ public class Role extends AbstractEntity {
     public Role(RoleBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.name = builder.name;
     }
 
@@ -56,6 +58,7 @@ public class Role extends AbstractEntity {
         private Long id;
         private UUID uuid;
         private UserType name;
+        private LocalDateTime created;
 
         public RoleBuilder setId(Long id) {
             this.id = id;
@@ -69,6 +72,11 @@ public class Role extends AbstractEntity {
 
         public RoleBuilder setName(UserType name) {
             this.name = name;
+            return this;
+        }
+
+        public RoleBuilder setCreated(LocalDateTime created) {
+            this.created = created;
             return this;
         }
 

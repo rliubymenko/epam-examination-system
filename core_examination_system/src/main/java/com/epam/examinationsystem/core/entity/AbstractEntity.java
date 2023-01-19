@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public abstract class AbstractEntity implements Serializable {
@@ -15,6 +16,7 @@ public abstract class AbstractEntity implements Serializable {
 
     protected Long id;
     protected UUID uuid;
+    protected LocalDateTime created;
 
     protected AbstractEntity() {
         this.uuid = UUID.randomUUID();
@@ -26,6 +28,10 @@ public abstract class AbstractEntity implements Serializable {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
     }
 
     @Override
@@ -52,6 +58,7 @@ public abstract class AbstractEntity implements Serializable {
         return new ToStringBuilder(this)
                 .append("id", id)
                 .append("uuid", uuid)
+                .append("created", created)
                 .toString();
     }
 }

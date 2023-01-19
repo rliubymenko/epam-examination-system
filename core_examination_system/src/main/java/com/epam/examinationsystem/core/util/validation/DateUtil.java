@@ -1,4 +1,4 @@
-package com.epam.examinationsystem.core.util;
+package com.epam.examinationsystem.core.util.validation;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;

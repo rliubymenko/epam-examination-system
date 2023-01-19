@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class User extends AbstractEntity {
@@ -19,6 +20,7 @@ public class User extends AbstractEntity {
     private User(UserBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.username = builder.username;
         this.password = builder.password;
         this.email = builder.email;
@@ -103,6 +105,7 @@ public class User extends AbstractEntity {
         private String lastName;
         private Boolean isActivated;
         private Role role;
+        private LocalDateTime created;
 
         public UserBuilder setId(Long id) {
             this.id = id;
@@ -149,20 +152,13 @@ public class User extends AbstractEntity {
             return this;
         }
 
+        public UserBuilder setCreated(LocalDateTime created) {
+            this.created = created;
+            return this;
+        }
+
         public User build() {
             return new User(this);
         }
-
-//        public User fromUserDto(UserDto userDto) {
-//            return this
-//                    .setUuid(userDto.getUuid().toString())
-//                    .setUsername(userDto.getUsername())
-//                    .setPassword(userDto.getPassword())
-//                    .setEmail(userDto.getEmail())
-//                    .setFirstName(userDto.getFirstName())
-//                    .setLastName(userDto.getLastName())
-//                    .setRole(userDto.getRole().getName().toString())
-//                    .build();
-//        }
     }
 }

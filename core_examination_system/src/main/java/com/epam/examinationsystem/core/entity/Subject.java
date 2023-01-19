@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Subject extends AbstractEntity {
@@ -15,6 +16,7 @@ public class Subject extends AbstractEntity {
     public Subject(SubjectBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.name = builder.name;
         this.description = builder.description;
         this.user = builder.user;
@@ -71,6 +73,7 @@ public class Subject extends AbstractEntity {
         private String name;
         private String description;
         private User user;
+        private LocalDateTime created;
 
         public SubjectBuilder setId(Long id) {
             this.id = id;
@@ -94,6 +97,11 @@ public class Subject extends AbstractEntity {
 
         public SubjectBuilder setUser(User user) {
             this.user = user;
+            return this;
+        }
+
+        public SubjectBuilder setCreated(LocalDateTime created) {
+            this.created = created;
             return this;
         }
 

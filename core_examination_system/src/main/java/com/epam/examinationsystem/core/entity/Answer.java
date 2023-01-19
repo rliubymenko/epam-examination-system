@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Answer extends AbstractEntity {
@@ -15,6 +16,7 @@ public class Answer extends AbstractEntity {
     private Answer(AnswerBuilder builder) {
         super.id = builder.id;
         super.uuid = builder.uuid;
+        super.created = builder.created;
         this.content = builder.content;
         this.isCorrect = builder.isCorrect;
         this.question = builder.question;
@@ -68,6 +70,7 @@ public class Answer extends AbstractEntity {
         private String content;
         private Boolean isCorrect;
         private Question question;
+        private LocalDateTime created;
 
         public AnswerBuilder setId(Long id) {
             this.id = id;
@@ -91,6 +94,11 @@ public class Answer extends AbstractEntity {
 
         public AnswerBuilder setQuestion(Question question) {
             this.question = question;
+            return this;
+        }
+
+        public AnswerBuilder setCreated(LocalDateTime created) {
+            this.created = created;
             return this;
         }
 
