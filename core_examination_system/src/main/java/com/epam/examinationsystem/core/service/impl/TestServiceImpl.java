@@ -2,18 +2,18 @@ package com.epam.examinationsystem.core.service.impl;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
-import com.epam.examinationsystem.core.dao.RoleDao;
-import com.epam.examinationsystem.core.dao.SubjectDao;
-import com.epam.examinationsystem.core.dao.TestDao;
+import com.epam.examinationsystem.core.dao.*;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
+import com.epam.examinationsystem.core.dto.StudentTestDto;
 import com.epam.examinationsystem.core.dto.TestDto;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.TestComplexity;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
+import com.epam.examinationsystem.core.service.QuestionService;
 import com.epam.examinationsystem.core.service.TestService;
 import com.epam.examinationsystem.core.util.DateUtil;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,6 +43,15 @@ public class TestServiceImpl implements TestService {
 
     @PleaseInject
     private RoleDao roleDao;
+
+    @PleaseInject
+    private QuestionDao questionDao;
+
+    @PleaseInject
+    private AnswerDao answerDao;
+
+    @PleaseInject
+    private QuestionService questionService;
 
     @PleaseInject
     private TransactionManager<Test> transactionManager;
@@ -118,6 +128,25 @@ public class TestServiceImpl implements TestService {
         try {
             Optional<Test> maybeTest = testDao.findByUuid(uuid);
             return maybeTest.map(TestDto.builder()::fromTest);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public Optional<StudentTestDto> findByUuidForTesting(UUID uuid) throws ServiceException {
+        LOG.debug("Find test for testing by uuid {}", uuid);
+        transactionManager.beginWithAutoCommit(testDao, questionDao, answerDao);
+        try {
+            Optional<Test> maybeTest = testDao.findByUuidWithoutSubject(uuid);
+            List<StudentTestDto.QuestionForStudentTestDto> questions = new ArrayList<>();
+            if (maybeTest.isPresent()) {
+                questions = questionService.findAllByTestUuid(maybeTest.get().getUuid());
+            }
+            List<StudentTestDto.QuestionForStudentTestDto> finalQuestions = questions;
+            return maybeTest.map(test -> StudentTestDto.builder().fromTest(test, finalQuestions));
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

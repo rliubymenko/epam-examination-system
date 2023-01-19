@@ -10,6 +10,8 @@ import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.QuestionDto;
+import com.epam.examinationsystem.core.dto.StudentTestDto;
+import com.epam.examinationsystem.core.entity.Answer;
 import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.QuestionType;
@@ -138,15 +140,29 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public DataTableResponse<QuestionDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all questions by {}", request);
-        transactionManager.beginWithAutoCommit(questionDao, testDao, subjectDao);
+        transactionManager.beginWithAutoCommit(questionDao, testDao, answerDao);
         try {
-            List<Question> questions = questionDao.findAll(request);
+            List<Question> questions = questionDao.findAll();
             DataTableResponse<QuestionDto> response = PageableUtil.calculatePageableData(request, testDao);
             List<QuestionDto> questionDtos = questions.stream()
                     .map(QuestionDto.builder()::fromQuestion)
                     .toList();
             response.setDtos(questionDtos);
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<StudentTestDto.QuestionForStudentTestDto> findAllByTestUuid(UUID testUuid) throws ServiceException {
+        LOG.debug("Find all questions by test uuid {}", testUuid);
+        transactionManager.beginWithAutoCommit(questionDao, testDao, answerDao);
+        try {
+            List<Question> questions = questionDao.findAllByTestUuid(testUuid);
+            return generateQuestionDto(questions);
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {
@@ -191,5 +207,36 @@ public class QuestionServiceImpl implements QuestionService {
         } finally {
             transactionManager.end();
         }
+    }
+
+    private List<StudentTestDto.QuestionForStudentTestDto> generateQuestionDto(List<Question> questions) throws DaoException {
+        List<StudentTestDto.QuestionForStudentTestDto> questionsForStudent = new ArrayList<>();
+        for (Question question : questions) {
+            List<Answer> answers = answerDao.findAllByQuestionUuid(question.getUuid());
+            List<StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto> answerDtos = generateAnswerDtos(answers);
+            StudentTestDto.QuestionForStudentTestDto questionForStudent = new StudentTestDto.QuestionForStudentTestDto(
+                    question.getUuid().toString(),
+                    question.getType().toString(),
+                    question.getContent(),
+                    question.getDescription(),
+                    answerDtos
+            );
+            questionsForStudent.add(questionForStudent);
+        }
+        return questionsForStudent;
+    }
+
+    private List<StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto> generateAnswerDtos(List<Answer> answers) {
+        List<StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto> answerDtos = new ArrayList<>();
+        for (Answer answer : answers) {
+            StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto answerForStudent =
+                    new StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto(
+                            answer.getUuid().toString(),
+                            answer.getContent(),
+                            answer.getIsCorrect().toString()
+                    );
+            answerDtos.add(answerForStudent);
+        }
+        return answerDtos;
     }
 }

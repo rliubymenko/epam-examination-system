@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.service;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.QuestionDto;
+import com.epam.examinationsystem.core.dto.StudentTestDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface QuestionService {
     boolean existsByUuid(UUID uuid) throws ServiceException;
 
     DataTableResponse<QuestionDto> findAll(DataTableRequest request) throws ServiceException;
+
+    List<StudentTestDto.QuestionForStudentTestDto> findAllByTestUuid(UUID testUuid) throws ServiceException;
 
     List<QuestionDto> findAllOpenToCreateAnswers() throws ServiceException;
 

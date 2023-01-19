@@ -4,12 +4,15 @@ import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.RoleDao;
 import com.epam.examinationsystem.core.dao.SubjectDao;
+import com.epam.examinationsystem.core.dao.TestDao;
 import com.epam.examinationsystem.core.dao.UserDao;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
+import com.epam.examinationsystem.core.dto.StudentSubjectDto;
 import com.epam.examinationsystem.core.dto.SubjectDto;
 import com.epam.examinationsystem.core.entity.Subject;
+import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.SubjectService;
@@ -17,6 +20,7 @@ import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +38,9 @@ public class SubjectServiceImpl implements SubjectService {
 
     @PleaseInject
     private RoleDao roleDao;
+
+   @PleaseInject
+    private TestDao testDao;
 
     @PleaseInject
     private TransactionManager<Subject> transactionManager;
@@ -143,6 +150,27 @@ public class SubjectServiceImpl implements SubjectService {
             List<SubjectDto> subjectDtos = subjects.stream()
                     .map(SubjectDto.builder()::fromSubject)
                     .toList();
+            response.setDtos(subjectDtos);
+            return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public DataTableResponse<StudentSubjectDto> findAllForStudent(DataTableRequest request) throws ServiceException {
+        LOG.debug("Find all subjects by {} for student", request);
+        transactionManager.beginWithAutoCommit(subjectDao, userDao, roleDao, testDao);
+        try {
+            List<StudentSubjectDto> subjectDtos = new ArrayList<>();
+            List<Subject> subjects = subjectDao.findAll(request);
+            DataTableResponse<StudentSubjectDto> response = PageableUtil.calculatePageableData(request, subjectDao);
+            for (Subject subject : subjects) {
+                List<Test> tests = testDao.findAllBySubjectUuid(subject.getUuid());
+                subjectDtos.add(StudentSubjectDto.builder().fromSubject(subject, tests));
+            }
             response.setDtos(subjectDtos);
             return response;
         } catch (DaoException e) {
