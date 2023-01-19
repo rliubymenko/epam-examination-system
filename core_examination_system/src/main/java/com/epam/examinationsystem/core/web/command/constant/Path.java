@@ -11,6 +11,7 @@ public interface Path {
     String TESTS = "/admins/tests";
     String QUESTIONS = "/admins/questions";
     String ANSWERS = "/admins/answers";
+    String TESTS_FOR_STUDENT = "/students/tests";
 
 
     String POST_METHOD = "POST";
@@ -39,6 +40,9 @@ public interface Path {
     String SINGLE_CHOICE_DELETE_ANSWER_PAGE = "/view/admin/deleteAnswer.jsp";
     String NEW_ANSWER_PAGE = "/view/admin/newAnswer.jsp";
 
+    String SUBJECTS_FOR_STUDENT_PAGE = "/view/student/subjects.jsp";
+    String TESTS_FOR_STUDENT_PAGE = "/view/student/tests.jsp";
+    String STUDENT_TESTING_PAGE = "/view/student/testing.jsp";
 
     String LANGUAGE = "lang";
     String CURRENT_PAGE = "referer";

@@ -34,6 +34,8 @@ public interface Parameter {
     String ANSWERS_ANSWER = "answers.answer";
     String NEW_TRUE_ANSWER_UUID = "new_true_answer_uuid";
     String ERROR_CHANGE_SINGLE_CHOICE_TRUE_ANSWER = "error_change_single_choice_true_answer";
+    String START_TIME = "startTime";
+    String END_TIME = "endTime";
 
     String PAGE = "page";
     String SIZE = "size";
