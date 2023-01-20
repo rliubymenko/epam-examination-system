@@ -61,56 +61,85 @@
                       <div class="row">
                           <c:if test="${empty subject.tests}">
                               <div class="text-center">
-                                  <fmt:message key="table.nothing_to_show"/>
+                                  <h6><fmt:message key="table.nothing_to_show"/></h6>
                               </div>
                           </c:if>
-                          <table class="table table-hover">
-                              <thead class="table-head">
-                              <tr>
-                                  <th><fmt:message key="#"/></th>
-                                  <th><fmt:message key="test.name"/></th>
-                                  <th><fmt:message key="test.complexity"/></th>
-                                  <th><fmt:message key="test.expirationDate"/></th>
-                                  <th><fmt:message key="test.maxAttemptNumber"/></th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <c:forEach var="test" items="${subject.tests}" varStatus="testCounter">
-                              <tr>
-                                  <td>${testCounter.count}</td>
-                                  <td>${test.name}</td>
-                                  <td>
-                                      <c:choose>
-                                         <c:when test="${test.complexity == 'hard'}">
-                                             <span class="badge badge-danger rounded-pill d-inline">
-                                                <fmt:message key="test.hard"/>
-                                             </span>
-                                         </c:when>
-                                         <c:when test="${test.complexity == 'moderate'}">
-                                            <span class="badge badge-warning rounded-pill d-inline">
-                                                <fmt:message key="test.moderate"/>
-                                             </span>
-                                         </c:when>
-                                         <c:otherwise>
-                                             <span class="badge badge-success rounded-pill d-inline">
-                                                 <fmt:message key="test.easy"/>
-                                            </span>
-                                         </c:otherwise>
-                                      </c:choose>
-                                  </td>
-                                  <td>
-                                      <c:if test="${empty test.expirationDate}">
-                                          <fmt:message key="test.unlimited"/>
-                                      </c:if>
-                                      <c:if test="${not empty test.expirationDate}">
-                                          <eslib:datetime-formatter datetime="${test.expirationDate}"/>
-                                      </c:if>
-                                  </td>
-                                  <td>${test.maxAttemptNumber}</td>
-                              </tr>
-                               </c:forEach>
-                              </tbody>
-                          </table>
+                          <c:if test="${not empty subject.tests}">
+                                <table class="table table-hover">
+                                    <thead class="table-head">
+                                    <tr>
+                                        <th><fmt:message key="#"/></th>
+                                        <th><fmt:message key="test.name"/></th>
+                                        <th><fmt:message key="test.complexity"/></th>
+                                        <th><fmt:message key="test.expirationDate"/></th>
+                                        <th><fmt:message key="test.maxAttemptNumber"/></th>
+                                        <th><fmt:message key="table.actions"/></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="test" items="${subject.tests}" varStatus="testCounter">
+                                          <tr>
+                                              <td>${testCounter.count}</td>
+                                              <td>${test.name}</td>
+                                              <td>
+                                                  <c:choose>
+                                                     <c:when test="${test.complexity == 'hard'}">
+                                                         <span class="badge badge-danger rounded-pill d-inline">
+                                                            <fmt:message key="test.hard"/>
+                                                         </span>
+                                                     </c:when>
+                                                     <c:when test="${test.complexity == 'moderate'}">
+                                                        <span class="badge badge-warning rounded-pill d-inline">
+                                                            <fmt:message key="test.moderate"/>
+                                                         </span>
+                                                     </c:when>
+                                                     <c:otherwise>
+                                                         <span class="badge badge-success rounded-pill d-inline">
+                                                             <fmt:message key="test.easy"/>
+                                                        </span>
+                                                     </c:otherwise>
+                                                  </c:choose>
+                                              </td>
+                                              <td>
+                                                  <c:if test="${empty test.expirationDate}">
+                                                      <fmt:message key="test.unlimited"/>
+                                                  </c:if>
+                                                  <c:if test="${not empty test.expirationDate}">
+                                                      <eslib:datetime-formatter datetime="${test.expirationDate}"/>
+                                                  </c:if>
+                                              </td>
+                                              <td>${test.maxAttemptNumber}</td>
+                                              <td>
+                                                  <div class="d-flex flex-column">
+                                                      <button type="button"
+                                                              class="btn text-success btn-link btn-rounded btn-sm fw-bold"
+                                                              data-mdb-toggle="modal"
+                                                              data-mdb-target="#testConfirmationModal${test.uuid}"
+                                                              data-mdb-ripple-color="dark"
+                                                      >
+                                                          <fmt:message key="test.start_testing"/>
+                                                      </button>
+                                                      <c:if test="${not test.isSelected}">
+                                                          <a href="${pageContext.request.contextPath}/students/tests/test/select?uuid=${test.uuid}"
+                                                             type="button"
+                                                             class="btn btn-link text-warning btn-rounded btn-sm fw-bold"
+                                                             data-mdb-ripple-color="dark">
+                                                              <fmt:message key="test.select"/>
+                                                          </a>
+                                                      </c:if>
+                                                  </div>
+                                                  <es:confirmationTestStartModal
+                                                          modalId="${test.uuid}"
+                                                          testingUrl="${pageContext.request.contextPath}/students/tests/testing?uuid=${test.uuid}"
+                                                          testDuration="${test.duration}"
+                                                          testMaxAttemptNumber="${test.maxAttemptNumber}"
+                                                          testCurrentAttemptNumber="${test.currentAttemptNumber}"/>
+                                              </td>
+                                          </tr>
+                                         </c:forEach>
+                                    </tbody>
+                                </table>
+                          </c:if>
                       </div>
                   </td>
               </tr>

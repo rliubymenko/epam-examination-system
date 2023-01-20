@@ -68,18 +68,24 @@
                             </c:if>
                             <c:if test="${current_user.role == 'student'}">
                                 <li>
-                                    <a class="dropdown-item" href="#">Personal account</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/students/subjects">
-                                        <i class="fa-solid fa-book pe-1"></i><fmt:message key="home.subjects"/>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/students/account">
+                                        <i class="fas fa-user-alt pe-1"></i><fmt:message key="home.personal_account"/>
                                     </a>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/students/tests">
-                                        <i class="fa-solid fa-cubes pe-1"></i><fmt:message key="home.tests"/>
-                                    </a>
-                                </li>
+                                <c:if test="${current_user.isActivated}">
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="${pageContext.request.contextPath}/students/subjects">
+                                            <i class="fa-solid fa-book pe-1"></i><fmt:message key="home.subjects"/>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="${pageContext.request.contextPath}/students/tests">
+                                            <i class="fa-solid fa-cubes pe-1"></i><fmt:message key="home.tests"/>
+                                        </a>
+                                    </li>
+                                </c:if>
                             </c:if>
                         </ul>
                     </li>

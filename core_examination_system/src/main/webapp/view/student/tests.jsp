@@ -89,48 +89,21 @@
                           >
                               <fmt:message key="test.start_testing"/>
                           </button>
+                          <c:if test="${not test.isSelected}">
+                               <a href="${pageContext.request.contextPath}/students/tests/test/select?uuid=${test.uuid}"
+                                  type="button"
+                                  class="btn btn-link text-warning btn-rounded btn-sm fw-bold"
+                                  data-mdb-ripple-color="dark">
+                                   <fmt:message key="test.select"/>
+                               </a>
+                          </c:if>
                       </div>
-                      <div
-                              class="modal fade"
-                              id="testConfirmationModal${counter.count}"
-                              data-mdb-backdrop="static"
-                              data-mdb-keyboard="false"
-                              tabindex="-1"
-                              aria-labelledby="staticBackdropLabel"
-                              aria-hidden="true"
-                      >
-                          <div class="modal-dialog modal-lg">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h3 class="modal-title" id="staticBackdropLabel">
-                                          <fmt:message key="test.testing_confirmation_header"/>
-                                      </h3>
-                                      <button type="button" class="btn-close" data-mdb-dismiss="modal"
-                                              aria-label="Close"></button>
-                                  </div>
-                                  <div class="modal-body">
-                                      <div class="text-center">
-                                          <h6 class="text-warning">
-                                              <fmt:message key="test.testing_warning_message"/>
-                                          </h6>
-                                          <p>
-                                              <fmt:message key="test.you_will_have"/> ${test.duration} <fmt:message
-                                                  key="test.to_complete_test"/>
-                                          </p>
-                                      </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                      <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">
-                                          <fmt:message key="table.close"/>
-                                      </button>
-                                      <a href="${pageContext.request.contextPath}/students/tests/testing?uuid=${test.uuid}"
-                                         type="button" class="btn btn-success">
-                                          <fmt:message key="test.start"/>
-                                      </a>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+                      <es:confirmationTestStartModal
+                              modalId="${counter.count}"
+                              testingUrl="${pageContext.request.contextPath}/students/tests/testing?uuid=${test.uuid}"
+                              testDuration="${test.duration}"
+                              testMaxAttemptNumber="${test.maxAttemptNumber}"
+                              testCurrentAttemptNumber="${test.currentAttemptNumber}"/>
                   </td>
               </tr>
           </c:forEach>

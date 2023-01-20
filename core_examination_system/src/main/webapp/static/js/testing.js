@@ -37,12 +37,12 @@ function addTimeInputsAndSubmit() {
     const startTimeInput = document.createElement("input");
     startTimeInput.setAttribute("type", "hidden");
     startTimeInput.setAttribute("name", "startTime");
-    startTimeInput.setAttribute("value", date.toISOString().split('.')[0]);
+    startTimeInput.setAttribute("value", moment(date).format("YYYY-MM-DDTHH:mm:ss"));
     $('#testForm').append(startTimeInput);
     const endTimeInput = document.createElement("input");
     endTimeInput.setAttribute("type", "hidden");
     endTimeInput.setAttribute("name", "endTime");
-    endTimeInput.setAttribute("value", new Date().toISOString().split('.')[0]);
+    endTimeInput.setAttribute("value", moment(new Date()).format("YYYY-MM-DDTHH:mm:ss"));
     $('#testForm').append(endTimeInput);
     $('#testForm').submit();
 }
