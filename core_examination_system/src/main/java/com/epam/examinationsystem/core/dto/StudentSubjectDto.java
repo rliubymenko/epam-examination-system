@@ -1,12 +1,10 @@
 package com.epam.examinationsystem.core.dto;
 
 import com.epam.examinationsystem.core.entity.Subject;
-import com.epam.examinationsystem.core.entity.Test;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentSubjectDto extends AbstractDto {
@@ -69,7 +67,10 @@ public class StudentSubjectDto extends AbstractDto {
             String name,
             String complexity,
             String maxAttemptNumber,
-            String expirationDate) {
+            String currentAttemptNumber,
+            String isSelected,
+            String expirationDate,
+            String duration) {
 
         public String getUuid() {
             return uuid;
@@ -89,6 +90,18 @@ public class StudentSubjectDto extends AbstractDto {
 
         public String getExpirationDate() {
             return expirationDate;
+        }
+
+        public String getDuration() {
+            return duration;
+        }
+
+        public String getCurrentAttemptNumber() {
+            return currentAttemptNumber;
+        }
+
+        public String getIsSelected() {
+            return isSelected;
         }
     }
 
@@ -127,23 +140,12 @@ public class StudentSubjectDto extends AbstractDto {
             return new StudentSubjectDto(this);
         }
 
-        public StudentSubjectDto fromSubject(Subject subject, List<Test> tests) {
-            List<TestForStudentSubjectDto> testsForSubject = new ArrayList<>();
-            tests.forEach(test -> {
-                TestForStudentSubjectDto testForSubject = new TestForStudentSubjectDto(
-                        test.getUuid().toString(),
-                        test.getName(),
-                        test.getComplexity().toString(),
-                        String.valueOf(test.getMaxAttemptNumber()),
-                        test.getExpirationDate() != null ? test.getExpirationDate().toString() : null
-                );
-                testsForSubject.add(testForSubject);
-            });
+        public StudentSubjectDto fromSubject(Subject subject, List<TestForStudentSubjectDto> tests) {
             return this
                     .setUuid(subject.getUuid().toString())
                     .setName(subject.getName())
                     .setDescription(subject.getDescription())
-                    .setTests(testsForSubject)
+                    .setTests(tests)
                     .build();
         }
     }

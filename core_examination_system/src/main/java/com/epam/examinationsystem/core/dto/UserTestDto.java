@@ -104,7 +104,16 @@ public class UserTestDto extends AbstractDto {
         }
     }
 
-    public record TestAdjacent(String uuid, String name) {
+    public record TestAdjacent(String uuid,
+                               String name,
+                               String complexity,
+                               String maxAttemptNumber,
+                               String expirationDate,
+                               String duration) {
+
+        public TestAdjacent(String uuid, String name) {
+            this(uuid, name, null, null, null, null);
+        }
 
         public String getUuid() {
             return uuid;
@@ -112,6 +121,22 @@ public class UserTestDto extends AbstractDto {
 
         public String getName() {
             return name;
+        }
+
+        public String getComplexity() {
+            return complexity;
+        }
+
+        public String getMaxAttemptNumber() {
+            return maxAttemptNumber;
+        }
+
+        public String getExpirationDate() {
+            return expirationDate;
+        }
+
+        public String getDuration() {
+            return duration;
         }
     }
 
@@ -184,7 +209,14 @@ public class UserTestDto extends AbstractDto {
             User currentUser = userTest.getUser();
             Test currentTest = userTest.getTest();
             UserAdjacent userAdjacent = new UserAdjacent(currentUser.getUuid().toString(), currentUser.getUsername());
-            TestAdjacent testAdjacent = new TestAdjacent(currentTest.getUuid().toString(), currentTest.getName());
+            TestAdjacent testAdjacent = new TestAdjacent(
+                    currentTest.getUuid().toString(),
+                    currentTest.getName(),
+                    currentTest.getComplexity().toString(),
+                    String.valueOf(currentTest.getMaxAttemptNumber()),
+                    currentTest.getExpirationDate() != null ? currentTest.getExpirationDate().toString() : null,
+                    String.valueOf(currentTest.getDuration())
+            );
             return this
                     .setUuid(userTest.getUuid().toString())
                     .setIsSelected(userTest.getIsSelected().toString())

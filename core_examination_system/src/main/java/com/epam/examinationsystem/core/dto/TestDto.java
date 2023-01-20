@@ -4,6 +4,7 @@ import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.entity.Test;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class TestDto extends AbstractDto {
 
@@ -12,6 +13,8 @@ public class TestDto extends AbstractDto {
     private final String complexity;
     private final String duration;
     private final String totalAttemptNumber;
+    private final String currentAttemptNumber;
+    private final String isSelected;
     private final String creationDate;
     private final String expirationDate;
     private final String maxAttemptNumber;
@@ -24,6 +27,8 @@ public class TestDto extends AbstractDto {
         this.complexity = builder.complexity;
         this.duration = builder.duration;
         this.totalAttemptNumber = builder.totalAttemptNumber;
+        this.currentAttemptNumber = builder.currentAttemptNumber;
+        this.isSelected = builder.isSelected;
         this.subject = builder.subject;
         this.creationDate = builder.creationDate;
         this.expirationDate = builder.expirationDate;
@@ -66,6 +71,14 @@ public class TestDto extends AbstractDto {
         return subject;
     }
 
+    public String getCurrentAttemptNumber() {
+        return currentAttemptNumber;
+    }
+
+    public String getIsSelected() {
+        return isSelected;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,6 +95,22 @@ public class TestDto extends AbstractDto {
                 .toHashCode();
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("uuid", uuid)
+                .append("name", name)
+                .append("description", description)
+                .append("complexity", complexity)
+                .append("duration", duration)
+                .append("totalAttemptNumber", totalAttemptNumber)
+                .append("currentAttemptNumber", currentAttemptNumber)
+                .append("creationDate", creationDate)
+                .append("expirationDate", expirationDate)
+                .append("maxAttemptNumber", maxAttemptNumber)
+                .append("subject", subject)
+                .toString();
+    }
 
     public record SubjectForTest(String uuid, String name) {
 
@@ -106,6 +135,8 @@ public class TestDto extends AbstractDto {
         private String complexity;
         private String duration;
         private String totalAttemptNumber;
+        private String currentAttemptNumber;
+        private String isSelected;
         private String creationDate;
         private String expirationDate;
         private String maxAttemptNumber;
@@ -139,6 +170,16 @@ public class TestDto extends AbstractDto {
 
         public TestDtoBuilder setTotalAttemptNumber(String totalAttemptNumber) {
             this.totalAttemptNumber = totalAttemptNumber;
+            return this;
+        }
+
+        public TestDtoBuilder setCurrentAttemptNumber(String currentAttemptNumber) {
+            this.currentAttemptNumber = currentAttemptNumber;
+            return this;
+        }
+
+        public TestDtoBuilder setIsSelected(String isSelected) {
+            this.isSelected = isSelected;
             return this;
         }
 
