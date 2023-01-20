@@ -16,12 +16,14 @@ import com.epam.examinationsystem.core.web.command.constant.Path;
 import com.epam.examinationsystem.core.web.command.constant.SessionConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.collections4.SetUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class ExamineStudentCommand implements ActionCommand {
@@ -59,7 +61,7 @@ public class ExamineStudentCommand implements ActionCommand {
                             .setMarkValue(String.valueOf(percentageOfCorrectAnswers))
                             .build();
 
-                    if (userTestService.create(userTestDto)) {
+                    if (userTestService.createAfterExam(userTestDto)) {
                         LOG.debug("The user test {} has been created successfully", userTestDto);
                         return new CommandResult(Path.TESTS_FOR_STUDENT, true);
                     }
@@ -101,13 +103,9 @@ public class ExamineStudentCommand implements ActionCommand {
                     String answerKey = "choice_question_uuid" + question.getUuid();
                     String[] answers = parameters.get(answerKey);
                     if (ArrayUtils.isNotEmpty(answers)) {
-                        List<String> answerList = new ArrayList<>(Arrays.asList(answers));
-                        for (StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto answer : question.getAnswers()) {
-                            if (answerList.contains(answer.getUuid()) && Boolean.parseBoolean(answer.getIsCorrect())) {
-                                answerList.remove(answer.getUuid());
-                            }
-                        }
-                        if (answerList.isEmpty()) {
+                        Set<String> currentAnswerSet = new HashSet<>(Arrays.asList(answers));
+                        Set<String> allCorrectAnswers = getAllCorrectAnswerUuids(question.getAnswers());
+                        if (SetUtils.disjunction(currentAnswerSet, allCorrectAnswers).isEmpty()) {
                             correctAnswersAmount += 1;
                         }
                     }
@@ -115,5 +113,13 @@ public class ExamineStudentCommand implements ActionCommand {
             }
         }
         return correctAnswersAmount.floatValue() * 100 / totalQuestionNumber.floatValue();
+    }
+
+    private Set<String> getAllCorrectAnswerUuids(List<StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto> answers) {
+        return answers
+                .stream()
+                .filter(answer -> Boolean.parseBoolean(answer.getIsCorrect()))
+                .map(StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto::uuid)
+                .collect(Collectors.toSet());
     }
 }
