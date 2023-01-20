@@ -93,5 +93,9 @@
     </jsp:attribute>
 </es:datatable>
 
+<div class="pt-4">
+    <jsp:include page="/view/shared/footer.jsp"/>
+</div>
+
 </body>
 </html>

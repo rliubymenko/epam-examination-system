@@ -15,5 +15,9 @@
 
 <jsp:include page="header.jsp"/>
 
+<div class="fixed-bottom">
+    <jsp:include page="footer.jsp"/>
+</div>
+
 </body>
 </html>

@@ -28,8 +28,6 @@
 </head>
 <body>
 
-<jsp:include page="/view/shared/header.jsp"/>
-
 <div class="container">
     <div class="row pt-4">
         <div class="row rounded-pill d-flex justify-content-center">

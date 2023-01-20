@@ -21,8 +21,7 @@ $(function () {
 
     });
 
-    questionStepper = new Stepper($('.bs-stepper')[0])
-
+    questionStepper = new Stepper($('.bs-stepper')[0]);
 });
 
 function stepNext() {
@@ -45,4 +44,24 @@ function addTimeInputsAndSubmit() {
     endTimeInput.setAttribute("value", moment(new Date()).format("YYYY-MM-DDTHH:mm:ss"));
     $('#testForm').append(endTimeInput);
     $('#testForm').submit();
+    exitFullscreen();
 }
+
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+}
+
+let full_screen = document.documentElement;
+
+function goFullscreen() {
+    full_screen.webkitRequestFullscreen();
+    full_screen.style.display = "";
+}
+
+full_screen.onclick = goFullscreen;

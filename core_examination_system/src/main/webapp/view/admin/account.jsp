@@ -88,5 +88,9 @@
     </div>
 </section>
 
+<div class="fixed-bottom">
+    <jsp:include page="/view/shared/footer.jsp"/>
+</div>
+
 </body>
 </html>
