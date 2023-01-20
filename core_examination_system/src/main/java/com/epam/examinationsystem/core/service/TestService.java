@@ -22,6 +22,8 @@ public interface TestService {
 
     DataTableResponse<TestDto> findAll(DataTableRequest request) throws ServiceException;
 
+    DataTableResponse<TestDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException;
+
     List<TestDto> findAll() throws ServiceException;
 
     boolean existsByUuid(UUID uuid) throws ServiceException;

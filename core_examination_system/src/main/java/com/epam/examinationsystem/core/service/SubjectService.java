@@ -4,6 +4,7 @@ import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.StudentSubjectDto;
 import com.epam.examinationsystem.core.dto.SubjectDto;
+import com.epam.examinationsystem.core.dto.UserDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public interface SubjectService {
 
     DataTableResponse<SubjectDto> findAll(DataTableRequest request) throws ServiceException;
 
-    DataTableResponse<StudentSubjectDto> findAllForStudent(DataTableRequest request) throws ServiceException;
+    DataTableResponse<StudentSubjectDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException;
 
     boolean existsByUuid(UUID uuid) throws ServiceException;
 

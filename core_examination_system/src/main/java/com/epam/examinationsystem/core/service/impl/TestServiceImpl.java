@@ -15,13 +15,14 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.QuestionService;
 import com.epam.examinationsystem.core.service.TestService;
+import com.epam.examinationsystem.core.service.UserTestService;
 import com.epam.examinationsystem.core.util.validation.DateUtil;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,12 @@ public class TestServiceImpl implements TestService {
 
     @PleaseInject
     private QuestionService questionService;
+
+    @PleaseInject
+    private UserTestDao userTestDao;
+
+    @PleaseInject
+    private UserTestService userTestService;
 
     @PleaseInject
     private TransactionManager<Test> transactionManager;
@@ -179,6 +186,48 @@ public class TestServiceImpl implements TestService {
             List<TestDto> testDtos = tests.stream()
                     .map(TestDto.builder()::fromTest)
                     .toList();
+            response.setDtos(testDtos);
+            return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+
+    @Override
+    public DataTableResponse<TestDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException {
+        LOG.debug("Find all tests by {}", request);
+        transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao, userTestDao);
+        try {
+            List<Test> tests = testDao.findAll(request);
+            DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, testDao);
+            List<TestDto> testDtos = new ArrayList<>();
+            for (Test test : tests) {
+                int currentAttemptNumber = userTestService.getCurrentAttemptNumber(currentUserUuid, test.getUuid());
+                boolean isSelected = userTestService.isSelected(currentUserUuid, test.getUuid());
+                Subject testSubject = test.getSubject();
+                TestDto.SubjectForTest subjectForTest = null;
+                if (testSubject != null) {
+                    subjectForTest = new TestDto.SubjectForTest(testSubject.getUuid().toString(), testSubject.getName());
+                }
+                TestDto testDto = TestDto.builder()
+                        .setUuid(test.getUuid().toString())
+                        .setName(test.getName())
+                        .setDescription(test.getDescription())
+                        .setComplexity(test.getComplexity().toString())
+                        .setDuration(String.valueOf(test.getDuration()))
+                        .setTotalAttemptNumber(String.valueOf(test.getTotalAttemptNumber()))
+                        .setCurrentAttemptNumber(String.valueOf(currentAttemptNumber))
+                        .setIsSelected(BooleanUtils.toStringTrueFalse(isSelected))
+                        .setCreationDate(test.getCreated().toString())
+                        .setExpirationDate(test.getExpirationDate() != null ? test.getExpirationDate().toString() : null)
+                        .setMaxAttemptNumber(String.valueOf(test.getMaxAttemptNumber()))
+                        .setSubject(subjectForTest)
+                        .build();
+                testDtos.add(testDto);
+            }
             response.setDtos(testDtos);
             return response;
         } catch (DaoException e) {
