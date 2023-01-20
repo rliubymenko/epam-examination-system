@@ -23,6 +23,7 @@ public interface Path {
     String REGISTRATION_PAGE = "/view/shared/registration.jsp";
     String USERS_PAGE = "/view/admin/users.jsp";
     String ADMIN_ACCOUNT_PAGE = "/view/admin/account.jsp";
+    String STUDENT_ACCOUNT_PAGE = "/view/student/account.jsp";
     String EDIT_USER_PAGE = "/view/admin/editUser.jsp";
     String SUBJECTS_PAGE = "/view/admin/subjects.jsp";
     String EDIT_SUBJECT_PAGE = "/view/admin/editSubject.jsp";

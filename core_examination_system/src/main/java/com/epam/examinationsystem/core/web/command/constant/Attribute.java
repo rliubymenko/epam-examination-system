@@ -21,5 +21,6 @@ public interface Attribute {
     String QUESTIONS = "questions";
     String ANSWER = "answer";
     String ANSWERS = "answers";
+    String USER_TESTS = "userTests";
 
 }

@@ -15,10 +15,12 @@ import com.epam.examinationsystem.core.web.command.impl.admin.user.EditUserComma
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetAllUsersByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetEditUserPageCommand;
 import com.epam.examinationsystem.core.web.command.impl.auth.*;
+import com.epam.examinationsystem.core.web.command.impl.student.GetStudentAccountPageCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.subject.GetAllSubjectsForStudentByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.test.ExamineStudentCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.test.GetAllTestsForStudentByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.test.GetTestingPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.student.test.SelectTestCommand;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.EnumMap;
@@ -59,10 +61,13 @@ public class ActionFactory {
         commands.put(CommandType.GET_ADMINS_ANSWERS_ANSWER_DELETE, ObjectProvider.getInstance(DeleteAnswerPageCommand.class));
 
         commands.put(CommandType.GET_ADMINS_ACCOUNT, ObjectProvider.getInstance(GetAdminAccountPageCommand.class));
+        commands.put(CommandType.GET_STUDENTS_ACCOUNT, ObjectProvider.getInstance(GetStudentAccountPageCommand.class));
+
         commands.put(CommandType.GET_STUDENTS_SUBJECTS, ObjectProvider.getInstance(GetAllSubjectsForStudentByParametersCommand.class));
 
         commands.put(CommandType.GET_STUDENTS_TESTS, ObjectProvider.getInstance(GetAllTestsForStudentByParametersCommand.class));
         commands.put(CommandType.GET_STUDENTS_TESTS_TESTING, ObjectProvider.getInstance(GetTestingPageCommand.class));
+        commands.put(CommandType.GET_STUDENTS_TESTS_TEST_SELECT, ObjectProvider.getInstance(SelectTestCommand.class));
 
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));
