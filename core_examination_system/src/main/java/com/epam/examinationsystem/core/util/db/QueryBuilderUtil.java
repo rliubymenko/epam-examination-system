@@ -11,6 +11,7 @@ import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public final class QueryBuilderUtil {
@@ -18,43 +19,61 @@ public final class QueryBuilderUtil {
     private QueryBuilderUtil() {
     }
 
-    public static String generateFindByUuidQuery(String tableName, UUID uuid) {
+    public static String findByUuidQuery(String tableName, UUID uuid) {
         return "SELECT * FROM " + tableName + " WHERE uuid = " + '\'' + uuid + '\'' + ";";
     }
 
-    public static String generateFindByIdQuery(String tableName, Long id) {
+    public static String findByIdQuery(String tableName, Long id) {
         return "SELECT * FROM " + tableName + " WHERE id = " + id + ";";
     }
 
-    public static String generateFindByQuery(String tableName, String propertyName, String propertyValue) {
+    public static String findByQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + propertyValue + ";";
     }
 
-    public static String generateFindByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
+    public static String findByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
     }
 
-    public static String generateCountQuery(String tableName) {
+    public static String countQuery(String tableName) {
         return "SELECT COUNT(*) as count FROM " + tableName + ";";
     }
 
-    public static String generateCountByUuidQuery(String tableName, UUID uuid) {
+    public static String countByUuidQuery(String tableName, UUID uuid) {
         return "SELECT COUNT(*) as count FROM " + tableName + " WHERE uuid = " + '\'' + uuid + '\'' + ";";
     }
 
-    public static String generateCountByQuery(String tableName, String propertyName, String propertyValue) {
+    public static String countByQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT COUNT(*) as count FROM " + tableName + " WHERE " + propertyName + " = " + propertyValue + ";";
     }
 
-    public static String generateCountByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
+    public static String countByWrappedValueQuery(String tableName, String propertyName, String propertyValue) {
         return "SELECT COUNT(*) as count FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
     }
 
-    public static String generateFindAllQuery(String tableName) {
+    public static String findAllByPredicates(String tableName, Map<String, String> columnWithPredicates) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ");
+        query.append(tableName);
+        query.append(" WHERE ");
+        for (Map.Entry<String, String> entry : columnWithPredicates.entrySet()) {
+            query
+                    .append(entry.getKey())
+                    .append(" = ")
+                    .append(entry.getValue())
+                    .append(" and ");
+        }
+        return query
+                .delete(query.length() - 5, query.length() - 1)
+                .append(";")
+                .toString();
+    }
+
+    public static String findAllQuery(String tableName) {
         return "SELECT * FROM " + tableName + ";";
     }
 
-    public static String generateFindAllWithParametersQuery(String tableName, DataTableRequest request) {
+    public static String findAllWithParametersQuery(String tableName, DataTableRequest request) {
         int offset = (request.getCurrentPage() - 1) * request.getPageSize();
         return new StringBuilder()
                 .append("SELECT * FROM ")
@@ -70,7 +89,7 @@ public final class QueryBuilderUtil {
                 .append(";").toString();
     }
 
-    public static String generateDeleteQuery(String tableName, String columnName, String predicate) {
+    public static String deleteQuery(String tableName, String columnName, String predicate) {
         if (ParameterValidator.isValidUUID(predicate)) {
             UUID uuid = UUID.fromString(predicate);
             return "DELETE FROM " + tableName + " WHERE uuid = " + '\'' + uuid + '\'' + ";";
@@ -78,11 +97,11 @@ public final class QueryBuilderUtil {
         return "DELETE FROM " + tableName + " WHERE " + columnName + " = " + predicate + ";";
     }
 
-    public static String generateInsertQuery(String tableName, int countOfColumns) {
+    public static String insertQuery(String tableName, int countOfColumns) {
         return "INSERT INTO " + tableName + " VALUES(default,default" + ",?".repeat(Math.max(0, countOfColumns)) + ");";
     }
 
-    public static String generateUpdateQueryByUuid(String tableName, UUID uuid, List<String> columnNames) {
+    public static String updateQueryByUuid(String tableName, UUID uuid, List<String> columnNames) {
         StringBuilder query = new StringBuilder("UPDATE " + tableName + " SET");
         for (int columnIndex = 0; columnIndex < columnNames.size(); columnIndex++) {
             String currentColumn = columnNames.get(columnIndex);

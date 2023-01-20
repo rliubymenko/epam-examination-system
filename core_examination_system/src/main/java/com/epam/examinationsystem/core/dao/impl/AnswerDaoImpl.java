@@ -46,7 +46,7 @@ public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
         String questionId = String.valueOf(question.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, QUESTION_ID, questionId);
         try (Statement statement = connection.createStatement()) {
-            String findAllQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), QUESTION_ID, questionId);
+            String findAllQuery = QueryBuilderUtil.findByQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), QUESTION_ID, questionId);
             try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
                 answers = extractEntities(resultSet);
             }
@@ -78,13 +78,13 @@ public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), 3);
+        return QueryBuilderUtil.insertQuery(DaoConstant.ANSWER_TABLE_NAME.getValue(), 3);
     }
 
     @Override
     public String getUpdateQuery(Answer entity) {
         List<String> columnNames = List.of("content", "is_correct");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.ANSWER_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.ANSWER_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
     @Override

@@ -40,11 +40,25 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
     }
 
     @Override
+    public boolean incrementTotalAttemptNumber(Test test) throws DaoException {
+        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, test.getUuid());
+        List<String> columnNames = List.of("total_attempt_number");
+        String updateQuery = QueryBuilderUtil.updateQueryByUuid(DaoConstant.TEST_TABLE_NAME.getValue(), test.getUuid(), columnNames);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            preparedStatement.setInt(1, test.getTotalAttemptNumber() + 1);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            String message = LoggerUtil.updateEntityErrorLogging(LOG, ENTITY_NAME, test.getUuid());
+            throw new DaoException(message, e);
+        }
+    }
+
+    @Override
     public Test getById(Long id) throws DaoException {
         Test test;
         LoggerUtil.findByIdStartLogging(LOG, ENTITY_NAME, id);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByIdQuery(DaoConstant.TEST_TABLE_NAME.getValue(), id);
+            String findQuery = QueryBuilderUtil.findByIdQuery(DaoConstant.TEST_TABLE_NAME.getValue(), id);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 test = extractTestWithoutSubject(resultSet);
             }
@@ -60,7 +74,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
         Optional<Test> maybeTest;
         LoggerUtil.findByUuidStartLogging(LOG, ENTITY_NAME, uuid);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByUuidQuery(DaoConstant.TEST_TABLE_NAME.getValue(), uuid);
+            String findQuery = QueryBuilderUtil.findByUuidQuery(DaoConstant.TEST_TABLE_NAME.getValue(), uuid);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 Test test = extractTestWithoutSubject(resultSet);
                 maybeTest = Optional.ofNullable(test);
@@ -79,7 +93,7 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
         String subjectId = String.valueOf(subject.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, SUBJECT_ID, subjectId);
         try (Statement statement = connection.createStatement()) {
-            String findAllQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.TEST_TABLE_NAME.getValue(), SUBJECT_ID, subjectId);
+            String findAllQuery = QueryBuilderUtil.findByQuery(DaoConstant.TEST_TABLE_NAME.getValue(), SUBJECT_ID, subjectId);
             try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
                 tests = extractTestsWithoutSubject(resultSet);
             }
@@ -128,13 +142,13 @@ public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.TEST_TABLE_NAME.getValue(), 8);
+        return QueryBuilderUtil.insertQuery(DaoConstant.TEST_TABLE_NAME.getValue(), 8);
     }
 
     @Override
     public String getUpdateQuery(Test entity) {
         List<String> columnNames = List.of("name", "description", "complexity", "duration", "expiration_date", "max_attempt_number");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.TEST_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.TEST_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
     @Override

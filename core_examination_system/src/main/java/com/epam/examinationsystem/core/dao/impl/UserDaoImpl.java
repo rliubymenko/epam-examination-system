@@ -42,7 +42,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Optional<User> maybeUser;
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, USERNAME, username);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), USERNAME, username);
+            String findQuery = QueryBuilderUtil.findByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), USERNAME, username);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 User user = extractEntity(resultSet);
                 maybeUser = Optional.ofNullable(user);
@@ -59,7 +59,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         Optional<User> maybeUser;
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, EMAIL, email);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), EMAIL, email);
+            String findQuery = QueryBuilderUtil.findByWrappedValueQuery(DaoConstant.USER_TABLE_NAME.getValue(), EMAIL, email);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 User user = extractEntity(resultSet);
                 maybeUser = Optional.ofNullable(user);
@@ -105,18 +105,18 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.USER_TABLE_NAME.getValue(), 7);
+        return QueryBuilderUtil.insertQuery(DaoConstant.USER_TABLE_NAME.getValue(), 7);
     }
 
     @Override
     public String getUpdateQuery(User user) {
         List<String> columnNames = List.of("username", "password", "email", "first_name", "last_name", "is_activated");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
     public String getUpdateWithoutPasswordQuery(User user) {
         List<String> columnNames = List.of("username", "email", "first_name", "last_name", "is_activated");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
     @Override

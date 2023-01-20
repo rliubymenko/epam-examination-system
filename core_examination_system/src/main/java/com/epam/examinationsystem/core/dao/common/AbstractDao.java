@@ -34,7 +34,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         Optional<ENTITY> maybeEntity;
         LoggerUtil.findByUuidStartLogging(log, entityName, uuid);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByUuidQuery(tableName, uuid);
+            String findQuery = QueryBuilderUtil.findByUuidQuery(tableName, uuid);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 ENTITY entity = extractEntity(resultSet);
                 maybeEntity = Optional.ofNullable(entity);
@@ -51,7 +51,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         ENTITY entity;
         LoggerUtil.findByIdStartLogging(log, entityName, id);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByIdQuery(tableName, id);
+            String findQuery = QueryBuilderUtil.findByIdQuery(tableName, id);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 entity = extractEntity(resultSet);
             }
@@ -67,7 +67,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         long count = 0;
         LoggerUtil.existByUuidStartLogging(log, entityName, uuid);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.generateCountByUuidQuery(tableName, uuid);
+            String countQuery = QueryBuilderUtil.countByUuidQuery(tableName, uuid);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     count = resultSet.getLong("count");
@@ -85,7 +85,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         List<ENTITY> entities;
         LoggerUtil.findAllStartLogging(log, entityName);
         try (Statement statement = connection.createStatement()) {
-            String findAllQuery = QueryBuilderUtil.generateFindAllQuery(tableName);
+            String findAllQuery = QueryBuilderUtil.findAllQuery(tableName);
             try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
                 entities = extractEntities(resultSet);
             }
@@ -101,7 +101,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         List<ENTITY> entities;
         LoggerUtil.findAllWithParametersStartLogging(log, entityName, request);
         try (Statement statement = connection.createStatement()) {
-            String findAllQuery = QueryBuilderUtil.generateFindAllWithParametersQuery(tableName, request);
+            String findAllQuery = QueryBuilderUtil.findAllWithParametersQuery(tableName, request);
             try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
                 entities = extractEntities(resultSet);
             }
@@ -146,7 +146,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     @Override
     public boolean deleteByUuid(UUID uuid) throws DaoException {
         LoggerUtil.deleteByUuidStartLogging(log, entityName, uuid);
-        String deleteQuery = QueryBuilderUtil.generateDeleteQuery(tableName, "uuid", uuid.toString());
+        String deleteQuery = QueryBuilderUtil.deleteQuery(tableName, "uuid", uuid.toString());
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
@@ -159,7 +159,7 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     public long count() throws DaoException {
         LoggerUtil.countingRecordsStartLogging(log, entityName);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.generateCountQuery(tableName);
+            String countQuery = QueryBuilderUtil.countQuery(tableName);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     return resultSet.getLong("count");

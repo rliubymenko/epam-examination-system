@@ -40,7 +40,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
         long count = 0;
         LoggerUtil.existByStartLogging(LOG, ENTITY_NAME, NAME, name);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.generateCountByWrappedValueQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), NAME, name);
+            String countQuery = QueryBuilderUtil.countByWrappedValueQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), NAME, name);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     count = resultSet.getLong("count");
@@ -74,13 +74,13 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), 2);
+        return QueryBuilderUtil.insertQuery(DaoConstant.SUBJECT_TABLE_NAME.getValue(), 2);
     }
 
     @Override
     public String getUpdateQuery(Subject entity) {
         List<String> columnNames = List.of("name", "description");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.SUBJECT_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.SUBJECT_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
     @Override

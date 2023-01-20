@@ -13,4 +13,6 @@ public interface TestDao extends CommonDao<Test> {
     List<Test> findAllBySubjectUuid(UUID uuid) throws DaoException;
 
     Optional<Test> findByUuidWithoutSubject(UUID uuid) throws DaoException;
+
+    boolean incrementTotalAttemptNumber(Test test) throws DaoException;
 }

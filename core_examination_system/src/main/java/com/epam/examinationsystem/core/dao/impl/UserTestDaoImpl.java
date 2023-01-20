@@ -22,10 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @PleaseService
 public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDao {
@@ -46,38 +43,80 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
     }
 
     @Override
-    public Optional<UserTest> findByUserUuid(UUID uuid) throws DaoException {
+    public UserTest createAndSelect(UserTest userTest) throws DaoException {
+        LoggerUtil.createEntityStartLogging(LOG, ENTITY_NAME);
+        String insertQuery = QueryBuilderUtil.insertQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), 3);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+            QueryBuilderUtil.populatePreparedStatement(
+                    preparedStatement,
+                    userTest.getUser().getId(),
+                    userTest.getTest().getId(),
+                    userTest.getIsSelected()
+            );
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            resultSet.next();
+            long lastGeneratedId = resultSet.getLong(1);
+            return getById(lastGeneratedId);
+        } catch (SQLException e) {
+            String message = LoggerUtil.createEntityErrorLogging(LOG, ENTITY_NAME);
+            throw new DaoException(message, e);
+        }
+    }
+
+    @Override
+    public List<UserTest> findByUserUuid(UUID uuid) throws DaoException {
         User user = getUser(uuid);
-        Optional<UserTest> maybeUserTest;
+        List<UserTest> userTests;
         String userId = String.valueOf(user.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, USER_ID, userId);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
+            String findQuery = QueryBuilderUtil.findByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
-                UserTest entity = extractEntity(resultSet);
-                maybeUserTest = Optional.ofNullable(entity);
+                userTests = extractEntities(resultSet);
             }
         } catch (SQLException | DaoException e) {
             String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, USER_ID, userId);
             throw new DaoException(message, e);
         }
-        return maybeUserTest;
+        return userTests;
     }
 
     @Override
-    public Optional<UserTest> findByTestUuid(UUID uuid) throws DaoException {
+    public List<UserTest> findByTestUuid(UUID uuid) throws DaoException {
         Test test = getTest(uuid);
-        Optional<UserTest> maybeUserTest;
+        List<UserTest> userTests;
         String testId = String.valueOf(test.getId());
         LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, TEST_ID, testId);
         try (Statement statement = connection.createStatement()) {
-            String findQuery = QueryBuilderUtil.generateFindByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
+            String findQuery = QueryBuilderUtil.findByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
+            try (ResultSet resultSet = statement.executeQuery(findQuery)) {
+                userTests = extractEntities(resultSet);
+            }
+        } catch (SQLException | DaoException e) {
+            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, TEST_ID, testId);
+            throw new DaoException(message, e);
+        }
+        return userTests;
+    }
+
+    @Override
+    public Optional<UserTest> findByUserAndTestUuid(UUID userUuid, UUID testUuid) throws DaoException {
+        User user = getUser(userUuid);
+        Test test = getTest(testUuid);
+        Optional<UserTest> maybeUserTest;
+        String userId = String.valueOf(user.getId());
+        String testId = String.valueOf(test.getId());
+        Map<String, String> columnWithPredicates = Map.of(USER_ID, userId, TEST_ID, testId);
+        LoggerUtil.findByStartLogging(LOG, ENTITY_NAME, USER_ID + " and " + TEST_ID, userId + " and " + testId);
+        try (Statement statement = connection.createStatement()) {
+            String findQuery = QueryBuilderUtil.findAllByPredicates(DaoConstant.USER_TEST_TABLE_NAME.getValue(), columnWithPredicates);
             try (ResultSet resultSet = statement.executeQuery(findQuery)) {
                 UserTest entity = extractEntity(resultSet);
                 maybeUserTest = Optional.ofNullable(entity);
             }
         } catch (SQLException | DaoException e) {
-            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, TEST_ID, testId);
+            String message = LoggerUtil.findByErrorLogging(LOG, ENTITY_NAME, USER_ID + " and " + TEST_ID, userId + " and " + testId);
             throw new DaoException(message, e);
         }
         return maybeUserTest;
@@ -90,7 +129,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         String userId = String.valueOf(user.getId());
         LoggerUtil.existByStartLogging(LOG, ENTITY_NAME, USER_ID, userId);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.generateCountByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
+            String countQuery = QueryBuilderUtil.countByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     count = resultSet.getLong("count");
@@ -110,7 +149,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         String testId = String.valueOf(test.getId());
         LoggerUtil.existByStartLogging(LOG, ENTITY_NAME, TEST_ID, testId);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.generateCountByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
+            String countQuery = QueryBuilderUtil.countByQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     count = resultSet.getLong("count");
@@ -128,7 +167,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         User user = getUser(uuid);
         String userId = String.valueOf(user.getId());
         LoggerUtil.deleteByStartLogging(LOG, ENTITY_NAME, USER_ID, userId);
-        String deleteQuery = QueryBuilderUtil.generateDeleteQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
+        String deleteQuery = QueryBuilderUtil.deleteQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), USER_ID, userId);
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
@@ -142,7 +181,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
         Test test = getTest(uuid);
         String testId = String.valueOf(test.getId());
         LoggerUtil.deleteByStartLogging(LOG, ENTITY_NAME, TEST_ID, testId);
-        String deleteQuery = QueryBuilderUtil.generateDeleteQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
+        String deleteQuery = QueryBuilderUtil.deleteQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), TEST_ID, testId);
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
@@ -172,13 +211,13 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
 
     @Override
     public String getInsertQuery() {
-        return QueryBuilderUtil.generateInsertQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), 8);
+        return QueryBuilderUtil.insertQuery(DaoConstant.USER_TEST_TABLE_NAME.getValue(), 8);
     }
 
     @Override
     public String getUpdateQuery(UserTest entity) {
         List<String> columnNames = List.of("is_selected", "is_completed", "mark_value", "attempt_number", "start_time", "end_time");
-        return QueryBuilderUtil.generateUpdateQueryByUuid(DaoConstant.USER_TEST_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
+        return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TEST_TABLE_NAME.getValue(), entity.getUuid(), columnNames);
     }
 
     @Override
