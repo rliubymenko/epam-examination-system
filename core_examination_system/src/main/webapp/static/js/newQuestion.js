@@ -76,8 +76,6 @@ function resetInputs() {
 }
 
 // Clone input group fields
-
-
 function cloneAndModifyInputGroupFields() {
 
     $("body").on("click", ".copyNodeBtnField", function (e) {
@@ -87,8 +85,6 @@ function cloneAndModifyInputGroupFields() {
         // Clone input row
         const clonedElement = $(e.target).closest(".checkboxChoice")
             .clone(true);
-
-        console.log(clonedElement)
 
         // Append data and remove disabled state from remove button
         $(e.target).closest("#choiceToggler")

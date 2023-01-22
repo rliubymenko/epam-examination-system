@@ -15,7 +15,6 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <jsp:include page="static.jsp"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/home.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/login.css">
     <script src="${pageContext.request.contextPath}/static/js/login.js" defer></script>
     <script>
@@ -55,80 +54,87 @@
 </head>
 <body>
 
-<jsp:include page="header.jsp"/>
+<div id="page-container">
 
-<section class="vh-90 bg-image"
-         style="background-image: url('${pageContext.request.contextPath}/static/img/back.jpg');">
-    <div class="mask d-flex align-items-center h-100 gradient-signin-form">
-        <div class="container h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div class="card" style="border-radius: 15px;">
-                        <div class="card-body p-5">
-                            <h2 class="text-uppercase text-center mb-5"><fmt:message key="login.login"/></h2>
-                            <form
-                                    id="login-form"
-                                    action="${pageContext.request.contextPath}/login"
-                                    method="post"
-                                    novalidate
-                                    class="needs-validation"
-                            >
-                                <div class="input-group form-outline mb-4">
-                                    <span class="input-group-text" id="usernameGroup">@</span>
-                                    <input
-                                            type="text"
-                                            class="form-control form-control-lg"
-                                            id="username"
-                                            name="username"
-                                            aria-label="Username"
-                                            placeholder="<fmt:message key="login.username"/>"
-                                            aria-describedby="usernameGroup"
-                                            required
-                                    />
-                                    <div class="invalid-feedback">
-                                        <fmt:message key="login.invalid_username"/>
-                                    </div>
-                                </div>
+    <jsp:include page="header.jsp"/>
 
-                                <div class="form-outline mb-4">
-                                    <input
-                                            type="password"
-                                            id="password"
-                                            name="password"
-                                            class="form-control form-control-lg"
-                                            required
-                                    />
-                                    <label class="form-label" for="password">
-                                        <fmt:message key="login.password"/>
-                                    </label>
-                                    <div class="invalid-feedback">
-                                        <fmt:message key="login.invalid_password"/>
-                                    </div>
+    <div id="login-content-wrap">
+        <section class="vh-90 bg-image"
+                 style="background-image: url('${pageContext.request.contextPath}/static/img/back.jpg');">
+            <div class="mask d-flex align-items-center h-100 gradient-signin-form">
+                <div class="container h-100">
+                    <div class="row d-flex justify-content-center align-items-center login-height">
+                        <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                            <div class="card" style="border-radius: 15px;">
+                                <div class="card-body p-5">
+                                    <h2 class="text-uppercase text-center mb-5"><fmt:message key="login.login"/></h2>
+                                    <form
+                                            id="login-form"
+                                            action="${pageContext.request.contextPath}/login"
+                                            method="post"
+                                            novalidate
+                                            class="needs-validation"
+                                    >
+                                        <div class="input-group form-outline mb-4">
+                                            <span class="input-group-text" id="usernameGroup">@</span>
+                                            <input
+                                                    type="text"
+                                                    class="form-control form-control-lg"
+                                                    id="username"
+                                                    name="username"
+                                                    aria-label="Username"
+                                                    placeholder="<fmt:message key="login.username"/>"
+                                                    aria-describedby="usernameGroup"
+                                                    required
+                                            />
+                                            <div class="invalid-feedback">
+                                                <fmt:message key="login.invalid_username"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input
+                                                    type="password"
+                                                    id="password"
+                                                    name="password"
+                                                    class="form-control form-control-lg"
+                                                    required
+                                            />
+                                            <label class="form-label" for="password">
+                                                <fmt:message key="login.password"/>
+                                            </label>
+                                            <div class="invalid-feedback">
+                                                <fmt:message key="login.invalid_password"/>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="submit"
+                                                    class="btn btn-success btn-block btn-lg gradient-submit-btn text-body">
+                                                <fmt:message key="login.signin"/>
+                                            </button>
+                                        </div>
+                                        <p class="text-center text-muted mt-5 mb-0">
+                                            <fmt:message key="login.do_not_have_account"/>
+                                            <a href="${pageContext.request.contextPath}/registration"
+                                               class="fw-bold text-body">
+                                                <u>
+                                                    <fmt:message key="login.register_here"/>
+                                                </u>
+                                            </a>
+                                        </p>
+                                    </form>
                                 </div>
-                                <div class="d-flex justify-content-center">
-                                    <button type="submit"
-                                            class="btn btn-success btn-block btn-lg gradient-submit-btn text-body">
-                                        <fmt:message key="login.signin"/>
-                                    </button>
-                                </div>
-                                <p class="text-center text-muted mt-5 mb-0">
-                                    <fmt:message key="login.do_not_have_account"/>
-                                    <a href="${pageContext.request.contextPath}/registration" class="fw-bold text-body">
-                                        <u>
-                                            <fmt:message key="login.register_here"/>
-                                        </u>
-                                    </a>
-                                </p>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
-</section>
 
-<jsp:include page="footer.jsp"/>
+    <jsp:include page="footer.jsp"/>
+
+</div>
 
 </body>
 </html>

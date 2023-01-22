@@ -7,6 +7,7 @@
 <%@ attribute name="cardHeader" required="true" type="java.lang.String" %>
 <%@ attribute name="allowCreate" required="true" type="java.lang.String" %>
 <%@ attribute name="createNewItemUrl" required="false" type="java.lang.String" %>
+<%@ attribute name="searchHeaderNames" required="false" type="java.util.List" %>
 <%@ attribute name="pageData" required="true" type="com.epam.examinationsystem.core.dto.pageable.PageResponseDto" %>
 <%@ attribute name="body" fragment="true" %>
 
@@ -19,13 +20,20 @@
 <fmt:message bundle="${locale}" key="table.pagination_of" var="of"/>
 <fmt:message bundle="${locale}" key="table.pagination_entries" var="entries"/>
 
-<c:set var="dataPage" scope="session" value="${pageData.currentPage}"/>
-<c:set var="dataSize" scope="session" value="${pageData.pageSize}"/>
-<c:set var="dataSort" scope="session" value="${pageData.sort}"/>
-<c:set var="dataOrder" scope="session" value="${pageData.order}"/>
+<c:set var="dataPage" scope="page" value="${pageData.currentPage}"/>
+<c:set var="dataSize" scope="page" value="${pageData.pageSize}"/>
+<c:set var="dataSort" scope="page" value="${pageData.sort}"/>
+<c:set var="dataOrder" scope="page" value="${pageData.order}"/>
+<c:set var="dataForSearch" scope="page" value="${pageData.dataForSearch}"/>
 <c:set var="currentUrl" value="${requestScope['jakarta.servlet.forward.request_uri']}"/>
+<c:forEach var="status" items="${pageData.currentDataForSearch}" varStatus="currentDataForSearchStatus">
+    <c:if test="${currentDataForSearchStatus.count eq 1}">
+        <c:set var="currentDataSearch" scope="page" value="${status}"/>
+    </c:if>
+</c:forEach>
 
-<div class="d-flex justify-content-center pb-4 pt-3 px-5">
+
+<div class="d-flex justify-content-center px-5">
     <div class="row">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
@@ -34,7 +42,7 @@
                     <div class="d-flex justify-content-start align-items-start">
                         <fmt:message key="${cardHeader}" bundle="${locale}"/>
                     </div>
-                    <div class="d-flex justify-content-center align-items-center">
+                    <div class="d-flex justify-content-center mx-auto flex-row align-items-center">
                         <ul class="pagination pagination-circle justify-content-center">
                             <li class="${pageData.showFirst ? 'page-item' : 'page-item disabled'}">
                                 <a class="page-link " href="#"
@@ -65,6 +73,29 @@
                             </li>
                         </ul>
                     </div>
+                    <c:if test="${not empty dataForSearch}">
+                        <div class="d-flex px-2 justify-content-end align-items-start">
+                            <c:forEach var="searchData" items="${dataForSearch}" varStatus="searchDataStatus">
+                                <select id="select_${searchDataStatus.index}"
+                                        aria-label="search"
+                                        class="form-select"
+                                        style="width: 10rem"
+                                        onchange="runSortByCriteria(event, '${dataSort}', '${dataOrder}', '${dataPage}', '${dataSize}')"
+                                >
+                                    <option value="-1" ${empty pageData.currentDataForSearch ? 'selected' : ''}>
+                                        <fmt:message key="${searchHeaderNames[searchDataStatus.index]}"
+                                                     bundle="${locale}"/>
+                                    </option>
+                                    <c:forEach var="dataMap" items="${searchData}" varStatus="dataMapStatus">
+                                        <option ${not empty pageData.currentDataForSearch && currentDataSearch.key == dataMap.key ? 'selected' : ''}
+                                                value="${dataMap.key}">
+                                                ${dataMap.value}
+                                        </option>
+                                    </c:forEach>
+                                </select>
+                            </c:forEach>
+                        </div>
+                    </c:if>
                     <c:if test="${allowCreate}">
                         <div class="d-flex justify-content-end align-items-start">
                             <a class="btn btn-sm fw-bold btn-outline-success btn-rounded"
@@ -79,6 +110,14 @@
             <div class="card-body">
                 <table class="table table-hover">
                     <thead class="table-head">
+                    <c:if test="${empty pageData.items}">
+                        <div class="text-center">
+                            <h1>
+                                <fmt:message key="table.empty_body" bundle="${locale}"/>
+                            </h1>
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty pageData.items}">
                     <tr>
                         <c:forEach items="${headerDataList}" var="columnHeader">
                             <th>
@@ -114,6 +153,7 @@
                     <tbody>
                     <jsp:invoke fragment="body"/>
                     </tbody>
+                    </c:if>
                 </table>
 
                 <div class="d-flex justify-content-between">
@@ -177,7 +217,7 @@
                            title="<fmt:message key="table.refresh_page" bundle="${locale}"/>"><i
                                 class="fa fa-refresh"></i></a>
                         <a class="page-link btn btn-secondary pe-3" href="#"
-                           onclick="runSortWithPagination('${dataSort}', '${dataOrder}', 1, 10, 0)"
+                           onclick="resetAll()"
                            title="<fmt:message key="table.reset_page" bundle="${locale}"/>"><i class="fa fa-trash"></i></a>
                     </div>
                 </div>
@@ -185,6 +225,9 @@
         </div>
     </div>
     <form id="personalSearch" action="${currentUrl}" method="GET" novalidate>
+        <c:if test="${not empty pageData.currentDataForSearch}">
+            <input id="searchIdInput" type="hidden" name="search_uuid" value="${currentDataSearch.key}"/>
+        </c:if>
         <input type="submit" id="personalSearchSubmit" hidden/>
     </form>
 </div>

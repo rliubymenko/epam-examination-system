@@ -6,7 +6,7 @@
 <fmt:setBundle basename="i18n.bundle"/>
 
 <!-- Footer -->
-<footer class="text-center text-white" style="background-color: #40C4FF">
+<footer id="footer" class="text-center text-white" style="background-color: #40C4FF">
     <!-- Grid container -->
     <div class="container">
 
@@ -37,7 +37,7 @@
                 <p>
                     © Copyright 2022 - 2023 :
                     <a class="text-white" href="${requestScope['jakarta.servlet.forward.context_path']}/home">
-                        <fmt:message key="footer.сopyright"/>
+                        <fmt:message key="footer.copyright"/>
                     </a>
                 </p>
             </li>

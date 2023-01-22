@@ -1,5 +1,5 @@
 function runSortWithPagination(sort, order, page, size, pageOperator) {
-    submitRequest(sort, order, parseInt(page,10) + pageOperator, size);
+    submitRequest(sort, order, parseInt(page, 10) + pageOperator, size);
 }
 
 function runSort(sort, order, page, size) {
@@ -9,6 +9,36 @@ function runSort(sort, order, page, size) {
         order = 'desc';
     }
     submitRequest(sort, order, page, size);
+}
+
+function runSortByCriteria(event, sort, order, page, size) {
+    const uuid = event.target.value;
+    if (uuid !== '-1') {
+        let personalSearch = document.getElementById('personalSearch');
+        const searchIdInput = document.getElementById("searchIdInput");
+        if (searchIdInput === undefined || searchIdInput === null) {
+            const input = document.createElement("input");
+            input.setAttribute("id", "searchIdInput");
+            input.setAttribute("type", "hidden");
+            input.setAttribute("name", "search_uuid");
+            input.setAttribute("value", uuid);
+            personalSearch.appendChild(input);
+            submitRequest(sort, order, page, size);
+        } else if (uuid !== searchIdInput.getAttribute('value')) {
+            searchIdInput.setAttribute("value", uuid);
+            submitRequest('created', 'desc', 1, 10);
+        }
+    }
+}
+
+function resetAll() {
+    const personalSearchForm = document.getElementById('personalSearch');
+    const searchIdInput = document.getElementById("searchIdInput");
+    if (searchIdInput !== undefined && searchIdInput !== null) {
+        searchIdInput.remove();
+    }
+    personalSearchForm.reset();
+    personalSearchForm.submit();
 }
 
 function submitRequest(sort, order, page, size) {
