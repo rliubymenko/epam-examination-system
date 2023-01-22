@@ -8,12 +8,14 @@ public class DataTableRequest {
     private int pageSize;
     private String sort;
     private String order;
+    private String searchUuid;
 
-    public DataTableRequest(int currentPage, int pageSize, String sort, String order) {
+    public DataTableRequest(int currentPage, int pageSize, String sort, String order, String searchUuid) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.sort = sort;
         this.order = order;
+        this.searchUuid = searchUuid;
     }
 
     public String getSort() {
@@ -48,6 +50,14 @@ public class DataTableRequest {
         this.pageSize = pageSize;
     }
 
+    public String getSearchUuid() {
+        return searchUuid;
+    }
+
+    public void setSearchUuid(String searchUuid) {
+        this.searchUuid = searchUuid;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -55,6 +65,7 @@ public class DataTableRequest {
                 .append("order", order)
                 .append("currentPage", currentPage)
                 .append("pageSize", pageSize)
+                .append("foreignUuid", searchUuid)
                 .toString();
     }
 }

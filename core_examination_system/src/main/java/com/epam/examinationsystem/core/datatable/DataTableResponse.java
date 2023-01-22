@@ -3,8 +3,7 @@ package com.epam.examinationsystem.core.datatable;
 import com.epam.examinationsystem.core.dto.AbstractDto;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DataTableResponse<DTO extends AbstractDto> {
 
@@ -13,10 +12,13 @@ public class DataTableResponse<DTO extends AbstractDto> {
     private long entriesFrom;
     private long entriesTo;
     private long totalPageSize;
-
+    private List<Map<UUID, String>> dataForSearch;
+    private Map<UUID, String> currentDataForSearch;
 
     public DataTableResponse() {
         dtos = Collections.emptyList();
+        dataForSearch = new ArrayList<>();
+        currentDataForSearch = new HashMap<>();
         entitiesSize = 0;
     }
 
@@ -60,6 +62,22 @@ public class DataTableResponse<DTO extends AbstractDto> {
         this.totalPageSize = totalPageSize;
     }
 
+    public List<Map<UUID, String>> getDataForSearch() {
+        return dataForSearch;
+    }
+
+    public void setDataForSearch(List<Map<UUID, String>> dataForSearch) {
+        this.dataForSearch = dataForSearch;
+    }
+
+    public Map<UUID, String> getCurrentDataForSearch() {
+        return currentDataForSearch;
+    }
+
+    public void setCurrentDataForSearch(Map<UUID, String> currentDataForSearch) {
+        this.currentDataForSearch = currentDataForSearch;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -68,6 +86,7 @@ public class DataTableResponse<DTO extends AbstractDto> {
                 .append("entriesFrom", entriesFrom)
                 .append("entriesTo", entriesTo)
                 .append("totalPageSize", totalPageSize)
+                .append("currentDataForSearch", currentDataForSearch)
                 .toString();
     }
 }

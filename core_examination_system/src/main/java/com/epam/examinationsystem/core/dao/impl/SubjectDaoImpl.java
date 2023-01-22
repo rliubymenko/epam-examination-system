@@ -32,7 +32,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
     private UserDao userDao;
 
     public SubjectDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue());
+        super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue(), null);
     }
 
     @Override

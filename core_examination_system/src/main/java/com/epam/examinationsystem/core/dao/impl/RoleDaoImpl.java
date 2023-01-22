@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.dao.impl;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.RoleDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.Role;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
 import com.epam.examinationsystem.core.enumeration.UserType;
@@ -29,7 +30,7 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
     private static final Logger LOG = LoggerFactory.getLogger(RoleDaoImpl.class);
 
     public RoleDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.ROLE_TABLE_NAME.getValue());
+        super(LOG, ENTITY_NAME, DaoConstant.ROLE_TABLE_NAME.getValue(), null);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
     }
 
     @Override
-    public long count() {
+    public long count(DataTableRequest request) {
         // Default number of roles
         return 3;
     }

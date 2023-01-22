@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @PleaseService
@@ -28,13 +29,14 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final String ENTITY_NAME = "user";
     private static final String USERNAME = "username";
     private static final String EMAIL = "email";
+    private static final Map<String, String> foreignTableNamesWithKeys = Map.of("role", "role_id");
     private static final Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @PleaseInject
     private RoleDao roleDao;
 
     public UserDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.USER_TABLE_NAME.getValue());
+        super(LOG, ENTITY_NAME, DaoConstant.USER_TABLE_NAME.getValue(), foreignTableNamesWithKeys);
     }
 
     @Override

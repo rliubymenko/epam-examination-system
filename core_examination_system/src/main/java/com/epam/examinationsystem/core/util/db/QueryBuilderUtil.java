@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.util.db;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,10 +36,6 @@ public final class QueryBuilderUtil {
         return "SELECT * FROM " + tableName + " WHERE " + propertyName + " = " + '\'' + propertyValue + '\'' + ";";
     }
 
-    public static String countQuery(String tableName) {
-        return "SELECT COUNT(*) as count FROM " + tableName + ";";
-    }
-
     public static String countByUuidQuery(String tableName, UUID uuid) {
         return "SELECT COUNT(*) as count FROM " + tableName + " WHERE uuid = " + '\'' + uuid + '\'' + ";";
     }
@@ -61,7 +58,7 @@ public final class QueryBuilderUtil {
                     .append(entry.getKey())
                     .append(" = ")
                     .append(entry.getValue())
-                    .append(" and ");
+                    .append(" AND ");
         }
         return query
                 .delete(query.length() - 5, query.length() - 1)
@@ -73,20 +70,34 @@ public final class QueryBuilderUtil {
         return "SELECT * FROM " + tableName + ";";
     }
 
-    public static String findAllWithParametersQuery(String tableName, DataTableRequest request) {
+    public static String findAllAndJoinTableByForeignKeyByQueryParameters(String tableName,
+                                                                          DataTableRequest request,
+                                                                          Map<String, String> foreignTableNamesWithKeys) {
         int offset = (request.getCurrentPage() - 1) * request.getPageSize();
+        String sort = request.getSort().equals(PageableUtil.DEFAULT_SORT_VALUE) ? tableName + '.' + request.getSort() : request.getSort();
         return new StringBuilder()
                 .append("SELECT * FROM ")
                 .append(tableName)
+                .append(joinAndWhereByParametersQuery(tableName, request, foreignTableNamesWithKeys))
                 .append(" ORDER BY ")
-                .append(fromCamelCaseToSnakeCase(request.getSort()))
+                .append(sort)
                 .append(" ")
                 .append(request.getOrder().toLowerCase())
                 .append(" LIMIT ")
                 .append(request.getPageSize())
                 .append(" OFFSET ")
                 .append(offset)
-                .append(";").toString();
+                .append(";")
+                .toString();
+    }
+
+    public static String countQuery(String tableName, DataTableRequest request, Map<String, String> foreignTableNamesWithKeys) {
+        return new StringBuilder()
+                .append("SELECT COUNT(*) as count FROM ")
+                .append(tableName)
+                .append(joinAndWhereByParametersQuery(tableName, request, foreignTableNamesWithKeys))
+                .append(";")
+                .toString();
     }
 
     public static String deleteQuery(String tableName, String columnName, String predicate) {
@@ -130,14 +141,6 @@ public final class QueryBuilderUtil {
         }
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-
-    private static String fromCamelCaseToSnakeCase(String field) {
-        String regex = "([a-z])([A-Z]+)";
-        String replacement = "$1_$2";
-        return field.replaceAll(regex, replacement).toLowerCase();
-    }
-
     private static void populatePreparedStatement(PreparedStatement preparedStatement, Object field, int index) throws SQLException {
         if (field == null) {
             preparedStatement.setNull(index, Types.OTHER);
@@ -165,5 +168,39 @@ public final class QueryBuilderUtil {
                 default -> preparedStatement.setObject(index, field.toString(), Types.OTHER);
             }
         }
+    }
+
+    private static StringBuilder joinAndWhereByParametersQuery(String tableName,
+                                                               DataTableRequest request,
+                                                               Map<String, String> foreignTableNamesWithKeys) {
+        StringBuilder query = new StringBuilder();
+        if (foreignTableNamesWithKeys != null) {
+            for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
+                query
+                        .append(" LEFT JOIN ")
+                        .append(foreignTableNameWithKey.getKey())
+                        .append(" ON ")
+                        .append(tableName)
+                        .append(".")
+                        .append(foreignTableNameWithKey.getValue())
+                        .append(" = ")
+                        .append(foreignTableNameWithKey.getKey())
+                        .append(".id ");
+            }
+            if (!request.getSearchUuid().equals(PageableUtil.DEFAULT_FOREIGN_UUID)) {
+                query.append(" WHERE ");
+                for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
+                    query
+                            .append(foreignTableNameWithKey.getKey())
+                            .append(".uuid")
+                            .append(" = '")
+                            .append(request.getSearchUuid())
+                            .append("'")
+                            .append(" OR ");
+                }
+                query.delete(query.length() - 4, query.length() - 1);
+            }
+        }
+        return query;
     }
 }

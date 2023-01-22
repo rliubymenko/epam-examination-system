@@ -30,6 +30,10 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
     private static final String ENTITY_NAME = "user_test";
     private static final String USER_ID = "epam_user_id";
     private static final String TEST_ID = "test_id";
+    private static final Map<String, String> foreignTableNamesWithKeys = Map.of(
+            "epam_user", USER_ID,
+            "test", TEST_ID
+    );
     private static final Logger LOG = LoggerFactory.getLogger(UserTestDaoImpl.class);
 
     @PleaseInject
@@ -39,7 +43,7 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
     private TestDao testDao;
 
     public UserTestDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.USER_TEST_TABLE_NAME.getValue());
+        super(LOG, ENTITY_NAME, DaoConstant.USER_TEST_TABLE_NAME.getValue(), foreignTableNamesWithKeys);
     }
 
     @Override

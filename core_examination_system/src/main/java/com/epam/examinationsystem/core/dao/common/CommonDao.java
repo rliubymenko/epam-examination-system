@@ -27,7 +27,7 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
 
     boolean deleteByUuid(UUID uuid) throws DaoException;
 
-    long count() throws DaoException;
+    long count(DataTableRequest request) throws DaoException;
 
     // --- Method for transaction manager
     void setConnection(Connection connection);

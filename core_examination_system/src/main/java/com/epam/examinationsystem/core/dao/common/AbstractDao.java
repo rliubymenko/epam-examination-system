@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,12 +18,14 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     private final Logger log;
     private final String entityName;
     private final String tableName;
+    private final Map<String, String> foreignTableNamesWithKeys;
     protected Connection connection;
 
-    protected AbstractDao(Logger log, String entityName, String tableName) {
+    protected AbstractDao(Logger log, String entityName, String tableName, Map<String, String> foreignTableNamesWithKeys) {
         this.log = log;
         this.entityName = entityName;
         this.tableName = tableName;
+        this.foreignTableNamesWithKeys = foreignTableNamesWithKeys;
     }
 
     public void setConnection(Connection connection) {
@@ -99,14 +102,14 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     @Override
     public List<ENTITY> findAll(DataTableRequest request) throws DaoException {
         List<ENTITY> entities;
-        LoggerUtil.findAllWithParametersStartLogging(log, entityName, request);
+        LoggerUtil.findAllByParametersStartLogging(log, entityName, request);
         try (Statement statement = connection.createStatement()) {
-            String findAllQuery = QueryBuilderUtil.findAllWithParametersQuery(tableName, request);
+            String findAllQuery = QueryBuilderUtil.findAllAndJoinTableByForeignKeyByQueryParameters(tableName, request, foreignTableNamesWithKeys);
             try (ResultSet resultSet = statement.executeQuery(findAllQuery)) {
                 entities = extractEntities(resultSet);
             }
         } catch (SQLException e) {
-            String message = LoggerUtil.findAllWithParametersErrorLogging(log, entityName, request);
+            String message = LoggerUtil.findAllByParametersErrorLogging(log, entityName, request);
             throw new DaoException(message, e);
         }
         return entities;
@@ -156,10 +159,10 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
     }
 
     @Override
-    public long count() throws DaoException {
+    public long count(DataTableRequest request) throws DaoException {
         LoggerUtil.countingRecordsStartLogging(log, entityName);
         try (Statement statement = connection.createStatement()) {
-            String countQuery = QueryBuilderUtil.countQuery(tableName);
+            String countQuery = QueryBuilderUtil.countQuery(tableName, request, foreignTableNamesWithKeys);
             try (ResultSet resultSet = statement.executeQuery(countQuery)) {
                 if (resultSet.next()) {
                     return resultSet.getLong("count");

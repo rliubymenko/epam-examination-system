@@ -20,23 +20,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @PleaseService
 public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 
     private static final String ENTITY_NAME = "answer";
     private static final String QUESTION_ID = "question_id";
+    private static final Map<String, String> foreignTableNamesWithKeys = Map.of("question", QUESTION_ID);
     private static final Logger LOG = LoggerFactory.getLogger(AnswerDaoImpl.class);
 
     @PleaseInject
     private QuestionDao questionDao;
 
     public AnswerDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.ANSWER_TABLE_NAME.getValue());
+        super(LOG, ENTITY_NAME, DaoConstant.ANSWER_TABLE_NAME.getValue(), foreignTableNamesWithKeys);
     }
 
     @Override
