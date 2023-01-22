@@ -34,12 +34,12 @@ public class GetAllAnswersByParametersCommand implements ActionCommand {
 
     public GetAllAnswersByParametersCommand() {
         headerNames = List.of(
-                new HeaderName("#", false, null),
-                new HeaderName("answer.content", true, "content"),
-                new HeaderName("answer.is_correct", true, "is_correct"),
-                new HeaderName("answer.question", false, "question_id"),
-                new HeaderName("answer.question_type", false, null),
-                new HeaderName("table.actions", false, null)
+                new HeaderName("#", false, null, null),
+                new HeaderName("answer.content", true, "answerContent", "answer.content"),
+                new HeaderName("answer.is_correct", true, "answerCorrectness", "answer.is_correct"),
+                new HeaderName("answer.question", true, "questionContent", "question.content"),
+                new HeaderName("answer.question_type", true, "questionType", "question.type"),
+                new HeaderName("table.actions", false, null, null)
         );
     }
 
@@ -47,12 +47,12 @@ public class GetAllAnswersByParametersCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Searching answers by parameters");
         String page = Path.ANSWERS_PAGE;
-        DataTableRequest tableRequest = PageableUtil.extractPageableData(request);
+        DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
         try {
             DataTableResponse<AnswerDto> answerResponse = answerService.findAll(tableRequest);
-            PageableFacade<AnswerDto> pageableFacade = new PageableFacade<>(tableRequest, answerResponse);
+            PageableFacade<AnswerDto> pageableFacade = new PageableFacade<>(tableRequest, answerResponse, headerNames);
             PageResponseDto<AnswerDto> pageResponseDto = pageableFacade.getPageResponseDto();
-            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList(headerNames);
+            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList();
             request.setAttribute(Attribute.HEADER_DATA_LIST, headerDataList);
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, true);

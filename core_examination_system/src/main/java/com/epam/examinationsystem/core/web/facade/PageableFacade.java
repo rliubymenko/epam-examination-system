@@ -13,34 +13,38 @@ import java.util.List;
 
 public class PageableFacade<DTO extends AbstractDto> {
 
+    private final List<HeaderName> headerNames;
     private final PageResponseDto<DTO> pageResponseDto;
 
-    public PageableFacade(DataTableRequest request, DataTableResponse<DTO> response) {
+    public PageableFacade(DataTableRequest request, DataTableResponse<DTO> response, List<HeaderName> headerNames) {
         pageResponseDto = new PageResponseDto<>();
         pageResponseDto.setItems(response.getDtos());
+        pageResponseDto.setDataForSearch(response.getDataForSearch());
+        pageResponseDto.setCurrentDataForSearch(response.getCurrentDataForSearch());
         pageResponseDto.setCurrentPage(request.getCurrentPage());
         pageResponseDto.setPageSize(request.getPageSize());
-        pageResponseDto.setSort(request.getSort());
+        pageResponseDto.setSort(extractSortStringViewName(request.getSort(), headerNames));
         pageResponseDto.setOrder(request.getOrder());
         pageResponseDto.setItemsSize(response.getEntitiesSize());
         pageResponseDto.setTotalPageSize(response.getTotalPageSize());
         pageResponseDto.setCurrentShowFromEntries(response.getEntriesFrom());
         pageResponseDto.setCurrentShowToEntries(response.getEntriesTo());
         pageResponseDto.initPaginationState(request.getCurrentPage());
+        this.headerNames = headerNames;
     }
 
     public PageResponseDto<DTO> getPageResponseDto() {
         return pageResponseDto;
     }
 
-    public List<HeaderData> getHeaderDataList(List<HeaderName> headerNames) {
+    public List<HeaderData> getHeaderDataList() {
         List<HeaderData> headerDataList = new ArrayList<>();
         for (HeaderName headerName : headerNames) {
             HeaderData headerData = new HeaderData();
             headerData.setHeaderName(headerName.columnName());
             headerData.setIsSortable(headerName.isSortable());
-            headerData.setSort(headerName.dbName());
-            if (pageResponseDto.getSort().equalsIgnoreCase(headerName.dbName())) {
+            headerData.setSort(headerName.viewName());
+            if (pageResponseDto.getSort().equalsIgnoreCase(headerName.viewName())) {
                 headerData.setActive(true);
                 headerData.setOrder(pageResponseDto.getOrder());
             } else {
@@ -50,5 +54,16 @@ public class PageableFacade<DTO extends AbstractDto> {
             headerDataList.add(headerData);
         }
         return headerDataList;
+    }
+
+    private static String extractSortStringViewName(String sort, List<HeaderName> headerNames) {
+        if (!sort.equals(PageableUtil.DEFAULT_SORT_VALUE)) {
+            return headerNames.stream()
+                    .filter(headerName -> headerName.dbName() != null && headerName.dbName().contains(sort))
+                    .map(HeaderName::viewName)
+                    .findFirst()
+                    .get();
+        }
+        return PageableUtil.DEFAULT_SORT_VALUE;
     }
 }

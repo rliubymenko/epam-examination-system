@@ -37,10 +37,10 @@ public class GetAllSubjectsForStudentByParametersCommand implements ActionComman
 
     public GetAllSubjectsForStudentByParametersCommand() {
         headerNames = List.of(
-                new HeaderName("#", false, null),
-                new HeaderName("subject.name", true, "name"),
-                new HeaderName("subject.description", true, "description"),
-                new HeaderName("table.actions", false, null)
+                new HeaderName("#", false, null, null),
+                new HeaderName("subject.name", true, "subjectName", "subject.name"),
+                new HeaderName("subject.description", true, "subjectDescription", "subject.description"),
+                new HeaderName("table.actions", false, null, null)
         );
     }
 
@@ -48,15 +48,15 @@ public class GetAllSubjectsForStudentByParametersCommand implements ActionComman
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Searching subjects by parameters for students");
         String page = Path.SUBJECTS_FOR_STUDENT_PAGE;
-        DataTableRequest tableRequest = PageableUtil.extractPageableData(request);
+        DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
         try {
             UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             DataTableResponse<StudentSubjectDto> subjectResponse = subjectService.findAllForStudent(
                     tableRequest, UUID.fromString(currentUser.getUuid())
             );
-            PageableFacade<StudentSubjectDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse);
+            PageableFacade<StudentSubjectDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse, headerNames);
             PageResponseDto<StudentSubjectDto> pageResponseDto = pageableFacade.getPageResponseDto();
-            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList(headerNames);
+            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList();
             request.setAttribute(Attribute.HEADER_DATA_LIST, headerDataList);
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, false);

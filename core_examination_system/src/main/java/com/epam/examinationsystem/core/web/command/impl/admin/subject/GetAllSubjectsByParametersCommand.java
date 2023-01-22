@@ -34,11 +34,10 @@ public class GetAllSubjectsByParametersCommand implements ActionCommand {
 
     public GetAllSubjectsByParametersCommand() {
         headerNames = List.of(
-                new HeaderName("#", false, null),
-                new HeaderName("subject.name", true, "name"),
-                new HeaderName("subject.description", true, "description"),
-//                new HeaderName("subject.tutor", false, "epam_user_id"),
-                new HeaderName("table.actions", false, null)
+                new HeaderName("#", false, null, null),
+                new HeaderName("subject.name", true, "subjectName", "subject.name"),
+                new HeaderName("subject.description", true, "subjectDescription", "subject.description"),
+                new HeaderName("table.actions", false, null, null)
         );
     }
 
@@ -46,12 +45,12 @@ public class GetAllSubjectsByParametersCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Searching subjects by parameters");
         String page = Path.SUBJECTS_PAGE;
-        DataTableRequest tableRequest = PageableUtil.extractPageableData(request);
+        DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
         try {
             DataTableResponse<SubjectDto> subjectResponse = subjectService.findAll(tableRequest);
-            PageableFacade<SubjectDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse);
+            PageableFacade<SubjectDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse, headerNames);
             PageResponseDto<SubjectDto> pageResponseDto = pageableFacade.getPageResponseDto();
-            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList(headerNames);
+            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList();
             request.setAttribute(Attribute.HEADER_DATA_LIST, headerDataList);
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, true);

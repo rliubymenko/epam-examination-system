@@ -34,26 +34,26 @@ public class GetAllUsersByParametersCommand implements ActionCommand {
 
     public GetAllUsersByParametersCommand() {
         headerNames = List.of(
-                new HeaderName("#", false, null),
-                new HeaderName("user.username", true, "username"),
-                new HeaderName("user.email", true, "email"),
-                new HeaderName("user.first_name", true, "first_name"),
-                new HeaderName("user.last_name", true, "last_name"),
-                new HeaderName("user.is_activated", true, "is_activated"),
-                new HeaderName("user.role", false, "role_id"),
-                new HeaderName("table.editing", false, null)
+                new HeaderName("#", false, null, null),
+                new HeaderName("user.username", true, "username", "epam_user.username"),
+                new HeaderName("user.email", true, "email", "epam_user.email"),
+                new HeaderName("user.first_name", true, "firstName", "epam_user.first_name"),
+                new HeaderName("user.last_name", true, "lastName", "epam_user.last_name"),
+                new HeaderName("user.is_activated", true, "isActivated", "epam_user.is_activated"),
+                new HeaderName("user.role", true, "userType", "role.name"),
+                new HeaderName("table.editing", false, null, null)
         );
     }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Searching users by parameters");
-        DataTableRequest tableRequest = PageableUtil.extractPageableData(request);
+        DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
         try {
             DataTableResponse<UserDto> userResponse = userService.findAll(tableRequest);
-            PageableFacade<UserDto> pageableFacade = new PageableFacade<>(tableRequest, userResponse);
+            PageableFacade<UserDto> pageableFacade = new PageableFacade<>(tableRequest, userResponse, headerNames);
             PageResponseDto<UserDto> pageResponseDto = pageableFacade.getPageResponseDto();
-            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList(headerNames);
+            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList();
             request.setAttribute(Attribute.HEADER_DATA_LIST, headerDataList);
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, false);

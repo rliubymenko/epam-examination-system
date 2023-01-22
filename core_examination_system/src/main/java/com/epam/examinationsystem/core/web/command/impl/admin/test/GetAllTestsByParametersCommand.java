@@ -34,29 +34,29 @@ public class GetAllTestsByParametersCommand implements ActionCommand {
 
     public GetAllTestsByParametersCommand() {
         headerNames = List.of(
-                new HeaderName("#", false, null),
-                new HeaderName("test.name", true, "name"),
-                new HeaderName("test.description", true, "description"),
-                new HeaderName("test.complexity", true, "complexity"),
-                new HeaderName("test.duration", true, "duration"),
-                new HeaderName("test.creationDate", true, "created"),
-                new HeaderName("test.expirationDate", true, "expiration_date"),
-                new HeaderName("test.maxAttemptNumber", true, "max_attempt_number"),
-                new HeaderName("test.totalAttemptNumber", true, "total_attempt_number"),
-                new HeaderName("test.subject", false, "subject_id"),
-                new HeaderName("table.actions", false, null)
+                new HeaderName("#", false, null, null),
+                new HeaderName("test.name", true, "testName", "test.name"),
+                new HeaderName("test.description", true, "testDescription", "test.description"),
+                new HeaderName("test.complexity", true, "testComplexity", "test.complexity"),
+                new HeaderName("test.duration", true, "testDuration", "test.duration"),
+                new HeaderName("test.creationDate", true, "testCreated", "test.created"),
+                new HeaderName("test.expirationDate", true, "testExpirationDate", "test.expiration_date"),
+                new HeaderName("test.maxAttemptNumber", true, "testMaxAttemptNumber", "test.max_attempt_number"),
+                new HeaderName("test.totalAttemptNumber", true, "testTotalAttemptNumber", "test.total_attempt_number"),
+                new HeaderName("test.subject", true, "subjectName", "subject.name"),
+                new HeaderName("table.actions", false, null, null)
         );
     }
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Searching tests by parameters");
-        DataTableRequest tableRequest = PageableUtil.extractPageableData(request);
+        DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
         try {
             DataTableResponse<TestDto> subjectResponse = testService.findAll(tableRequest);
-            PageableFacade<TestDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse);
+            PageableFacade<TestDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse, headerNames);
             PageResponseDto<TestDto> pageResponseDto = pageableFacade.getPageResponseDto();
-            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList(headerNames);
+            List<HeaderData> headerDataList = pageableFacade.getHeaderDataList();
             request.setAttribute(Attribute.HEADER_DATA_LIST, headerDataList);
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, true);
