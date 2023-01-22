@@ -2,8 +2,7 @@ package com.epam.examinationsystem.core.dto.pageable;
 
 import com.epam.examinationsystem.core.dto.AbstractDto;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class PageResponseDto<DTO extends AbstractDto> {
 
@@ -21,6 +20,8 @@ public class PageResponseDto<DTO extends AbstractDto> {
     private String order;
     private long currentShowFromEntries;
     private long currentShowToEntries;
+    private List<Map<UUID, String>> dataForSearch;
+    private Map<UUID, String> currentDataForSearch;
 
     public PageResponseDto() {
         this.currentPage = 0;
@@ -28,6 +29,8 @@ public class PageResponseDto<DTO extends AbstractDto> {
         this.totalPageSize = 0;
         this.itemsSize = 0;
         this.items = Collections.emptyList();
+        this.dataForSearch = Collections.emptyList();
+        this.currentDataForSearch = new HashMap<>();
         this.pageSizeItems = new int[]{10, 25, 50, 100};
         this.showFirst = false;
         this.showPrevious = false;
@@ -148,5 +151,21 @@ public class PageResponseDto<DTO extends AbstractDto> {
 
     public void setCurrentShowToEntries(long currentShowToEntries) {
         this.currentShowToEntries = currentShowToEntries;
+    }
+
+    public List<Map<UUID, String>> getDataForSearch() {
+        return dataForSearch;
+    }
+
+    public void setDataForSearch(List<Map<UUID, String>> dataForSearch) {
+        this.dataForSearch = dataForSearch;
+    }
+
+    public Map<UUID, String> getCurrentDataForSearch() {
+        return currentDataForSearch;
+    }
+
+    public void setCurrentDataForSearch(Map<UUID, String> currentDataForSearch) {
+        this.currentDataForSearch = currentDataForSearch;
     }
 }
