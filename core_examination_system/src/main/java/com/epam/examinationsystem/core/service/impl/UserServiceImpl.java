@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.UserDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.entity.Role;
 import com.epam.examinationsystem.core.entity.User;
 import com.epam.examinationsystem.core.enumeration.UserType;
@@ -15,13 +16,13 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.PasswordEncoder;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class UserServiceImpl implements UserService {
@@ -121,10 +122,14 @@ public class UserServiceImpl implements UserService {
         transactionManager.beginWithAutoCommit(userDao, roleDao);
         try {
             List<User> users = userDao.findAll(request);
+            Map<UUID, String> rolesForSearch = getRolesForSearch();
             DataTableResponse<UserDto> response = PageableUtil.calculatePageableData(request, userDao);
             List<UserDto> userDtos = users.stream()
                     .map(UserDto.builder()::fromUser)
                     .toList();
+            Map<UUID, String> currentRoleForSearch = getCurrentRoleForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentRoleForSearch);
+            response.setDataForSearch(List.of(rolesForSearch));
             response.setDtos(userDtos);
             return response;
         } catch (DaoException e) {
@@ -194,5 +199,28 @@ public class UserServiceImpl implements UserService {
         } finally {
             transactionManager.end();
         }
+    }
+
+    private Map<UUID, String> getRolesForSearch() throws DaoException {
+        return roleDao.findAll()
+                .stream()
+                .filter(role -> !role.getName().equals(UserType.TUTOR))
+                .collect(Collectors.toMap(
+                        AbstractEntity::getUuid,
+                        role -> role.getName().toString()
+                ));
+    }
+
+    private Map<UUID, String> getCurrentRoleForSearch(String roleUuid) throws DaoException {
+        Map<UUID, String> currentRoleForSearch = new HashMap<>();
+        if (ParameterValidator.isValidUUID(roleUuid) && roleDao.existsByUuid(UUID.fromString(roleUuid))) {
+            currentRoleForSearch = roleDao.findByUuid(UUID.fromString(roleUuid))
+                    .stream()
+                    .collect(Collectors.toMap(
+                            AbstractEntity::getUuid,
+                            role -> role.getName().toString()
+                    ));
+        }
+        return currentRoleForSearch;
     }
 }

@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.StudentTestDto;
 import com.epam.examinationsystem.core.dto.TestDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.enumeration.TestComplexity;
@@ -17,16 +18,15 @@ import com.epam.examinationsystem.core.service.QuestionService;
 import com.epam.examinationsystem.core.service.TestService;
 import com.epam.examinationsystem.core.service.UserTestService;
 import com.epam.examinationsystem.core.util.validation.DateUtil;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class TestServiceImpl implements TestService {
@@ -182,10 +182,15 @@ public class TestServiceImpl implements TestService {
         transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao);
         try {
             List<Test> tests = testDao.findAll(request);
+            List<Test> allTests = testDao.findAll();
+            Map<UUID, String> subjectsForSearch = getSubjectsForSearch(allTests);
             DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, testDao);
             List<TestDto> testDtos = tests.stream()
                     .map(TestDto.builder()::fromTest)
                     .toList();
+            Map<UUID, String> currentSubjectForSearch = getCurrentSubjectForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentSubjectForSearch);
+            response.setDataForSearch(List.of(subjectsForSearch));
             response.setDtos(testDtos);
             return response;
         } catch (DaoException e) {
@@ -202,6 +207,8 @@ public class TestServiceImpl implements TestService {
         transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao, userTestDao);
         try {
             List<Test> tests = testDao.findAll(request);
+            List<Test> allTests = testDao.findAll();
+            Map<UUID, String> subjectsForSearch = getSubjectsForSearch(allTests);
             DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, testDao);
             List<TestDto> testDtos = new ArrayList<>();
             for (Test test : tests) {
@@ -228,6 +235,9 @@ public class TestServiceImpl implements TestService {
                         .build();
                 testDtos.add(testDto);
             }
+            Map<UUID, String> currentSubjectForSearch = getCurrentSubjectForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentSubjectForSearch);
+            response.setDataForSearch(List.of(subjectsForSearch));
             response.setDtos(testDtos);
             return response;
         } catch (DaoException e) {
@@ -268,5 +278,29 @@ public class TestServiceImpl implements TestService {
         } finally {
             transactionManager.end();
         }
+    }
+
+    private Map<UUID, String> getSubjectsForSearch(List<Test> tests) {
+        return tests
+                .stream()
+                .filter(test -> test.getSubject() != null)
+                .collect(Collectors.toMap(
+                        test -> test.getSubject().getUuid(),
+                        test -> test.getSubject().getName(),
+                        (firstSubject, secondSubject) -> firstSubject
+                ));
+    }
+
+    private Map<UUID, String> getCurrentSubjectForSearch(String subjectUuid) throws DaoException {
+        Map<UUID, String> currentSubjectForSearch = new HashMap<>();
+        if (ParameterValidator.isValidUUID(subjectUuid) && subjectDao.existsByUuid(UUID.fromString(subjectUuid))) {
+            currentSubjectForSearch = subjectDao.findByUuid(UUID.fromString(subjectUuid))
+                    .stream()
+                    .collect(Collectors.toMap(
+                            AbstractEntity::getUuid,
+                            Subject::getName
+                    ));
+        }
+        return currentSubjectForSearch;
     }
 }

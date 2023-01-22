@@ -78,12 +78,12 @@ public final class LoggerUtil {
         return message;
     }
 
-    public static void findAllWithParametersStartLogging(Logger log, String entityName, DataTableRequest request) {
+    public static void findAllByParametersStartLogging(Logger log, String entityName, DataTableRequest request) {
         String message = MessageFormat.format("Finding all {0} entities by {1}", entityName, request);
         log.debug(message);
     }
 
-    public static String findAllWithParametersErrorLogging(Logger log, String entityName,  DataTableRequest request) {
+    public static String findAllByParametersErrorLogging(Logger log, String entityName, DataTableRequest request) {
         String message = MessageFormat.format("Error occurred while trying to find all {0} entities by {1}", entityName, request);
         log.error(message);
         return message;

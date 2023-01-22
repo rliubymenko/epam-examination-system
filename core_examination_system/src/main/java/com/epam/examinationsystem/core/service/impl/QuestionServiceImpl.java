@@ -11,6 +11,7 @@ import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.QuestionDto;
 import com.epam.examinationsystem.core.dto.StudentTestDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.entity.Answer;
 import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.entity.Test;
@@ -18,15 +19,14 @@ import com.epam.examinationsystem.core.enumeration.QuestionType;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.QuestionService;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class QuestionServiceImpl implements QuestionService {
@@ -140,13 +140,18 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public DataTableResponse<QuestionDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all questions by {}", request);
-        transactionManager.beginWithAutoCommit(questionDao, testDao, answerDao);
+        transactionManager.beginWithAutoCommit(questionDao, testDao, answerDao, subjectDao);
         try {
-            List<Question> questions = questionDao.findAll();
-            DataTableResponse<QuestionDto> response = PageableUtil.calculatePageableData(request, testDao);
+            List<Question> questions = questionDao.findAll(request);
+            List<Question> allQuestions = questionDao.findAll();
+            Map<UUID, String> testsForSearch = getTestsForSearch(allQuestions);
+            DataTableResponse<QuestionDto> response = PageableUtil.calculatePageableData(request, questionDao);
             List<QuestionDto> questionDtos = questions.stream()
                     .map(QuestionDto.builder()::fromQuestion)
                     .toList();
+            Map<UUID, String> currentTestForSearch = getCurrentTestForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentTestForSearch);
+            response.setDataForSearch(List.of(testsForSearch));
             response.setDtos(questionDtos);
             return response;
         } catch (DaoException e) {
@@ -238,5 +243,28 @@ public class QuestionServiceImpl implements QuestionService {
             answerDtos.add(answerForStudent);
         }
         return answerDtos;
+    }
+
+    private Map<UUID, String> getTestsForSearch(List<Question> questions) {
+        return questions
+                .stream()
+                .collect(Collectors.toMap(
+                        question -> question.getTest().getUuid(),
+                        question -> question.getTest().getName(),
+                        (firstTest, secondTest) -> firstTest
+                ));
+    }
+
+    private Map<UUID, String> getCurrentTestForSearch(String testUuid) throws DaoException {
+        Map<UUID, String> currentTestForSearch = new HashMap<>();
+        if (ParameterValidator.isValidUUID(testUuid) && testDao.existsByUuid(UUID.fromString(testUuid))) {
+            currentTestForSearch = testDao.findByUuid(UUID.fromString(testUuid))
+                    .stream()
+                    .collect(Collectors.toMap(
+                            AbstractEntity::getUuid,
+                            Test::getName
+                    ));
+        }
+        return currentTestForSearch;
     }
 }

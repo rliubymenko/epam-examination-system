@@ -4,26 +4,28 @@ import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.AnswerDao;
 import com.epam.examinationsystem.core.dao.QuestionDao;
+import com.epam.examinationsystem.core.dao.SubjectDao;
 import com.epam.examinationsystem.core.dao.TestDao;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.AnswerDto;
 import com.epam.examinationsystem.core.dto.QuestionDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.entity.Answer;
 import com.epam.examinationsystem.core.entity.Question;
 import com.epam.examinationsystem.core.enumeration.QuestionType;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.AnswerService;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class AnswerServiceImpl implements AnswerService {
@@ -38,6 +40,9 @@ public class AnswerServiceImpl implements AnswerService {
 
     @PleaseInject
     private TestDao testDao;
+
+    @PleaseInject
+    private SubjectDao subjectDao;
 
     @PleaseInject
     private TransactionManager<Answer> transactionManager;
@@ -195,14 +200,19 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public DataTableResponse<AnswerDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all answers by {}", request);
-        transactionManager.begin(answerDao, questionDao, testDao);
+        transactionManager.begin(answerDao, questionDao, testDao, subjectDao);
         try {
             List<Answer> answers = answerDao.findAll(request);
-            DataTableResponse<AnswerDto> response = PageableUtil.calculatePageableData(request, testDao);
+            List<Answer> allAnswers = answerDao.findAll();
+            Map<UUID, String> questionForSearch = getQuestionsForSearch(allAnswers);
+            DataTableResponse<AnswerDto> response = PageableUtil.calculatePageableData(request, answerDao);
             List<AnswerDto> answerDtos = answers.stream()
                     .map(AnswerDto.builder()::fromAnswer)
                     .toList();
+            Map<UUID, String> currentQuestionForSearch = getCurrentQuestionForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentQuestionForSearch);
             response.setDtos(answerDtos);
+            response.setDataForSearch(List.of(questionForSearch));
             return response;
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -279,5 +289,28 @@ public class AnswerServiceImpl implements AnswerService {
         } finally {
             transactionManager.end();
         }
+    }
+
+    private Map<UUID, String> getQuestionsForSearch(List<Answer> answers) {
+        return answers
+                .stream()
+                .collect(Collectors.toMap(
+                        answer -> answer.getQuestion().getUuid(),
+                        answer -> answer.getQuestion().getContent(),
+                        (firstQuestion, secondQuestion) -> firstQuestion
+                ));
+    }
+
+    private Map<UUID, String> getCurrentQuestionForSearch(String questionUuid) throws DaoException {
+        Map<UUID, String> currentQuestionForSearch = new HashMap<>();
+        if (ParameterValidator.isValidUUID(questionUuid) && questionDao.existsByUuid(UUID.fromString(questionUuid))) {
+            currentQuestionForSearch = questionDao.findByUuid(UUID.fromString(questionUuid))
+                    .stream()
+                    .collect(Collectors.toMap(
+                            AbstractEntity::getUuid,
+                            Question::getContent
+                    ));
+        }
+        return currentQuestionForSearch;
     }
 }

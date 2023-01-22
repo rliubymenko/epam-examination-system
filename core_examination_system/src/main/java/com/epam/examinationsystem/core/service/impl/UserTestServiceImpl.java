@@ -19,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @PleaseService
 public class UserTestServiceImpl implements UserTestService {
@@ -174,5 +172,25 @@ public class UserTestServiceImpl implements UserTestService {
         } finally {
             transactionManager.end();
         }
+    }
+
+    private Map<UUID, String> getTestsForSearch(List<UserTest> userTests) {
+        return userTests
+                .stream()
+                .collect(Collectors.toMap(
+                        userTest -> userTest.getTest().getUuid(),
+                        userTest -> userTest.getTest().getName(),
+                        (firstTest, secondTest) -> firstTest
+                ));
+    }
+
+    private Map<UUID, String> getUsersForSearch(List<UserTest> userTests) {
+        return userTests
+                .stream()
+                .collect(Collectors.toMap(
+                        userTest -> userTest.getUser().getUuid(),
+                        userTest -> userTest.getUser().getUsername(),
+                        (firstUser, secondUser) -> firstUser
+                ));
     }
 }
