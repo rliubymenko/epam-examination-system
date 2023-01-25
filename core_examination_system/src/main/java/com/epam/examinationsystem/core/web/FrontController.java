@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.web;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
 import com.epam.examinationsystem.core.web.command.constant.Path;
+import com.epam.examinationsystem.core.web.command.constant.RootPath;
 import com.epam.examinationsystem.core.web.command.factory.ActionFactory;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/registration", "/login", "/logout", "/locale", "/home", "/admins/*", "/students/*"})
+@WebServlet(urlPatterns = {
+        RootPath.REGISTRATION,
+        RootPath.LOGIN,
+        RootPath.LOGOUT,
+        RootPath.LOCALE,
+        RootPath.HOME,
+        RootPath.ADMINS_ALL,
+        RootPath.STUDENTS_ALL
+})
 public class FrontController extends HttpServlet {
 
     @Override

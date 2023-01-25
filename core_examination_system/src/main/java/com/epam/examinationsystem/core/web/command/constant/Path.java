@@ -2,9 +2,7 @@ package com.epam.examinationsystem.core.web.command.constant;
 
 public interface Path {
 
-    String ROOT = "/";
     String HOME = "/home";
-    String REGISTRATION = "/registration";
     String LOGIN = "/login";
     String USERS = "/admins/users";
     String SUBJECTS = "/admins/subjects";
@@ -12,7 +10,7 @@ public interface Path {
     String QUESTIONS = "/admins/questions";
     String ANSWERS = "/admins/answers";
     String TESTS_FOR_STUDENT = "/students/tests";
-
+    String LOGOUT = "/logout";
 
     String POST_METHOD = "POST";
     String GET_METHOD = "GET";

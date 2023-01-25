@@ -31,6 +31,11 @@
         <c:set var="statusCode" scope="page" value="${pageContext.errorData.statusCode}"/>
         <h1>${statusCode}</h1>
         <c:choose>
+            <c:when test="${statusCode eq 400}">
+                <h2>
+                    <fmt:message key="error.bad_request"/>
+                </h2>
+            </c:when>
             <c:when test="${statusCode eq 404}">
                 <h2>
                     <fmt:message key="error.page_not_found"/>
