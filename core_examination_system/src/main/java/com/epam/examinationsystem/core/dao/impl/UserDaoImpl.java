@@ -116,7 +116,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
-    public String getUpdateWithoutPasswordQuery(User user) {
+    private String getUpdateWithoutPasswordQuery(User user) {
         List<String> columnNames = List.of("username", "email", "first_name", "last_name", "is_activated");
         return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
