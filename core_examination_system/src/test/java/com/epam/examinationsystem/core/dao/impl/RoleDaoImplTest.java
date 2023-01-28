@@ -57,8 +57,7 @@ class RoleDaoImplTest {
                 .setName(UserType.ADMIN)
                 .build();
         expectedRoles = List.of(expectedRole);
-
-        request = new DataTableRequest(1, 10, "created", "desc", "-1");
+        request = new DataTableRequest(1, 10, "created", "desc", "-1", "");
     }
 
     @AfterEach

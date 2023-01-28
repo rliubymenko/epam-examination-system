@@ -62,7 +62,7 @@ class SubjectDaoImplTest {
                 .setDescription("description")
                 .build();
         expectedSubjects = List.of(expectedSubject);
-        request = new DataTableRequest(1, 10, "created", "desc", "-1");
+        request = new DataTableRequest(1, 10, "created", "desc", "-1", "");
     }
 
     @AfterEach

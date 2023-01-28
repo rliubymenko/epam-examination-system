@@ -74,7 +74,7 @@ class UserDaoImplTest {
                 .setRole(expectedRole)
                 .build();
         expectedUsers = List.of(expectedUser);
-        request = new DataTableRequest(1, 10, "created", "desc", "-1");
+        request = new DataTableRequest(1, 10, "created", "desc", "-1", "");
     }
 
     @AfterEach

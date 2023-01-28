@@ -82,7 +82,7 @@ class UserTestDaoImplTest {
                 .setTest(expectedTest)
                 .build();
         expectedUserTests = List.of(expectedUserTest);
-        request = new DataTableRequest(1, 10, "created", "desc", "-1");
+        request = new DataTableRequest(1, 10, "created", "desc", "-1", "");
     }
 
     @AfterEach
