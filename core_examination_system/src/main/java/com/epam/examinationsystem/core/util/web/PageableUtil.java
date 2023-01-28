@@ -21,6 +21,7 @@ public final class PageableUtil {
     private static final int DEFAULT_PAGE_NUMBER = 1;
     public static final int DEFAULT_SIZE_NUMBER = 10;
     public static final String DEFAULT_FOREIGN_UUID = "-1";
+    public static final String DEFAULT_SEARCH_QUERY = "";
 
     private PageableUtil() {
     }
@@ -30,13 +31,15 @@ public final class PageableUtil {
         String size = request.getParameter(Parameter.SIZE);
         String sort = request.getParameter(Parameter.SORT);
         String order = request.getParameter(Parameter.ORDER);
+        String searchQuery = request.getParameter(Parameter.SEARCH_QUERY);
         String foreignUuid = request.getParameter(Parameter.SEARCH_UUID);
         int pageNumber = StringUtils.isNumeric(page) ? Integer.parseInt(page) : DEFAULT_PAGE_NUMBER;
         int sizeNumber = StringUtils.isNumeric(size) ? Integer.parseInt(size) : DEFAULT_SIZE_NUMBER;
         String orderString = StringUtils.isNotBlank(order) ? order.strip() : DEFAULT_ORDER_VALUE;
         String foreignUuidString = StringUtils.isNotBlank(foreignUuid) ? foreignUuid.strip() : DEFAULT_FOREIGN_UUID;
+        String searchQueryString = StringUtils.isNotBlank(searchQuery) ? searchQuery.strip() : DEFAULT_SEARCH_QUERY;
         String sortString = extractSortStringDbName(sort, headerNames);
-        return new DataTableRequest(pageNumber, sizeNumber, sortString, orderString, foreignUuidString);
+        return new DataTableRequest(pageNumber, sizeNumber, sortString, orderString, foreignUuidString, searchQueryString);
     }
 
     public static <ENTITY extends AbstractEntity, DTO extends AbstractDto> DataTableResponse<DTO> calculatePageableData(
@@ -56,6 +59,7 @@ public final class PageableUtil {
         response.setEntriesTo(entriesTo);
         response.setTotalPageSize(totalPageSize);
         response.setEntitiesSize(count);
+        response.setSearchQuery(request.getSearchQuery());
         return response;
     }
 

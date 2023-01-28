@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @PleaseService
@@ -32,7 +33,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
     private UserDao userDao;
 
     public SubjectDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue(), null);
+        super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue(), new HashMap<>());
     }
 
     @Override

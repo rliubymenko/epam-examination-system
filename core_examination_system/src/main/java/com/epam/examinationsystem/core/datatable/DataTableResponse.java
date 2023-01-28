@@ -12,6 +12,7 @@ public class DataTableResponse<DTO extends AbstractDto> {
     private long entriesFrom;
     private long entriesTo;
     private long totalPageSize;
+    private String searchQuery;
     private List<Map<UUID, String>> dataForSearch;
     private Map<UUID, String> currentDataForSearch;
 
@@ -78,6 +79,14 @@ public class DataTableResponse<DTO extends AbstractDto> {
         this.currentDataForSearch = currentDataForSearch;
     }
 
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -86,6 +95,8 @@ public class DataTableResponse<DTO extends AbstractDto> {
                 .append("entriesFrom", entriesFrom)
                 .append("entriesTo", entriesTo)
                 .append("totalPageSize", totalPageSize)
+                .append("searchQuery", searchQuery)
+                .append("dataForSearch", dataForSearch)
                 .append("currentDataForSearch", currentDataForSearch)
                 .toString();
     }

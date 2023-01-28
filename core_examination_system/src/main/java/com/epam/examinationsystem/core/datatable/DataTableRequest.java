@@ -9,13 +9,15 @@ public class DataTableRequest {
     private String sort;
     private String order;
     private String searchUuid;
+    private String searchQuery;
 
-    public DataTableRequest(int currentPage, int pageSize, String sort, String order, String searchUuid) {
+    public DataTableRequest(int currentPage, int pageSize, String sort, String order, String searchUuid, String searchQuery) {
         this.currentPage = currentPage;
         this.pageSize = pageSize;
         this.sort = sort;
         this.order = order;
         this.searchUuid = searchUuid;
+        this.searchQuery = searchQuery;
     }
 
     public String getSort() {
@@ -58,6 +60,14 @@ public class DataTableRequest {
         this.searchUuid = searchUuid;
     }
 
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)
@@ -66,6 +76,7 @@ public class DataTableRequest {
                 .append("currentPage", currentPage)
                 .append("pageSize", pageSize)
                 .append("foreignUuid", searchUuid)
+                .append("searchQuery", searchQuery)
                 .toString();
     }
 }

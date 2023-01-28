@@ -18,10 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @PleaseService
 public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
@@ -30,7 +27,7 @@ public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
     private static final Logger LOG = LoggerFactory.getLogger(RoleDaoImpl.class);
 
     public RoleDaoImpl() {
-        super(LOG, ENTITY_NAME, DaoConstant.ROLE_TABLE_NAME.getValue(), null);
+        super(LOG, ENTITY_NAME, DaoConstant.ROLE_TABLE_NAME.getValue(), new HashMap<>());
     }
 
     @Override

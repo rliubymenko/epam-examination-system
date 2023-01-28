@@ -21,6 +21,7 @@
 <fmt:message bundle="${locale}" key="table.pagination_entries" var="entries"/>
 
 <c:set var="dataPage" scope="page" value="${pageData.currentPage}"/>
+<c:set var="searchQuery" scope="page" value="${pageData.searchQuery}"/>
 <c:set var="dataSize" scope="page" value="${pageData.pageSize}"/>
 <c:set var="dataSort" scope="page" value="${pageData.sort}"/>
 <c:set var="dataOrder" scope="page" value="${pageData.order}"/>
@@ -40,7 +41,25 @@
                 <div class="d-flex justify-content-between">
 
                     <div class="d-flex justify-content-start align-items-start">
-                        <fmt:message key="${cardHeader}" bundle="${locale}"/>
+                        <div class="pe-3">
+                            <fmt:message key="${cardHeader}" bundle="${locale}"/>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-outline">
+                                <input id="searchId" name="search_query"
+                                       value="${not empty searchQuery ? searchQuery: ''}"
+                                       type="search" class="form-control"/>
+                                <label class="form-label" for="searchId">
+                                    <fmt:message key="table.search" bundle="${locale}"/>
+                                </label>
+                            </div>
+                            <button type="button"
+                                    class="btn btn-sm btn-primary fw-bold"
+                                    onclick="runSearch('${dataSort}', '${dataOrder}', '${dataPage}', '${dataSize}')"
+                            >
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-center mx-auto flex-row align-items-center">
                         <ul class="pagination pagination-circle justify-content-center">

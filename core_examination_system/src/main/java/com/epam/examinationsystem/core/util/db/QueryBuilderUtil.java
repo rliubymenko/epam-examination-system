@@ -11,9 +11,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class QueryBuilderUtil {
 
@@ -174,33 +172,65 @@ public final class QueryBuilderUtil {
                                                                DataTableRequest request,
                                                                Map<String, String> foreignTableNamesWithKeys) {
         StringBuilder query = new StringBuilder();
-        if (foreignTableNamesWithKeys != null) {
+        for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
+            query
+                    .append(" LEFT JOIN ")
+                    .append(foreignTableNameWithKey.getKey())
+                    .append(" ON ")
+                    .append(tableName)
+                    .append(".")
+                    .append(foreignTableNameWithKey.getValue())
+                    .append(" = ")
+                    .append(foreignTableNameWithKey.getKey())
+                    .append(".id ");
+        }
+        if (request.getSearchUuid().equals(PageableUtil.DEFAULT_FOREIGN_UUID) && !request.getSearchQuery().equals(PageableUtil.DEFAULT_SEARCH_QUERY)) {
+            query
+                    .append(" WHERE ")
+                    .append(addSearchingByForeignTables(tableName, foreignTableNamesWithKeys.keySet(), request.getSearchQuery()));
+        }
+        if (!request.getSearchUuid().equals(PageableUtil.DEFAULT_FOREIGN_UUID)) {
+            query.append(" WHERE ");
             for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
                 query
-                        .append(" LEFT JOIN ")
                         .append(foreignTableNameWithKey.getKey())
-                        .append(" ON ")
-                        .append(tableName)
-                        .append(".")
-                        .append(foreignTableNameWithKey.getValue())
-                        .append(" = ")
-                        .append(foreignTableNameWithKey.getKey())
-                        .append(".id ");
+                        .append(".uuid")
+                        .append(" = '")
+                        .append(request.getSearchUuid())
+                        .append("'")
+                        .append(" OR ");
             }
-            if (!request.getSearchUuid().equals(PageableUtil.DEFAULT_FOREIGN_UUID)) {
-                query.append(" WHERE ");
-                for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
-                    query
-                            .append(foreignTableNameWithKey.getKey())
-                            .append(".uuid")
-                            .append(" = '")
-                            .append(request.getSearchUuid())
-                            .append("'")
-                            .append(" OR ");
-                }
-                query.delete(query.length() - 4, query.length() - 1);
+            query.delete(query.length() - 4, query.length() - 1);
+            if (!request.getSearchQuery().equals(PageableUtil.DEFAULT_SEARCH_QUERY)) {
+                query
+                        .append(" AND ")
+                        .append(addSearchingByForeignTables(tableName, foreignTableNamesWithKeys.keySet(), request.getSearchQuery()));
             }
         }
         return query;
+    }
+
+    private static StringBuilder addSearchQuery(List<String> tableNames, String toSearch) {
+        StringBuilder query = new StringBuilder();
+        query.append("to_tsvector( ");
+        for (String tableName : tableNames) {
+            query
+                    .append(tableName)
+                    .append("::text")
+                    .append(" || ");
+        }
+        query.delete(query.length() - 4, query.length() - 1);
+        return query.append(") @@ websearch_to_tsquery(")
+                .append("'")
+                .append(toSearch)
+                .append("') ");
+    }
+
+    private static StringBuilder addSearchingByForeignTables(String tableName, Set<String> foreignTableNamesSet, String searchQuery) {
+        StringBuilder query = new StringBuilder();
+        List<String> foreignTableNames = new ArrayList<>();
+        foreignTableNames.add(tableName);
+        foreignTableNames.addAll(foreignTableNamesSet);
+        return query.append(addSearchQuery(foreignTableNames, searchQuery));
     }
 }

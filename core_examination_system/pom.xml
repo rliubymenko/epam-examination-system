@@ -27,7 +27,6 @@
         <jakarta.servlet.jsp.version>3.0.0</jakarta.servlet.jsp.version>
         <jbcrypt.version>0.4</jbcrypt.version>
         <mockito.version>5.0.0</mockito.version>
-        <powermock.version>2.0.9</powermock.version>
     </properties>
 
     <dependencies>

@@ -42,5 +42,6 @@ public interface Parameter {
     String SIZE = "size";
     String SORT = "sort";
     String ORDER = "order";
+    String SEARCH_QUERY = "search_query";
 
 }

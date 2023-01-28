@@ -22,6 +22,7 @@ public class PageResponseDto<DTO extends AbstractDto> {
     private long currentShowToEntries;
     private List<Map<UUID, String>> dataForSearch;
     private Map<UUID, String> currentDataForSearch;
+    private String searchQuery;
 
     public PageResponseDto() {
         this.currentPage = 0;
@@ -36,6 +37,7 @@ public class PageResponseDto<DTO extends AbstractDto> {
         this.showPrevious = false;
         this.showNext = false;
         this.showLast = false;
+        searchQuery = "";
     }
 
     public void initPaginationState(int page) {
@@ -167,5 +169,13 @@ public class PageResponseDto<DTO extends AbstractDto> {
 
     public void setCurrentDataForSearch(Map<UUID, String> currentDataForSearch) {
         this.currentDataForSearch = currentDataForSearch;
+    }
+
+    public String getSearchQuery() {
+        return searchQuery;
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
     }
 }

@@ -23,11 +23,25 @@ function runSortByCriteria(event, sort, order, page, size) {
             input.setAttribute("name", "search_uuid");
             input.setAttribute("value", uuid);
             personalSearch.appendChild(input);
-            submitRequest(sort, order, page, size);
+            runSearch(sort, order, page, size);
         } else if (uuid !== searchIdInput.getAttribute('value')) {
             searchIdInput.setAttribute("value", uuid);
-            submitRequest('created', 'desc', 1, 10);
+            runSearch('created', 'desc', 1, 10);
         }
+    }
+}
+
+function runSearch(sort, order, page, size) {
+    const searchInput = document.getElementById('searchId');
+    const searchQuery = searchInput.value;
+    if (!!searchQuery) {
+        const personalSearch = document.getElementById('personalSearch');
+        const cloneSearch = searchInput.cloneNode(true);
+        cloneSearch.setAttribute("type", "hidden");
+        personalSearch.appendChild(cloneSearch);
+        submitRequest(sort, order, page, size);
+    } else {
+        submitRequest(sort, order, page, size);
     }
 }
 

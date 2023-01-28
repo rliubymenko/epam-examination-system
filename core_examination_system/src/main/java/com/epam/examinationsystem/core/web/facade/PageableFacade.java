@@ -29,6 +29,7 @@ public class PageableFacade<DTO extends AbstractDto> {
         pageResponseDto.setTotalPageSize(response.getTotalPageSize());
         pageResponseDto.setCurrentShowFromEntries(response.getEntriesFrom());
         pageResponseDto.setCurrentShowToEntries(response.getEntriesTo());
+        pageResponseDto.setSearchQuery(request.getSearchQuery());
         pageResponseDto.initPaginationState(request.getCurrentPage());
         this.headerNames = headerNames;
     }
