@@ -37,6 +37,7 @@ public interface Parameter {
     String ERROR_CHANGE_SINGLE_CHOICE_TRUE_ANSWER = "error_change_single_choice_true_answer";
     String START_TIME = "startTime";
     String END_TIME = "endTime";
+    String G_RECAPTCHA_RESPONSE = "g-recaptcha-response";
 
     String PAGE = "page";
     String SIZE = "size";

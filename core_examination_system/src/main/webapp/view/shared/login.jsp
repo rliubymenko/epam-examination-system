@@ -17,12 +17,20 @@
     <jsp:include page="static.jsp"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/login.css">
     <script src="${pageContext.request.contextPath}/static/js/login.js" defer></script>
+    <c:if test="${empty sessionScope.locale or sessionScope.locale == 'en_US'}">
+        <script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
+    </c:if>
+    <c:if test="${not empty sessionScope.locale and sessionScope.locale == 'uk_UA'}">
+        <script src="https://www.google.com/recaptcha/api.js?hl=ua" async defer></script>
+    </c:if>
     <script>
         $(document).ready(function () {
             const wrong_username = "${wrong_username}";
             const wrong_password = "${wrong_password}";
+            const wrong_captcha = "${wrong_captcha}";
             const wrong_username_message = "<fmt:message key="login.wrong_username"/>";
             const wrong_password_message = "<fmt:message key="login.wrong_password"/>";
+            const wrong_captcha_message = "<fmt:message key="login.wrong_captcha"/>";
 
             toastr.options = {
                 "closeButton": true,
@@ -42,6 +50,9 @@
                 "hideMethod": "fadeOut"
             }
 
+            if (wrong_captcha === 'true') {
+                toastr["warning"](wrong_captcha_message)
+            }
             if (wrong_username === 'true') {
                 toastr["warning"](wrong_username_message)
             }
@@ -50,7 +61,6 @@
             }
         });
     </script>
-
 </head>
 <body>
 
@@ -106,6 +116,10 @@
                                             <div class="invalid-feedback">
                                                 <fmt:message key="login.invalid_password"/>
                                             </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <div class="g-recaptcha"
+                                                 data-sitekey="6LfdqjYkAAAAAJGiHTSJjEfmLxaD-p1DbCxeC8wt"></div>
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <button type="submit"

@@ -27,6 +27,7 @@
         <jakarta.servlet.jsp.version>3.0.0</jakarta.servlet.jsp.version>
         <jbcrypt.version>0.4</jbcrypt.version>
         <mockito.version>5.0.0</mockito.version>
+        <json.version>20220924</json.version>
     </properties>
 
     <dependencies>
@@ -118,6 +119,12 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${jbcrypt.version}</version>
+        </dependency>
+        <!-- JSON parser -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
         </dependency>
     </dependencies>
 

@@ -2,10 +2,12 @@ package com.epam.examinationsystem.core.web.command.impl.auth;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
+import com.epam.di.annotation.PleaseValue;
 import com.epam.examinationsystem.core.dto.UserDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
+import com.epam.examinationsystem.core.util.web.CaptchaUtil;
 import com.epam.examinationsystem.core.web.command.ActionCommand;
 import com.epam.examinationsystem.core.web.command.CommandResult;
 import com.epam.examinationsystem.core.web.command.constant.Attribute;
@@ -17,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +31,15 @@ public class RegistrationCommand implements ActionCommand {
     @PleaseInject
     private UserService userService;
 
+    @PleaseValue("captcha.public_key")
+    private String captchaPublicKey;
+
+    @PleaseValue("captcha.secret_key")
+    private String captchaSecretKey;
+
+    @PleaseValue("captcha.verify_site_url")
+    private String captchaVerifySiteUrl;
+
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -37,6 +49,12 @@ public class RegistrationCommand implements ActionCommand {
             String repeatedPassword = request.getParameter(Parameter.REPEATED_PASSWORD);
             String firstName = request.getParameter(Parameter.FIRST_NAME);
             String lastName = request.getParameter(Parameter.LAST_NAME);
+            String gRecaptchaResponse = request.getParameter(Parameter.G_RECAPTCHA_RESPONSE);
+            if (!CaptchaUtil.verifyCaptcha(gRecaptchaResponse, captchaVerifySiteUrl, captchaSecretKey)) {
+                LOG.error("Captcha was not submitted {}", gRecaptchaResponse);
+                request.setAttribute(Attribute.WRONG_CAPTCHA, true);
+                return new CommandResult(Path.REGISTRATION_PAGE);
+            }
             Set<String> inconsistencies = performValidation(username, email, firstName, lastName, password, repeatedPassword);
 
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
@@ -55,7 +73,7 @@ public class RegistrationCommand implements ActionCommand {
                 LOG.debug("The user {} has been created successfully", userDto);
                 return new CommandResult(Path.LOGIN, true);
             }
-        } catch (ServiceException e) {
+        } catch (ServiceException | IOException e) {
             LOG.error("Error during registration has been occurred {}", e.getMessage());
             return new CommandResult(Path.REGISTRATION_PAGE);
         }

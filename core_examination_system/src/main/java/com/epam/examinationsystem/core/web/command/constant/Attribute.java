@@ -4,6 +4,7 @@ public interface Attribute {
 
     String WRONG_USERNAME = "wrong_username";
     String WRONG_PASSWORD = "wrong_password";
+    String WRONG_CAPTCHA = "wrong_captcha";
 
     String USER = "user";
     String SUBJECT = "subject";
