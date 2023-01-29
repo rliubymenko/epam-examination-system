@@ -204,7 +204,6 @@ public class UserServiceImpl implements UserService {
     private Map<UUID, String> getRolesForSearch() throws DaoException {
         return roleDao.findAll()
                 .stream()
-                .filter(role -> !role.getName().equals(UserType.TUTOR))
                 .collect(Collectors.toMap(
                         AbstractEntity::getUuid,
                         role -> role.getName().toString()
