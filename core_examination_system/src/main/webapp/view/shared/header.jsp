@@ -56,6 +56,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/usertests">
+                                        <i class="fa-solid fa-cubes pe-1"></i><fmt:message key="home.user_tests"/>
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="dropdown-item" href="${pageContext.request.contextPath}/admins/questions">
                                         <i class="fa-solid fa-question pe-1"></i><fmt:message key="home.questions"/>
                                     </a>

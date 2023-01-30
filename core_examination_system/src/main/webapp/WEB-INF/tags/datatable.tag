@@ -38,13 +38,12 @@
     <div class="row">
         <div class="card bg-light border border-primary shadow-0">
             <div class="card-header">
-                <div class="d-flex justify-content-between">
-
+                <div class="d-flex justify-content-between mb-1">
                     <div class="d-flex justify-content-start align-items-start">
-                        <div class="pe-3">
+                        <div class="text-nowrap">
                             <fmt:message key="${cardHeader}" bundle="${locale}"/>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group ps-3">
                             <div class="form-outline">
                                 <input id="searchId" name="search_query"
                                        value="${not empty searchQuery ? searchQuery: ''}"
@@ -62,7 +61,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center mx-auto flex-row align-items-center">
-                        <ul class="pagination pagination-circle justify-content-center">
+                        <ul class="pagination pagination-circle justify-content-center mb-0">
                             <li class="${pageData.showFirst ? 'page-item' : 'page-item disabled'}">
                                 <a class="page-link " href="#"
                                    onclick="runSortWithPagination('${dataSort}', '${dataOrder}', 1, '${pageData.pageSize}', 0)"

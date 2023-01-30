@@ -190,7 +190,7 @@ public final class QueryBuilderUtil {
                     .append(addSearchingByForeignTables(tableName, foreignTableNamesWithKeys.keySet(), request.getSearchQuery()));
         }
         if (!request.getSearchUuid().equals(PageableUtil.DEFAULT_FOREIGN_UUID)) {
-            query.append(" WHERE ");
+            query.append(" WHERE ( ");
             for (Map.Entry<String, String> foreignTableNameWithKey : foreignTableNamesWithKeys.entrySet()) {
                 query
                         .append(foreignTableNameWithKey.getKey())
@@ -200,7 +200,9 @@ public final class QueryBuilderUtil {
                         .append("'")
                         .append(" OR ");
             }
-            query.delete(query.length() - 4, query.length() - 1);
+            query
+                    .delete(query.length() - 4, query.length() - 1)
+                    .append(" )");
             if (!request.getSearchQuery().equals(PageableUtil.DEFAULT_SEARCH_QUERY)) {
                 query
                         .append(" AND ")

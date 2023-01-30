@@ -14,6 +14,7 @@ import com.epam.examinationsystem.core.web.command.impl.admin.test.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.EditUserCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetAllUsersByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetEditUserPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.usertest.GetAllUserTestsByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.auth.*;
 import com.epam.examinationsystem.core.web.command.impl.student.GetStudentAccountPageCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.subject.GetAllSubjectsForStudentByParametersCommand;
@@ -59,6 +60,8 @@ public class ActionFactory {
         commands.put(CommandType.GET_ADMINS_ANSWERS_ANSWER, ObjectProvider.getInstance(GetEditAnswerPageCommand.class));
         commands.put(CommandType.GET_ADMINS_ANSWERS_ANSWER_NEW, ObjectProvider.getInstance(GetNewAnswerPageCommand.class));
         commands.put(CommandType.GET_ADMINS_ANSWERS_ANSWER_DELETE, ObjectProvider.getInstance(DeleteAnswerPageCommand.class));
+
+        commands.put(CommandType.GET_ADMINS_USERTESTS, ObjectProvider.getInstance(GetAllUserTestsByParametersCommand.class));
 
         commands.put(CommandType.GET_ADMINS_ACCOUNT, ObjectProvider.getInstance(GetAdminAccountPageCommand.class));
         commands.put(CommandType.GET_STUDENTS_ACCOUNT, ObjectProvider.getInstance(GetStudentAccountPageCommand.class));

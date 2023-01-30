@@ -11,7 +11,6 @@ public class Subject extends AbstractEntity {
 
     private final String name;
     private final String description;
-    private final User user;
 
     public Subject(SubjectBuilder builder) {
         super.id = builder.id;
@@ -19,7 +18,6 @@ public class Subject extends AbstractEntity {
         super.created = builder.created;
         this.name = builder.name;
         this.description = builder.description;
-        this.user = builder.user;
     }
 
     public String getName() {
@@ -28,10 +26,6 @@ public class Subject extends AbstractEntity {
 
     public String getDescription() {
         return description;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     @Override
@@ -58,7 +52,6 @@ public class Subject extends AbstractEntity {
                 .appendSuper(super.toString())
                 .append("name", name)
                 .append("description", description)
-                .append("user", user.getUsername())
                 .toString();
     }
 
@@ -72,7 +65,6 @@ public class Subject extends AbstractEntity {
         private UUID uuid;
         private String name;
         private String description;
-        private User user;
         private LocalDateTime created;
 
         public SubjectBuilder setId(Long id) {
@@ -92,11 +84,6 @@ public class Subject extends AbstractEntity {
 
         public SubjectBuilder setDescription(String description) {
             this.description = description;
-            return this;
-        }
-
-        public SubjectBuilder setUser(User user) {
-            this.user = user;
             return this;
         }
 

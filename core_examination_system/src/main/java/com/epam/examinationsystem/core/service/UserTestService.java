@@ -1,5 +1,7 @@
 package com.epam.examinationsystem.core.service;
 
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
+import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.UserTestDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
@@ -17,4 +19,6 @@ public interface UserTestService {
     int getCurrentAttemptNumber(UUID userUuid, UUID testUuid) throws ServiceException;
 
     boolean isSelected(UUID userUuid, UUID testUuid) throws ServiceException;
+
+    DataTableResponse<UserTestDto> findAll(DataTableRequest request) throws ServiceException;
 }

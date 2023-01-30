@@ -1,6 +1,5 @@
 package com.epam.examinationsystem.core.dao.impl;
 
-import com.epam.examinationsystem.core.dao.UserDao;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.exception.DaoException;
@@ -25,9 +24,6 @@ import java.util.UUID;
 class SubjectDaoImplTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(SubjectDaoImplTest.class);
-
-    @Mock
-    private UserDao userDao;
 
     @Mock
     private Connection connection;
@@ -235,7 +231,7 @@ class SubjectDaoImplTest {
     void shouldExtractSubject() throws DaoException, SQLException {
         try (MockedStatic<DaoMapperUtil> daoMapperUtil = Mockito.mockStatic(DaoMapperUtil.class)) {
             Mockito.when(resultSet.next()).thenReturn(true).thenReturn(false);
-            daoMapperUtil.when(() -> DaoMapperUtil.extractSubject(resultSet, userDao)).thenReturn(expectedSubject);
+            daoMapperUtil.when(() -> DaoMapperUtil.extractSubject(resultSet)).thenReturn(expectedSubject);
             Subject actualSubject = subjectDao.extractEntity(resultSet);
             Assertions.assertEquals(expectedSubject, actualSubject);
         }
@@ -245,7 +241,7 @@ class SubjectDaoImplTest {
     void shouldExtractSubjects() throws DaoException, SQLException {
         try (MockedStatic<DaoMapperUtil> daoMapperUtil = Mockito.mockStatic(DaoMapperUtil.class)) {
             Mockito.when(resultSet.next()).thenReturn(true).thenReturn(false);
-            daoMapperUtil.when(() -> DaoMapperUtil.extractSubject(resultSet, userDao)).thenReturn(expectedSubject);
+            daoMapperUtil.when(() -> DaoMapperUtil.extractSubject(resultSet)).thenReturn(expectedSubject);
             List<Subject> actualSubjects = subjectDao.extractEntities(resultSet);
             Assertions.assertEquals(expectedSubjects, actualSubjects);
         }

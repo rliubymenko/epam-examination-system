@@ -1,9 +1,7 @@
 package com.epam.examinationsystem.core.dao.impl;
 
-import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
 import com.epam.examinationsystem.core.dao.SubjectDao;
-import com.epam.examinationsystem.core.dao.UserDao;
 import com.epam.examinationsystem.core.dao.common.AbstractDao;
 import com.epam.examinationsystem.core.entity.Subject;
 import com.epam.examinationsystem.core.enumeration.DaoConstant;
@@ -28,9 +26,6 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
     private static final String ENTITY_NAME = "subject";
     private static final String NAME = "name";
     private static final Logger LOG = LoggerFactory.getLogger(SubjectDaoImpl.class);
-
-    @PleaseInject
-    private UserDao userDao;
 
     public SubjectDaoImpl() {
         super(LOG, ENTITY_NAME, DaoConstant.SUBJECT_TABLE_NAME.getValue(), new HashMap<>());
@@ -58,7 +53,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
     public Subject extractEntity(ResultSet resultSet) throws SQLException, DaoException {
         Subject subject = null;
         while (resultSet.next()) {
-            subject = DaoMapperUtil.extractSubject(resultSet, userDao);
+            subject = DaoMapperUtil.extractSubject(resultSet);
         }
         return subject;
     }
@@ -67,7 +62,7 @@ public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
     public List<Subject> extractEntities(ResultSet resultSet) throws SQLException, DaoException {
         List<Subject> subjects = new ArrayList<>();
         while (resultSet.next()) {
-            Subject subject = DaoMapperUtil.extractSubject(resultSet, userDao);
+            Subject subject = DaoMapperUtil.extractSubject(resultSet);
             subjects.add(subject);
         }
         return subjects;

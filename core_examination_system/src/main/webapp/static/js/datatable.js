@@ -23,7 +23,7 @@ function runSortByCriteria(event, sort, order, page, size) {
             input.setAttribute("name", "search_uuid");
             input.setAttribute("value", uuid);
             personalSearch.appendChild(input);
-            runSearch(sort, order, page, size);
+            runSearch('created', 'desc', 1, 10);
         } else if (uuid !== searchIdInput.getAttribute('value')) {
             searchIdInput.setAttribute("value", uuid);
             runSearch('created', 'desc', 1, 10);

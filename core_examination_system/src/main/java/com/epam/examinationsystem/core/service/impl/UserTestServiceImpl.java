@@ -2,12 +2,12 @@ package com.epam.examinationsystem.core.service.impl;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
-import com.epam.examinationsystem.core.dao.RoleDao;
-import com.epam.examinationsystem.core.dao.TestDao;
-import com.epam.examinationsystem.core.dao.UserDao;
-import com.epam.examinationsystem.core.dao.UserTestDao;
+import com.epam.examinationsystem.core.dao.*;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
+import com.epam.examinationsystem.core.datatable.DataTableRequest;
+import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.UserTestDto;
+import com.epam.examinationsystem.core.entity.AbstractEntity;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.entity.User;
 import com.epam.examinationsystem.core.entity.UserTest;
@@ -15,6 +15,8 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.UserTestService;
 import com.epam.examinationsystem.core.util.validation.DateUtil;
+import com.epam.examinationsystem.core.util.validation.ParameterValidator;
+import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +34,9 @@ public class UserTestServiceImpl implements UserTestService {
 
     @PleaseInject
     private TestDao testDao;
+
+    @PleaseInject
+    private SubjectDao subjectDao;
 
     @PleaseInject
     private UserDao userDao;
@@ -174,6 +179,31 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    @Override
+    public DataTableResponse<UserTestDto> findAll(DataTableRequest request) throws ServiceException {
+        LOG.debug("Find all usertests by {}", request);
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, subjectDao, roleDao);
+        try {
+            List<UserTest> userTests = userTestDao.findAll(request);
+            List<UserTest> allUserTests = userTestDao.findAll();
+            Map<UUID, String> usersForSearch = getUsersForSearch(allUserTests);
+            Map<UUID, String> testsForSearch = getTestsForSearch(allUserTests);
+            DataTableResponse<UserTestDto> response = PageableUtil.calculatePageableData(request, userTestDao);
+            List<UserTestDto> userDtos = userTests.stream()
+                    .map(UserTestDto.builder()::fromUserTest)
+                    .toList();
+            Map<UUID, String> currentDataForSearch = getCurrentDataForSearch(request.getSearchUuid());
+            response.setCurrentDataForSearch(currentDataForSearch);
+            response.setDataForSearch(List.of(usersForSearch, testsForSearch));
+            response.setDtos(userDtos);
+            return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
     private Map<UUID, String> getTestsForSearch(List<UserTest> userTests) {
         return userTests
                 .stream()
@@ -192,5 +222,29 @@ public class UserTestServiceImpl implements UserTestService {
                         userTest -> userTest.getUser().getUsername(),
                         (firstUser, secondUser) -> firstUser
                 ));
+    }
+
+    private Map<UUID, String> getCurrentDataForSearch(String uuidString) throws DaoException {
+        Map<UUID, String> currentDataForSearch = new HashMap<>();
+        if (ParameterValidator.isValidUUID(uuidString)) {
+            UUID uuid = UUID.fromString(uuidString);
+            if (userDao.existsByUuid(uuid)) {
+                currentDataForSearch = userDao.findByUuid(uuid)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                AbstractEntity::getUuid,
+                                User::getUsername
+                        ));
+            }
+            if (testDao.existsByUuid(uuid)) {
+                currentDataForSearch = testDao.findByUuid(uuid)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                AbstractEntity::getUuid,
+                                Test::getName
+                        ));
+            }
+        }
+        return currentDataForSearch;
     }
 }

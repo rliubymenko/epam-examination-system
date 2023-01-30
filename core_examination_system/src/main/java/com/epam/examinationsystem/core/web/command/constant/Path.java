@@ -42,6 +42,7 @@ public interface Path {
     String SUBJECTS_FOR_STUDENT_PAGE = "/view/student/subjects.jsp";
     String TESTS_FOR_STUDENT_PAGE = "/view/student/tests.jsp";
     String STUDENT_TESTING_PAGE = "/view/student/testing.jsp";
+    String USER_TESTS_PAGE = "/view/admin/userTests.jsp";
 
     String LANGUAGE = "lang";
     String CURRENT_PAGE = "referer";
