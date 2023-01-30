@@ -163,8 +163,8 @@
                                                     <span><fmt:message key="user_test.attempt_number"/>: </span>
                                                     <span>${userTest.attemptNumber}</span>
                                                 </p>
-                                                <hr>
                                                 <c:if test="${userTest.isCompleted}">
+                                                    <hr>
                                                     <p class="mb-1">
                                                         <span><fmt:message key="user_test.start_time"/>: </span>
                                                         <span>
@@ -192,24 +192,31 @@
                                                         </div>
                                                     </div>
                                                 </c:if>
-                                                <hr>
                                                 <c:if test="${userTest.test.maxAttemptNumber >= userTest.attemptNumber + 1}">
-                                                    <div class="text-center">
-                                                        <button type="button"
-                                                                class="btn btn-outline-success"
-                                                                data-mdb-toggle="modal"
-                                                                data-mdb-target="#testConfirmationModal${userTest.test.uuid}"
-                                                                data-mdb-ripple-color="dark"
-                                                        >
-                                                            <fmt:message key="test.start_testing"/>
-                                                        </button>
-                                                    </div>
-                                                    <es:confirmationTestStartModal
-                                                            modalId="${userTest.test.uuid}"
-                                                            testingUrl="${pageContext.request.contextPath}/students/tests/testing?uuid=${userTest.test.uuid}"
-                                                            testDuration="${userTest.test.duration}"
-                                                            testMaxAttemptNumber="${userTest.test.maxAttemptNumber}"
-                                                            testCurrentAttemptNumber="${userTest.attemptNumber}"/>
+                                                    <hr>
+                                                    <c:if test="${userTest.test.isAvailable}">
+                                                        <div class="text-center">
+                                                            <button type="button"
+                                                                    class="btn btn-outline-success"
+                                                                    data-mdb-toggle="modal"
+                                                                    data-mdb-target="#testConfirmationModal${userTest.test.uuid}"
+                                                                    data-mdb-ripple-color="dark"
+                                                            >
+                                                                <fmt:message key="test.start_testing"/>
+                                                            </button>
+                                                        </div>
+                                                        <es:confirmationTestStartModal
+                                                                modalId="${userTest.test.uuid}"
+                                                                testingUrl="${pageContext.request.contextPath}/students/tests/testing?uuid=${userTest.test.uuid}"
+                                                                testDuration="${userTest.test.duration}"
+                                                                testMaxAttemptNumber="${userTest.test.maxAttemptNumber}"
+                                                                testCurrentAttemptNumber="${userTest.attemptNumber}"/>
+                                                    </c:if>
+                                                    <c:if test="${not userTest.test.isAvailable}">
+                                                        <div class="text-center">
+                                                            <fmt:message key="test.unavailable"/>
+                                                        </div>
+                                                    </c:if>
                                                 </c:if>
                                             </div>
                                         </div>

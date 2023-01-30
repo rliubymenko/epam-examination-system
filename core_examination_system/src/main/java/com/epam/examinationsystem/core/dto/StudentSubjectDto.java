@@ -70,7 +70,8 @@ public class StudentSubjectDto extends AbstractDto {
             String currentAttemptNumber,
             String isSelected,
             String expirationDate,
-            String duration) {
+            String duration,
+            String isAvailable) {
 
         public String getUuid() {
             return uuid;
@@ -102,6 +103,10 @@ public class StudentSubjectDto extends AbstractDto {
 
         public String getIsSelected() {
             return isSelected;
+        }
+
+        public String getIsAvailable() {
+            return isAvailable;
         }
     }
 

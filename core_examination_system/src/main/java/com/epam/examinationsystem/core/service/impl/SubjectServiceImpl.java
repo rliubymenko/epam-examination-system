@@ -14,6 +14,7 @@ import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.SubjectService;
 import com.epam.examinationsystem.core.service.UserTestService;
+import com.epam.examinationsystem.core.util.validation.DateUtil;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -186,7 +187,8 @@ public class SubjectServiceImpl implements SubjectService {
                             String.valueOf(currentAttemptNumber),
                             String.valueOf(BooleanUtils.toStringTrueFalse(isSelected)),
                             test.getExpirationDate() != null ? test.getExpirationDate().toString() : null,
-                            String.valueOf(test.getDuration())
+                            String.valueOf(test.getDuration()),
+                            DateUtil.compareDateForStudent(test.getExpirationDate())
                     );
                     subjectTests.add(testForSubject);
                 }

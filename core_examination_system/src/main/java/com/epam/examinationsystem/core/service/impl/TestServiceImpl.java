@@ -231,6 +231,7 @@ public class TestServiceImpl implements TestService {
                         .setCreationDate(test.getCreated().toString())
                         .setExpirationDate(test.getExpirationDate() != null ? test.getExpirationDate().toString() : null)
                         .setMaxAttemptNumber(String.valueOf(test.getMaxAttemptNumber()))
+                        .setIsAvailable(DateUtil.compareDateForStudent(test.getExpirationDate()))
                         .setSubject(subjectForTest)
                         .build();
                 testDtos.add(testDto);

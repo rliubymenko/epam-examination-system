@@ -19,6 +19,7 @@ public class TestDto extends AbstractDto {
     private final String expirationDate;
     private final String maxAttemptNumber;
     private final SubjectForTest subject;
+    private final String isAvailable;
 
     public TestDto(TestDtoBuilder builder) {
         super.uuid = builder.uuid;
@@ -33,6 +34,7 @@ public class TestDto extends AbstractDto {
         this.creationDate = builder.creationDate;
         this.expirationDate = builder.expirationDate;
         this.maxAttemptNumber = builder.maxAttemptNumber;
+        this.isAvailable = builder.isAvailable;
     }
 
     public String getName() {
@@ -77,6 +79,10 @@ public class TestDto extends AbstractDto {
 
     public String getIsSelected() {
         return isSelected;
+    }
+
+    public String getIsAvailable() {
+        return isAvailable;
     }
 
     @Override
@@ -141,7 +147,7 @@ public class TestDto extends AbstractDto {
         private String expirationDate;
         private String maxAttemptNumber;
         private SubjectForTest subject;
-
+        private String isAvailable;
 
         public TestDtoBuilder setUuid(String uuid) {
             this.uuid = uuid;
@@ -200,6 +206,11 @@ public class TestDto extends AbstractDto {
 
         public TestDtoBuilder setMaxAttemptNumber(String maxAttemptNumber) {
             this.maxAttemptNumber = maxAttemptNumber;
+            return this;
+        }
+
+        public TestDtoBuilder setIsAvailable(String isAvailable) {
+            this.isAvailable = isAvailable;
             return this;
         }
 

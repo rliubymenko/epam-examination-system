@@ -113,16 +113,17 @@
                                                       </td>
                                                       <td>${test.maxAttemptNumber}</td>
                                                       <td>
-                                                          <div class="d-flex flex-column">
-                                                              <button type="button"
-                                                                      class="btn text-success btn-link btn-rounded btn-sm fw-bold"
-                                                                      data-mdb-toggle="modal"
-                                                                      data-mdb-target="#testConfirmationModal${test.uuid}"
-                                                                      data-mdb-ripple-color="dark"
-                                                              >
-                                                                  <fmt:message key="test.start_testing"/>
-                                                              </button>
-                                                              <c:if test="${not test.isSelected}">
+                                                          <c:if test="${test.isAvailable}">
+                                                                 <div class="d-flex flex-column">
+                                                                     <button type="button"
+                                                                             class="btn text-success btn-link btn-rounded btn-sm fw-bold"
+                                                                             data-mdb-toggle="modal"
+                                                                             data-mdb-target="#testConfirmationModal${test.uuid}"
+                                                                             data-mdb-ripple-color="dark"
+                                                                     >
+                                                                         <fmt:message key="test.start_testing"/>
+                                                                     </button>
+                                                                     <c:if test="${not test.isSelected}">
                                                                   <a href="${pageContext.request.contextPath}/students/tests/test/select?uuid=${test.uuid}"
                                                                      type="button"
                                                                      class="btn btn-link text-warning btn-rounded btn-sm fw-bold"
@@ -130,13 +131,19 @@
                                                                       <fmt:message key="test.select"/>
                                                                   </a>
                                                               </c:if>
-                                                          </div>
+                                                                 </div>
                                                           <es:confirmationTestStartModal
                                                                   modalId="${test.uuid}"
                                                                   testingUrl="${pageContext.request.contextPath}/students/tests/testing?uuid=${test.uuid}"
                                                                   testDuration="${test.duration}"
                                                                   testMaxAttemptNumber="${test.maxAttemptNumber}"
                                                                   testCurrentAttemptNumber="${test.currentAttemptNumber}"/>
+                                                          </c:if>
+                                                          <c:if test="${not test.isAvailable}">
+                                                              <div class="text-center">
+                                                                  <fmt:message key="test.unavailable"/>
+                                                              </div>
+                                                          </c:if>
                                                       </td>
                                                   </tr>
                                                  </c:forEach>

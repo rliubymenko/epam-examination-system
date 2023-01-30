@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.dto;
 import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.entity.User;
 import com.epam.examinationsystem.core.entity.UserTest;
+import com.epam.examinationsystem.core.util.validation.DateUtil;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -109,10 +110,11 @@ public class UserTestDto extends AbstractDto {
                                String complexity,
                                String maxAttemptNumber,
                                String expirationDate,
-                               String duration) {
+                               String duration,
+                               String isAvailable) {
 
         public TestAdjacent(String uuid, String name) {
-            this(uuid, name, null, null, null, null);
+            this(uuid, name, null, null, null, null, null);
         }
 
         public String getUuid() {
@@ -137,6 +139,10 @@ public class UserTestDto extends AbstractDto {
 
         public String getDuration() {
             return duration;
+        }
+
+        public String getIsAvailable() {
+            return isAvailable;
         }
     }
 
@@ -215,7 +221,8 @@ public class UserTestDto extends AbstractDto {
                     currentTest.getComplexity().toString(),
                     String.valueOf(currentTest.getMaxAttemptNumber()),
                     currentTest.getExpirationDate() != null ? currentTest.getExpirationDate().toString() : null,
-                    String.valueOf(currentTest.getDuration())
+                    String.valueOf(currentTest.getDuration()),
+                    DateUtil.compareDateForStudent(currentTest.getExpirationDate())
             );
             return this
                     .setUuid(userTest.getUuid().toString())
