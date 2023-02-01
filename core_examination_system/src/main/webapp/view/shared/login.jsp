@@ -119,7 +119,7 @@
                                         </div>
                                         <div class="mb-4">
                                             <div class="g-recaptcha"
-                                                 data-sitekey="6LfdqjYkAAAAAJGiHTSJjEfmLxaD-p1DbCxeC8wt"></div>
+                                                 data-sitekey="6LcBlUAkAAAAADijqF9MDF83_KaaTnmJ5HYYuMjA"></div>
                                         </div>
                                         <div class="d-flex justify-content-center">
                                             <button type="submit"

@@ -5,6 +5,7 @@ import com.epam.di.annotation.PleaseService;
 import com.epam.di.annotation.PleaseValue;
 import com.epam.examinationsystem.core.dto.UserDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
+import com.epam.examinationsystem.core.service.MailService;
 import com.epam.examinationsystem.core.service.UserService;
 import com.epam.examinationsystem.core.util.validation.ParameterValidator;
 import com.epam.examinationsystem.core.util.web.CaptchaUtil;
@@ -13,6 +14,7 @@ import com.epam.examinationsystem.core.web.command.CommandResult;
 import com.epam.examinationsystem.core.web.command.constant.Attribute;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import com.epam.examinationsystem.core.web.command.constant.Path;
+import com.epam.examinationsystem.core.web.command.constant.SessionConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,6 +42,9 @@ public class RegistrationCommand implements ActionCommand {
     @PleaseValue("captcha.verify_site_url")
     private String captchaVerifySiteUrl;
 
+    @PleaseInject
+    private MailService mailService;
+
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -62,6 +67,7 @@ public class RegistrationCommand implements ActionCommand {
                 request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                 return new CommandResult(Path.REGISTRATION_PAGE);
             }
+            String language = (String) request.getSession().getAttribute(SessionConstant.LOCALE);
             UserDto userDto = UserDto.builder()
                     .setUsername(username)
                     .setPassword(password)
@@ -70,6 +76,8 @@ public class RegistrationCommand implements ActionCommand {
                     .setLastName(lastName)
                     .build();
             if (userService.createStudent(userDto)) {
+                String fullName = userDto.getLastName() + " " + userDto.getFirstName();
+                mailService.sendWelcomeMail(userDto.getEmail(), language, fullName);
                 LOG.debug("The user {} has been created successfully", userDto);
                 return new CommandResult(Path.LOGIN, true);
             }

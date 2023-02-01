@@ -28,6 +28,8 @@
         <jbcrypt.version>0.4</jbcrypt.version>
         <mockito.version>5.0.0</mockito.version>
         <json.version>20220924</json.version>
+        <jakarta.mail.api.version>2.1.1</jakarta.mail.api.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
     </properties>
 
     <dependencies>
@@ -125,6 +127,17 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>${json.version}</version>
+        </dependency>
+        <!-- Mail -->
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>${jakarta.mail.api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>${jakarta.mail.version}</version>
         </dependency>
     </dependencies>
 
