@@ -23,5 +23,6 @@ public interface Attribute {
     String ANSWER = "answer";
     String ANSWERS = "answers";
     String USER_TESTS = "userTests";
+    String REPORT_PATH = "reportPath";
 
 }

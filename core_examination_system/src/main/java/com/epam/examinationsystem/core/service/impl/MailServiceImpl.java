@@ -3,13 +3,20 @@ package com.epam.examinationsystem.core.service.impl;
 import com.epam.di.annotation.PleaseService;
 import com.epam.di.annotation.PleaseValue;
 import com.epam.examinationsystem.core.service.MailService;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,6 +33,7 @@ public class MailServiceImpl implements MailService {
     private static final String WELCOME_FILE_PATH = "../../view/mail/welcome.html";
     private static final String WELCOME_SUBJECT_UA = "Успішна реєстрація";
     private static final String WELCOME_SUBJECT_US = "Successful sign-up";
+    private static final String REPORT_BODY_SUBJECT_US = "Please you can find queried report in the attached file.";
 
     @PleaseValue("mail.from")
     private String fromEmail;
@@ -58,8 +66,35 @@ public class MailServiceImpl implements MailService {
     }
 
     @Override
-    public void sendMailWithAttachment() {
-
+    public void sendMailWithAttachment(String toEmail, String reportName, String fileName, OutputStream outputStream) {
+        Properties properties = getSmtpProperties();
+        Authenticator auth = new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        };
+        Session session = Session.getDefaultInstance(properties, auth);
+        Message message = new MimeMessage(session);
+        try {
+            message.setFrom(new InternetAddress(fromEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject(reportName);
+            ByteArrayOutputStream byteArrayOutputStream = (ByteArrayOutputStream) outputStream;
+            DataSource attachment = new ByteArrayDataSource(byteArrayOutputStream.toByteArray(), "application/octet-stream");
+            MimeMultipart multipart = new MimeMultipart();
+            MimeBodyPart attachmentPart = new MimeBodyPart();
+            MimeBodyPart maiText = new MimeBodyPart();
+            maiText.setContent(REPORT_BODY_SUBJECT_US, "text/plain; charset=UTF-8");
+            attachmentPart.setFileName(fileName);
+            attachmentPart.setDataHandler(new DataHandler(attachment));
+            multipart.addBodyPart(maiText);
+            multipart.addBodyPart(attachmentPart);
+            message.setContent(multipart);
+            Transport.send(message);
+        } catch (MessagingException e) {
+            LOG.error("Error has been occurred during sending report email to {}", toEmail);
+        }
     }
 
     private void sendEmail(String toEmail, String subject, String content) {
@@ -79,7 +114,7 @@ public class MailServiceImpl implements MailService {
             message.setContent(content, "text/html; charset=UTF-8");
             Transport.send(message);
         } catch (MessagingException e) {
-            LOG.error("Error has been occurred during sending email to {}", toEmail);
+            LOG.error("Error has been occurred during sending welcome email to {}", toEmail);
         }
     }
 

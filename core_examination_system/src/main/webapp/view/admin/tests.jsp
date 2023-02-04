@@ -34,6 +34,7 @@
                 pageData="${pageData}"
                 cardHeader="${cardHeader}"
                 createNewItemUrl="${createNewItemUrl}"
+                reportPath="${reportPath}"
                 searchHeaderNames="${['table.subjects']}">
             <jsp:attribute name="body">
                   <c:forEach var="test" items="${pageData.items}" varStatus="counter">

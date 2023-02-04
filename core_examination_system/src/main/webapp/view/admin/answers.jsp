@@ -32,6 +32,7 @@
                 allowCreate="${allowCreate}"
                 pageData="${pageData}"
                 cardHeader="${cardHeader}"
+                reportPath="${reportPath}"
                 createNewItemUrl="${createNewItemUrl}"
                 searchHeaderNames="${['table.questions']}">
             <jsp:attribute name="body">

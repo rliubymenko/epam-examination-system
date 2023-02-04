@@ -61,6 +61,7 @@ public class GetAllUserTestsByParametersCommand implements ActionCommand {
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, false);
             request.setAttribute(Attribute.CARD_HEADER, "table.user_tests");
+            request.setAttribute(Attribute.REPORT_PATH, "/admins/usertests/report");
             return new CommandResult(page);
         } catch (ServiceException e) {
             LOG.error("Error during searching by {} has been occurred {}", tableRequest, e.getMessage());

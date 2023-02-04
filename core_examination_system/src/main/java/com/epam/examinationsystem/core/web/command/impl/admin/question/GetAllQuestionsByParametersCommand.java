@@ -58,6 +58,7 @@ public class GetAllQuestionsByParametersCommand implements ActionCommand {
             request.setAttribute(Attribute.ALLOW_CREATE, true);
             request.setAttribute(Attribute.CREATE_NEW_ITEM_URL, "/admins/questions/question/new");
             request.setAttribute(Attribute.CARD_HEADER, "table.questions");
+            request.setAttribute(Attribute.REPORT_PATH, "/admins/questions/report");
             return new CommandResult(page);
         } catch (ServiceException e) {
             LOG.error("Error during searching by {} has been occurred {}", tableRequest, e.getMessage());

@@ -24,6 +24,8 @@ public interface AnswerService {
 
     DataTableResponse<AnswerDto> findAll(DataTableRequest request) throws ServiceException;
 
+    List<AnswerDto> findAll() throws ServiceException;
+
     boolean deleteByUuidAndQuestionUuid(UUID answerUuid, UUID questionUuid) throws ServiceException;
 
     boolean deleteByUuidAndSetNewTrueAnswer(UUID answerUuid, UUID newTrueAnswerUuid) throws ServiceException;

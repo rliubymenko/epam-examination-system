@@ -131,7 +131,7 @@ public class UserTestServiceImpl implements UserTestService {
     @Override
     public List<UserTestDto> findByUserUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find user test by user uuid {}", uuid);
-        transactionManager.begin(userTestDao, testDao, userDao, roleDao);
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, roleDao);
         try {
             List<UserTest> userTests = userTestDao.findByUserUuid(uuid);
             return userTests
@@ -197,6 +197,22 @@ public class UserTestServiceImpl implements UserTestService {
             response.setDataForSearch(List.of(usersForSearch, testsForSearch));
             response.setDtos(userDtos);
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<UserTestDto> findAll() throws ServiceException {
+        LOG.debug("Find all user tests ");
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, subjectDao, roleDao);
+        try {
+            return userTestDao.findAll()
+                    .stream()
+                    .map(UserTestDto.builder()::fromUserTest)
+                    .toList();
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

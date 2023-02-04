@@ -4,6 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ attribute name="headerDataList" required="true" type="java.util.List" %>
+<%@ attribute name="reportPath" required="false" type="java.lang.String" %>
 <%@ attribute name="cardHeader" required="true" type="java.lang.String" %>
 <%@ attribute name="allowCreate" required="true" type="java.lang.String" %>
 <%@ attribute name="createNewItemUrl" required="false" type="java.lang.String" %>
@@ -114,15 +115,37 @@
                             </c:forEach>
                         </div>
                     </c:if>
-                    <c:if test="${allowCreate}">
-                        <div class="d-flex justify-content-end align-items-start">
-                            <a class="btn btn-sm fw-bold btn-outline-success btn-rounded"
+                    <div class="d-flex justify-content-end align-items-start">
+                        <button id="reportDropdownButton"
+                                type="button"
+                                class="btn btn-rounded dropdown-toggle btn-sm fw-bold btn-outline-info"
+                                data-mdb-toggle="dropdown"
+                                data-mdb-ripple-color="dark"
+                                aria-expanded="false">
+                            <fmt:message key="table.report" bundle="${locale}"/>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="reportDropdownButton">
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}${reportPath}?type=download">
+                                    <fmt:message key="table.download" bundle="${locale}"/>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}${reportPath}?type=email">
+                                    <fmt:message key="table.send_to_email" bundle="${locale}"/>
+                                </a>
+                            </li>
+                        </ul>
+                        <c:if test="${allowCreate}">
+                            <a class="btn ms-2 btn-sm fw-bold btn-outline-success btn-rounded"
                                data-mdb-ripple-color="dark"
                                href="${pageContext.request.contextPath}${createNewItemUrl}">
                                 <fmt:message key="table.create" bundle="${locale}"/>
                             </a>
-                        </div>
-                    </c:if>
+                        </c:if>
+                    </div>
                 </div>
             </div>
             <div class="card-body">

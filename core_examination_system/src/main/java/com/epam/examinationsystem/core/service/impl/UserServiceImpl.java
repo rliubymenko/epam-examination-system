@@ -117,6 +117,23 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public List<UserDto> findAll() throws ServiceException {
+        LOG.debug("Find all users");
+        transactionManager.beginWithAutoCommit(userDao, roleDao);
+        try {
+            return userDao.findAll()
+                    .stream()
+                    .map(UserDto.builder()::fromUser)
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
     public DataTableResponse<UserDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all users by {}", request);
         transactionManager.beginWithAutoCommit(userDao, roleDao);

@@ -22,6 +22,8 @@ public interface QuestionService {
 
     DataTableResponse<QuestionDto> findAll(DataTableRequest request) throws ServiceException;
 
+    List<QuestionDto> findAll() throws ServiceException;
+
     List<StudentTestDto.QuestionForStudentTestDto> findAllByTestUuid(UUID testUuid) throws ServiceException;
 
     List<QuestionDto> findAllOpenToCreateAnswers() throws ServiceException;

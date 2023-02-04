@@ -21,4 +21,6 @@ public interface UserTestService {
     boolean isSelected(UUID userUuid, UUID testUuid) throws ServiceException;
 
     DataTableResponse<UserTestDto> findAll(DataTableRequest request) throws ServiceException;
+
+    List<UserTestDto> findAll() throws ServiceException;
 }

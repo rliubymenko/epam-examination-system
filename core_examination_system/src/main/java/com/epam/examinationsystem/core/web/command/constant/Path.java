@@ -7,6 +7,7 @@ public interface Path {
     String USERS = "/admins/users";
     String SUBJECTS = "/admins/subjects";
     String TESTS = "/admins/tests";
+    String USERTESTS = "/admins/usertests";
     String QUESTIONS = "/admins/questions";
     String ANSWERS = "/admins/answers";
     String TESTS_FOR_STUDENT = "/students/tests";

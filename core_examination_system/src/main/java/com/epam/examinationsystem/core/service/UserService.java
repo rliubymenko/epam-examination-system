@@ -5,6 +5,7 @@ import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.UserDto;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +18,8 @@ public interface UserService {
     Optional<UserDto> findByUsername(String username) throws ServiceException;
 
     Optional<UserDto> findByUuid(UUID uuid) throws ServiceException;
+
+    List<UserDto> findAll() throws ServiceException;
 
     DataTableResponse<UserDto> findAll(DataTableRequest request) throws ServiceException;
 

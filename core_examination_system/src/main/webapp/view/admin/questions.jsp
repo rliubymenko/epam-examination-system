@@ -31,6 +31,7 @@
                 allowCreate="${allowCreate}"
                 pageData="${pageData}"
                 cardHeader="${cardHeader}"
+                reportPath="${reportPath}"
                 createNewItemUrl="${createNewItemUrl}"
                 searchHeaderNames="${['table.tests']}">
             <jsp:attribute name="body">

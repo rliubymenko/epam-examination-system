@@ -53,7 +53,7 @@ public class AnswerServiceImpl implements AnswerService {
         if (uuid == null) {
             return Optional.empty();
         }
-        transactionManager.begin(answerDao, questionDao, testDao);
+        transactionManager.beginWithAutoCommit(answerDao, questionDao, testDao);
         try {
             Optional<Answer> maybeAnswer = answerDao.findByUuid(uuid);
             return maybeAnswer.map(AnswerDto.builder()::fromAnswer);
@@ -67,7 +67,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public List<AnswerDto> findAllByQuestionUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find answer by question uuid {}", uuid);
-        transactionManager.begin(answerDao, questionDao, testDao);
+        transactionManager.beginWithAutoCommit(answerDao, questionDao, testDao);
         try {
             List<Answer> answersByQuestionUuid = answerDao.findAllByQuestionUuid(uuid);
             return answersByQuestionUuid.stream()
@@ -200,7 +200,7 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public DataTableResponse<AnswerDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all answers by {}", request);
-        transactionManager.begin(answerDao, questionDao, testDao, subjectDao);
+        transactionManager.beginWithAutoCommit(answerDao, questionDao, testDao, subjectDao);
         try {
             List<Answer> answers = answerDao.findAll(request);
             List<Answer> allAnswers = answerDao.findAll();
@@ -214,6 +214,22 @@ public class AnswerServiceImpl implements AnswerService {
             response.setDtos(answerDtos);
             response.setDataForSearch(List.of(questionForSearch));
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<AnswerDto> findAll() throws ServiceException {
+        LOG.debug("Find all answers");
+        transactionManager.beginWithAutoCommit(answerDao, questionDao, testDao, subjectDao);
+        try {
+            return answerDao.findAll()
+                    .stream()
+                    .map(AnswerDto.builder()::fromAnswer)
+                    .toList();
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

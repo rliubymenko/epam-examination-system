@@ -8,6 +8,7 @@ import com.epam.examinationsystem.core.web.command.impl.HomeCommand;
 import com.epam.examinationsystem.core.web.command.impl.LocaleCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.GetAdminAccountPageCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.answer.*;
+import com.epam.examinationsystem.core.web.command.impl.admin.pdf.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.question.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.subject.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.test.*;
@@ -89,6 +90,13 @@ public class ActionFactory {
         commands.put(CommandType.POST_ADMINS_ANSWERS_ANSWER_NEW, ObjectProvider.getInstance(CreateAnswerCommand.class));
         commands.put(CommandType.POST_ADMINS_ANSWERS_ANSWER_DELETE, ObjectProvider.getInstance(SingleChoiceDeleteAnswerCommand.class));
         commands.put(CommandType.POST_STUDENTS_TESTS_TESTING, ObjectProvider.getInstance(ExamineStudentCommand.class));
+
+        commands.put(CommandType.GET_ADMINS_USERS_REPORT, ObjectProvider.getInstance(GenerateUserPdfReportCommand.class));
+        commands.put(CommandType.GET_ADMINS_ANSWERS_REPORT, ObjectProvider.getInstance(GenerateAnswerPdfReportCommand.class));
+        commands.put(CommandType.GET_ADMINS_QUESTIONS_REPORT, ObjectProvider.getInstance(GenerateQuestionPdfReportCommand.class));
+        commands.put(CommandType.GET_ADMINS_SUBJECTS_REPORT, ObjectProvider.getInstance(GenerateSubjectPdfReportCommand.class));
+        commands.put(CommandType.GET_ADMINS_TESTS_REPORT, ObjectProvider.getInstance(GenerateTestPdfReportCommand.class));
+        commands.put(CommandType.GET_ADMINS_USERTESTS_REPORT, ObjectProvider.getInstance(GenerateUserTestPdfReportCommand.class));
     }
 
     public static ActionFactory getInstance() {

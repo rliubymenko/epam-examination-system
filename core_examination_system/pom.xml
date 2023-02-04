@@ -30,6 +30,7 @@
         <json.version>20220924</json.version>
         <jakarta.mail.api.version>2.1.1</jakarta.mail.api.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <openpdf.version>1.3.30</openpdf.version>
     </properties>
 
     <dependencies>
@@ -138,6 +139,12 @@
             <groupId>org.eclipse.angus</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>${jakarta.mail.version}</version>
+        </dependency>
+        <!-- PDF generator -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>${openpdf.version}</version>
         </dependency>
     </dependencies>
 

@@ -110,7 +110,7 @@ public class QuestionServiceImpl implements QuestionService {
         if (uuid == null) {
             return Optional.empty();
         }
-        transactionManager.begin(questionDao, testDao, subjectDao);
+        transactionManager.beginWithAutoCommit(questionDao, testDao, subjectDao);
         try {
             Optional<Question> maybeQuestion = questionDao.findByUuid(uuid);
             return maybeQuestion.map(QuestionDto.builder()::fromQuestion);
@@ -154,6 +154,22 @@ public class QuestionServiceImpl implements QuestionService {
             response.setDataForSearch(List.of(testsForSearch));
             response.setDtos(questionDtos);
             return response;
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public List<QuestionDto> findAll() throws ServiceException {
+        LOG.debug("Find all questions");
+        transactionManager.beginWithAutoCommit(questionDao, testDao, answerDao, subjectDao);
+        try {
+            return questionDao.findAll()
+                    .stream()
+                    .map(QuestionDto.builder()::fromQuestion)
+                    .toList();
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {

@@ -58,6 +58,7 @@ public class GetAllAnswersByParametersCommand implements ActionCommand {
             request.setAttribute(Attribute.ALLOW_CREATE, true);
             request.setAttribute(Attribute.CREATE_NEW_ITEM_URL, "/admins/answers/answer/new");
             request.setAttribute(Attribute.CARD_HEADER, "table.answers");
+            request.setAttribute(Attribute.REPORT_PATH, "/admins/answers/report");
             return new CommandResult(page);
         } catch (ServiceException e) {
             LOG.error("Error during searching by {} has been occurred {}", tableRequest, e.getMessage());

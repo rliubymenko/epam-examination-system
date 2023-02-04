@@ -31,6 +31,7 @@
                 allowCreate="${allowCreate}"
                 pageData="${pageData}"
                 cardHeader="${cardHeader}"
+                reportPath="${reportPath}"
                 createNewItemUrl="${createNewItemUrl}">
             <jsp:attribute name="body">
                   <c:forEach var="subject" items="${pageData.items}" varStatus="counter">

@@ -62,6 +62,7 @@ public class GetAllTestsByParametersCommand implements ActionCommand {
             request.setAttribute(Attribute.ALLOW_CREATE, true);
             request.setAttribute(Attribute.CREATE_NEW_ITEM_URL, "/admins/tests/test/new");
             request.setAttribute(Attribute.CARD_HEADER, "table.tests");
+            request.setAttribute(Attribute.REPORT_PATH, "/admins/tests/report");
             return new CommandResult(Path.TESTS_PAGE);
         } catch (ServiceException e) {
             LOG.error("Error during searching by {} has been occurred {}", tableRequest, e.getMessage());

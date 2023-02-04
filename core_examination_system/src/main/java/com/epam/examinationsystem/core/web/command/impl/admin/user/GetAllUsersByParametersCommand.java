@@ -58,6 +58,7 @@ public class GetAllUsersByParametersCommand implements ActionCommand {
             request.setAttribute(Attribute.PAGE_DATA, pageResponseDto);
             request.setAttribute(Attribute.ALLOW_CREATE, false);
             request.setAttribute(Attribute.CARD_HEADER, "table.users");
+            request.setAttribute(Attribute.REPORT_PATH, "/admins/users/report");
             return new CommandResult(Path.USERS_PAGE);
         } catch (ServiceException e) {
             LOG.error("Error during searching by {} has been occurred {}", tableRequest, e.getMessage());
