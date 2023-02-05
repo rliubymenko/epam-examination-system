@@ -63,9 +63,10 @@
                     <div class="row d-flex justify-content-center align-items-center h-100">
                         <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                             <div class="card" style="border-radius: 15px;">
-                                <div class="card-body p-5">
-                                    <h2 class="text-uppercase text-center mb-5"><fmt:message
-                                            key="registration.creation"/></h2>
+                                <div class="card-body px-5 pt-4 pb-4">
+                                    <h2 class="text-uppercase text-center mb-5">
+                                        <fmt:message key="registration.creation"/>
+                                    </h2>
                                     <form
                                             id="registration-form"
                                             action="${pageContext.request.contextPath}/registration"
@@ -77,7 +78,7 @@
                                             <span class="input-group-text" id="usernameGroup">@</span>
                                             <input
                                                     type="text"
-                                                    class="${not empty inconsistencies && inconsistencies.contains('username') ?
+                                                    class="${not empty inconsistencies && (inconsistencies.contains('username') || inconsistencies.contains('invalid_username')) ?
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
                                                     id="username"
@@ -88,7 +89,7 @@
                                                     required
                                             />
                                             <div class="invalid-feedback">
-                                                <c:if test="${empty inconsistencies}">
+                                                <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('invalid_username'))}">
                                                     <fmt:message key="registration.invalid_username"/>
                                                 </c:if>
                                                 <c:if test="${not empty inconsistencies && inconsistencies.contains('username')}">
@@ -120,7 +121,7 @@
                                             </div>
                                         </div>
 
-                                        <div id="password-div" class="form-outline mb-4">
+                                        <div id="password-div" class="form-outline mb-5">
                                             <input
                                                     type="password"
                                                     id="password"
@@ -129,22 +130,16 @@
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
                                                     required
-                                                    pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,50}"
                                             />
                                             <label class="form-label" for="password">
                                                 <fmt:message key="registration.password"/>
                                             </label>
                                             <div class="invalid-feedback">
-                                                <c:if test="${empty inconsistencies}">
-                                                    <fmt:message key="registration.invalid_password"/>
-                                                </c:if>
-                                                <c:if test="${not empty inconsistencies && inconsistencies.contains('password')}">
-                                                    <fmt:message key="registration.incorrect_password"/>
-                                                </c:if>
+                                                <fmt:message key="registration.invalid_password"/>
                                             </div>
                                         </div>
 
-                                        <div id="repeated-password-div" class="form-outline mb-4">
+                                        <div id="repeated-password-div" class="form-outline mb-5">
                                             <input type="password"
                                                    id="repeated-password"
                                                    name="repeatedPassword"
@@ -152,18 +147,12 @@
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
                                                    required
-                                                   pattern="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,50}"
                                             />
                                             <label class="form-label" for="repeated-password">
                                                 <fmt:message key="registration.repeat_password"/>
                                             </label>
                                             <div class="invalid-feedback">
-                                                <c:if test="${empty inconsistencies}">
-                                                    <fmt:message key="registration.invalid_password"/>
-                                                </c:if>
-                                                <c:if test="${not empty inconsistencies && inconsistencies.contains('repeatedPassword')}">
-                                                    <fmt:message key="registration.invalid_passwords_match"/>
-                                                </c:if>
+                                                <fmt:message key="registration.invalid_passwords_match"/>
                                             </div>
                                         </div>
 
@@ -176,7 +165,6 @@
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
                                                     required
-                                                    pattern="([А-Яа-яЁёЇїІіЄєҐґ'A-Za-z]){1,30}"
                                             />
                                             <label class="form-label" for="firstname">
                                                 <fmt:message key="registration.firstname"/>
@@ -194,7 +182,6 @@
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
                                                     required
-                                                    pattern="([А-Яа-яЁёЇїІіЄєҐґ'A-Za-z]){1,50}"
                                             />
                                             <label class="form-label" for="lastname">
                                                 <fmt:message key="registration.lastname"/>

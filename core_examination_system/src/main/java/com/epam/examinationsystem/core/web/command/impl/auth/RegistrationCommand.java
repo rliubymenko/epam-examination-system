@@ -47,6 +47,7 @@ public class RegistrationCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOG.debug("Trying to register user");
         try {
             String username = request.getParameter(Parameter.USERNAME);
             String email = request.getParameter(Parameter.EMAIL);
@@ -97,7 +98,10 @@ public class RegistrationCommand implements ActionCommand {
             String repeatedPassword) throws ServiceException {
 
         Set<String> inconsistencies = new HashSet<>();
-        if (ParameterValidator.isNotValidUsername(username) || userService.existsByUsername(username)) {
+        if (ParameterValidator.isNotValidUsername(username)) {
+            inconsistencies.add("invalid_username");
+        }
+        if (userService.existsByUsername(username)) {
             inconsistencies.add("username");
         }
         if (ParameterValidator.isNotValidEmail(email) || userService.existsByEmail(email)) {

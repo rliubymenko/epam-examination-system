@@ -42,6 +42,7 @@ public class LoginCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
+        LOG.debug("Trying to login user");
         try {
             String username = request.getParameter(Parameter.USERNAME);
             String password = request.getParameter(Parameter.PASSWORD);

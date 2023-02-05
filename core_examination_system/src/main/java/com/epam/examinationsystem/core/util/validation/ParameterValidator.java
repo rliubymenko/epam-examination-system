@@ -25,7 +25,7 @@ public final class ParameterValidator {
     }
 
     public static boolean isNotValidUsername(String username) {
-        return username == null;
+        return StringUtils.isBlank(username);
     }
 
     public static boolean isNotValidBoolean(String value) {

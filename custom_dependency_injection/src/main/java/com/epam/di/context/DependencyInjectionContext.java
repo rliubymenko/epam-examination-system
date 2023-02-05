@@ -36,7 +36,7 @@ public class DependencyInjectionContext {
                 Class<?>[] interfaces = implementationClass.getInterfaces();
                 Map<Class<?>, Object> implementationWithInstance = new HashMap<>();
                 implementationWithInstance.put(implementationClass, null);
-                if (interfaces.length == 0 || implementationClass.getSimpleName().contains("Command")) {
+                if (interfaces.length == 0 || implementationClass.getSimpleName().endsWith("Command")) {
                     interfaceAndImplementationWithInstanceMap.put(implementationClass, implementationWithInstance);
                 } else {
                     for (Class<?> iface : interfaces) {
