@@ -40,3 +40,21 @@ body {
 .navbar-brand {
     padding-bottom: 0;
 }
+
+.homeMessage {
+    font-size: 6.5rem;
+    padding-left: 2.5rem;
+}
+
+.subjectList .card-body {
+    padding: 1rem;
+}
+
+@keyframes homeLetter {
+    0%, 10% {
+        opacity: 0;
+    }
+    15%, 100% {
+        opacity: 1;
+    }
+}
