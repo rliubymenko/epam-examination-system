@@ -12,11 +12,8 @@ Array.prototype.slice.call(forms).forEach((form) => {
     }, false);
 });
 
-function showHidePassword() {
-    const showPasswordInput = document.getElementById("password");
-    if (showPasswordInput.type === "password") {
-        showPasswordInput.type = "text";
-    } else {
-        showPasswordInput.type = "password";
-    }
-}
+$(document).on('click', '#togglePassword', function () {
+    const type = $('#password').attr('type') === "password" ? "text" : "password";
+    $('#password').attr("type", type);
+    $('#togglePassword').toggleClass('fa-eye-slash fa-eye');
+})

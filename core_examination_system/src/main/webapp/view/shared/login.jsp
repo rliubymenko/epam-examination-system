@@ -102,30 +102,23 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-outline mb-4">
+                                        <div class="form-outline input-group mb-4">
+                                             <span class="input-group-text border-0" id="passwordVisibility">
+                                                <i class="fas fa-eye-slash" id="togglePassword"></i>
+                                             </span>
                                             <input
                                                     type="password"
                                                     id="password"
                                                     name="password"
-                                                    class="form-control form-control-lg"
+                                                    class="form-control rounded form-control-lg"
+                                                    placeholder="<fmt:message key="login.password"/>"
+                                                    aria-label="<fmt:message key="login.password"/>"
+                                                    aria-describedby="passwordVisibility"
                                                     required
                                             />
-                                            <label class="form-label" for="password">
-                                                <fmt:message key="login.password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="login.invalid_password"/>
                                             </div>
-                                        </div>
-                                        <div class="form-check mb-4">
-                                            <input class="form-check-input"
-                                                   type="checkbox"
-                                                   id="showPassword"
-                                                   onclick="showHidePassword()"
-                                            />
-                                            <label class="form-check-label" for="showPassword">
-                                                <fmt:message key="login.show_password"/>
-                                            </label>
                                         </div>
                                         <div class="mb-4">
                                             <div class="g-recaptcha"

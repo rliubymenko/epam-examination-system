@@ -121,36 +121,42 @@
                                             </div>
                                         </div>
 
-                                        <div id="password-div" class="form-outline mb-5">
+                                        <div id="password-div" class="form-outline input-group mb-5">
+                                             <span class="input-group-text border-0" id="passwordVisibility">
+                                                <i class="fas fa-eye-slash" id="togglePassword"></i>
+                                            </span>
                                             <input
                                                     type="password"
                                                     id="password"
                                                     name="password"
                                                     class="${not empty inconsistencies && inconsistencies.contains('password') ?
-                                            'is-invalid form-control form-control-lg' :
-                                            'form-control form-control-lg'}"
+                                            'is-invalid rounded form-control form-control-lg' :
+                                            'form-control rounded form-control-lg'}"
+                                                    placeholder="<fmt:message key="login.password"/>"
+                                                    aria-label="<fmt:message key="login.password"/>"
+                                                    aria-describedby="passwordVisibility"
                                                     required
                                             />
-                                            <label class="form-label" for="password">
-                                                <fmt:message key="registration.password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_password"/>
                                             </div>
                                         </div>
 
-                                        <div id="repeated-password-div" class="form-outline mb-5">
+                                        <div id="repeated-password-div" class="form-outline input-group mb-5">
+                                             <span class="input-group-text border-0" id="repeatedPasswordVisibility">
+                                                <i class="fas fa-eye-slash" id="toggleRepeatedPassword"></i>
+                                            </span>
                                             <input type="password"
                                                    id="repeated-password"
                                                    name="repeatedPassword"
                                                    class="${not empty inconsistencies && inconsistencies.contains('repeatedPassword') ?
-                                            'is-invalid form-control form-control-lg' :
-                                            'form-control form-control-lg'}"
+                                            'is-invalid rounded form-control form-control-lg' :
+                                            'form-control rounded form-control-lg'}"
+                                                   placeholder="<fmt:message key="registration.repeat_password"/>"
+                                                   aria-label="<fmt:message key="registration.repeat_password"/>"
+                                                   aria-describedby="repeatedPasswordVisibility"
                                                    required
                                             />
-                                            <label class="form-label" for="repeated-password">
-                                                <fmt:message key="registration.repeat_password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_passwords_match"/>
                                             </div>

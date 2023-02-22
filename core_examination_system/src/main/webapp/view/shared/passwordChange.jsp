@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <jsp:include page="static.jsp"/>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/login.css">
-    <script src="${pageContext.request.contextPath}/static/js/login.js" defer></script>
+    <script src="${pageContext.request.contextPath}/static/js/passwordChange.js" defer></script>
 </head>
 <body>
 
@@ -41,54 +41,63 @@
                                             novalidate
                                             class="needs-validation"
                                     >
-                                        <div id="oldPasswordDiv" class="form-outline mb-5">
+                                        <div id="oldPasswordDiv" class="form-outline input-group mb-5">
+                                             <span class="input-group-text border-0" id="oldPasswordVisibility">
+                                                <i class="fas fa-eye-slash" id="toggleOldPassword"></i>
+                                             </span>
                                             <input
                                                     type="password"
                                                     id="oldPassword"
                                                     name="oldPassword"
                                                     class="${not empty inconsistencies && inconsistencies.contains('oldPassword') ?
-                                                        'is-invalid form-control form-control-lg' :
-                                                        'form-control form-control-lg'}"
+                                                        'is-invalid rounded form-control form-control-lg' :
+                                                        'form-control rounded form-control-lg'}"
+                                                    placeholder="<fmt:message key="password_change.old_password"/>"
+                                                    aria-label="<fmt:message key="password_change.old_password"/>"
+                                                    aria-describedby="passwordVisibility"
                                                     required
                                             />
-                                            <label class="form-label" for="oldPassword">
-                                                <fmt:message key="password_change.old_password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="password_change.invalid_old_password"/>
                                             </div>
                                         </div>
 
-                                        <div id="newPasswordDiv" class="form-outline mb-5">
+                                        <div id="newPasswordDiv" class="form-outline input-group mb-5">
+                                             <span class="input-group-text border-0" id="newPasswordVisibility">
+                                                <i class="fas fa-eye-slash" id="toggleNewPassword"></i>
+                                             </span>
                                             <input
                                                     type="password"
                                                     id="newPassword"
                                                     name="newPassword"
                                                     class="${not empty inconsistencies && inconsistencies.contains('newPassword') ?
-                                            'is-invalid form-control form-control-lg' :
-                                            'form-control form-control-lg'}"
+                                            'is-invalid rounded form-control form-control-lg' :
+                                            'form-control rounded form-control-lg'}"
+                                                    placeholder="<fmt:message key="password_change.new_password"/>"
+                                                    aria-label="<fmt:message key="password_change.new_password"/>"
+                                                    aria-describedby="passwordVisibility"
                                                     required
                                             />
-                                            <label class="form-label" for="newPassword">
-                                                <fmt:message key="password_change.new_password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_password"/>
                                             </div>
                                         </div>
 
-                                        <div id="repeatedPasswordDiv" class="form-outline mb-5">
+                                        <div id="repeatedPasswordDiv" class="form-outline input-group mb-5">
+                                             <span class="input-group-text border-0" id="repeatedPasswordVisibility">
+                                                <i class="fas fa-eye-slash" id="toggleRepeatedPassword"></i>
+                                             </span>
                                             <input type="password"
                                                    id="repeatedPassword"
                                                    name="repeatedPassword"
                                                    class="${not empty inconsistencies && inconsistencies.contains('repeatedPassword') ?
-                                            'is-invalid form-control form-control-lg' :
-                                            'form-control form-control-lg'}"
+                                            'is-invalid rounded form-control form-control-lg' :
+                                            'form-control rounded form-control-lg'}"
+                                                   placeholder="<fmt:message key="registration.repeat_password"/>"
+                                                   aria-label="<fmt:message key="registration.repeat_password"/>"
+                                                   aria-describedby="passwordVisibility"
                                                    required
                                             />
-                                            <label class="form-label" for="repeatedPassword">
-                                                <fmt:message key="registration.repeat_password"/>
-                                            </label>
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_passwords_match"/>
                                             </div>
