@@ -228,16 +228,16 @@ class UserDaoImplTest {
     }
 
     @Test
-    void shouldUpdateUserWithoutPassword() throws DaoException, SQLException {
+    void shouldUpdateWithoutChangingActivation() throws DaoException, SQLException {
         Mockito.when(connection.prepareStatement(Mockito.anyString())).thenReturn(preparedStatement);
-        Mockito.doNothing().when(userDao).populateUpdateWithoutPasswordQuery(preparedStatement, expectedUser);
+        Mockito.doNothing().when(userDao).populateUpdateWithoutChangingActivationQuery(preparedStatement, expectedUser);
         Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);
 
-        boolean actualResult = userDao.updateWithoutPassword(expectedUser);
+        boolean actualResult = userDao.updateWithoutChangingActivation(expectedUser);
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
-        Mockito.verify(userDao, Mockito.times(1)).updateWithoutPassword(userCaptor.capture());
+        Mockito.verify(userDao, Mockito.times(1)).updateWithoutChangingActivation(userCaptor.capture());
         Assertions.assertEquals(expectedUser, userCaptor.getValue());
 
         Assertions.assertTrue(actualResult);
