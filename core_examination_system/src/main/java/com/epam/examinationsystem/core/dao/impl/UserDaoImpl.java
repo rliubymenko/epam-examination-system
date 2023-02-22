@@ -18,10 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @PleaseService
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
@@ -74,11 +71,25 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean updateWithoutPassword(User user) throws DaoException {
-        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, user.getUuid());
-        String updateQuery = getUpdateWithoutPasswordQuery(user);
+    public boolean resetPassword(UUID userUuid, String newEncryptedPassword) throws DaoException {
+        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, userUuid);
+        List<String> columnNames = List.of("password");
+        String updateQuery = QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), userUuid, columnNames);
         try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-            populateUpdateWithoutPasswordQuery(preparedStatement, user);
+            preparedStatement.setString(1, newEncryptedPassword);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            String message = LoggerUtil.updateEntityErrorLogging(LOG, ENTITY_NAME, userUuid);
+            throw new DaoException(message, e);
+        }
+    }
+
+    @Override
+    public boolean updateWithoutChangingActivation(User user) throws DaoException {
+        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, user.getUuid());
+        String updateQuery = getUpdateWithoutChangingActivationQuery(user);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            populateUpdateWithoutChangingActivationQuery(preparedStatement, user);
             return preparedStatement.executeUpdate() != 0;
         } catch (SQLException e) {
             String message = LoggerUtil.updateEntityErrorLogging(LOG, ENTITY_NAME, user.getUuid());
@@ -112,12 +123,12 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 
     @Override
     public String getUpdateQuery(User user) {
-        List<String> columnNames = List.of("username", "password", "email", "first_name", "last_name", "is_activated");
+        List<String> columnNames = List.of("username", "email", "first_name", "last_name", "is_activated");
         return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
-    private String getUpdateWithoutPasswordQuery(User user) {
-        List<String> columnNames = List.of("username", "email", "first_name", "last_name", "is_activated");
+    private String getUpdateWithoutChangingActivationQuery(User user) {
+        List<String> columnNames = List.of("username", "email", "first_name", "last_name");
         return QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TABLE_NAME.getValue(), user.getUuid(), columnNames);
     }
 
@@ -140,7 +151,6 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         QueryBuilderUtil.populatePreparedStatement(
                 preparedStatement,
                 user.getUsername(),
-                user.getPassword(),
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
@@ -148,14 +158,13 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         );
     }
 
-    public void populateUpdateWithoutPasswordQuery(PreparedStatement preparedStatement, User user) throws SQLException {
+    public void populateUpdateWithoutChangingActivationQuery(PreparedStatement preparedStatement, User user) throws SQLException {
         QueryBuilderUtil.populatePreparedStatement(
                 preparedStatement,
                 user.getUsername(),
                 user.getEmail(),
                 user.getFirstName(),
-                user.getLastName(),
-                user.getIsActivated()
+                user.getLastName()
         );
     }
 }
