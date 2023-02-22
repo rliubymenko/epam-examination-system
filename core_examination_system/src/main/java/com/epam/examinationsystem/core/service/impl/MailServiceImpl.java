@@ -33,8 +33,8 @@ public class MailServiceImpl implements MailService {
     private static final String WELCOME_FILE_PATH = "../../view/mail/welcome.html";
     private static final String WELCOME_SUBJECT_UA = "Успішна реєстрація";
     private static final String WELCOME_SUBJECT_US = "Successful sign-up";
-    private static final String REPORT_BODY_SUBJECT_US = "Please you can find queried report in the attached file.";
-
+    private static final String REPORT_BODY_SUBJECT_US = "Please you can find queried report in the attached file";
+    private static final String RESETTING_PASSWORD_BODY_SUBJECT_US = "Please use this password for next sign in to our system";
     @PleaseValue("mail.from")
     private String fromEmail;
 
@@ -63,6 +63,12 @@ public class MailServiceImpl implements MailService {
             welcomeTemplateContent = fillOutWelcomeTemplate(welcomeTemplateContent, Locale.US, userFullName);
             sendEmail(toEmail, WELCOME_SUBJECT_US, welcomeTemplateContent);
         }
+    }
+
+    @Override
+    public void sendNewPassword(String toEmail, String newPassword) {
+        String message = RESETTING_PASSWORD_BODY_SUBJECT_US + ": " + newPassword;
+        sendEmail(toEmail, "Resetting password", message);
     }
 
     @Override
@@ -114,7 +120,7 @@ public class MailServiceImpl implements MailService {
             message.setContent(content, "text/html; charset=UTF-8");
             Transport.send(message);
         } catch (MessagingException e) {
-            LOG.error("Error has been occurred during sending welcome email to {}", toEmail);
+            LOG.error("Error has been occurred during sending email to {}", toEmail);
         }
     }
 

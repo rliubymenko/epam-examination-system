@@ -183,7 +183,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean update(UserDto userDto) throws ServiceException {
+    public boolean resetPassword(UserDto userDto, String newPassword) throws ServiceException {
+        LOG.debug("Resetting password for user {}", userDto);
+        transactionManager.begin(userDao, roleDao);
+        try {
+            UUID currentUserUuid = UUID.fromString(userDto.getUuid());
+            userDao.resetPassword(currentUserUuid, PasswordEncoder.encrypt(newPassword));
+            transactionManager.commit();
+            return true;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public boolean update(UserDto userDto, boolean isLoggedUser) throws ServiceException {
         LOG.debug("Updating user by user dto {}", userDto);
         transactionManager.begin(userDao, roleDao);
         try {
@@ -192,18 +209,15 @@ public class UserServiceImpl implements UserService {
             Optional<User> maybeUser = userDao.findByUuid(uuid);
             if (maybeUser.isPresent()) {
                 User.UserBuilder userBuilder = User.builder()
-                        .setId(maybeUser.get().getId())
                         .setUuid(maybeUser.get().getUuid())
                         .setUsername(userDto.getUsername())
                         .setEmail(userDto.getEmail())
                         .setFirstName(userDto.getFirstName())
-                        .setLastName(userDto.getLastName())
-                        .setIsActivated(userDto.getIsActivated())
-                        .setRole(maybeUser.get().getRole());
-                if (userDto.getPassword().equals(maybeUser.get().getPassword())) {
-                    userDao.updateWithoutPassword(userBuilder.build());
+                        .setLastName(userDto.getLastName());
+                if (isLoggedUser) {
+                    userDao.updateWithoutChangingActivation(userBuilder.build());
                 } else {
-                    userBuilder.setPassword(PasswordEncoder.encrypt(userDto.getPassword()));
+                    userBuilder.setIsActivated(userDto.getIsActivated());
                     userDao.update(userBuilder.build());
                 }
                 isUpdated = true;

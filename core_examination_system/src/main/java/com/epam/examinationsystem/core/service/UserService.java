@@ -13,7 +13,9 @@ public interface UserService {
 
     boolean createStudent(UserDto userDto) throws ServiceException;
 
-    boolean update(UserDto userDto) throws ServiceException;
+    boolean resetPassword(UserDto userDto, String newPassword) throws ServiceException;
+
+    boolean update(UserDto userDto, boolean isLoggedUser) throws ServiceException;
 
     Optional<UserDto> findByUsername(String username) throws ServiceException;
 
