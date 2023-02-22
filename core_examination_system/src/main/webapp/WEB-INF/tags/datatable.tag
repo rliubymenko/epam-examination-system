@@ -55,7 +55,7 @@
                             </div>
                             <button type="button"
                                     class="btn btn-sm btn-primary fw-bold"
-                                    onclick="runSearch('${dataSort}', '${dataOrder}', '${dataPage}', '${dataSize}')"
+                                    onclick="runSearch('created', 'desc', 1, 10)"
                             >
                                 <i class="fas fa-search"></i>
                             </button>
@@ -99,7 +99,7 @@
                                         aria-label="search"
                                         class="form-select"
                                         style="width: 10rem"
-                                        onchange="runSortByCriteria(event, '${dataSort}', '${dataOrder}', '${dataPage}', '${dataSize}')"
+                                        onchange="runSortByCriteria(event)"
                                 >
                                     <option value="-1" ${empty pageData.currentDataForSearch ? 'selected' : ''}>
                                         <fmt:message key="${searchHeaderNames[searchDataStatus.index]}"

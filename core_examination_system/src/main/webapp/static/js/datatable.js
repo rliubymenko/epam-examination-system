@@ -11,7 +11,7 @@ function runSort(sort, order, page, size) {
     submitRequest(sort, order, page, size);
 }
 
-function runSortByCriteria(event, sort, order, page, size) {
+function runSortByCriteria(event) {
     const uuid = event.target.value;
     if (uuid !== '-1') {
         let personalSearch = document.getElementById('personalSearch');
