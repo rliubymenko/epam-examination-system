@@ -11,6 +11,7 @@ import com.epam.examinationsystem.core.web.command.CommandResult;
 import com.epam.examinationsystem.core.web.command.constant.Attribute;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import com.epam.examinationsystem.core.web.command.constant.Path;
+import com.epam.examinationsystem.core.web.command.constant.SessionConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
@@ -34,34 +35,41 @@ public class EditUserCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
             String uuid = request.getParameter(Parameter.UUID);
+            UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             if (ParameterValidator.isValidUUID(uuid) && userService.existsByUuid(UUID.fromString(uuid))) {
-                UserDto currentUser = userService.findByUuid(UUID.fromString(uuid)).get();
+                UserDto user = userService.findByUuid(UUID.fromString(uuid)).get();
 
                 String username = request.getParameter(Parameter.USERNAME);
                 String email = request.getParameter(Parameter.EMAIL);
-                String password = request.getParameter(Parameter.PASSWORD);
                 String firstName = request.getParameter(Parameter.FIRST_NAME);
                 String lastName = request.getParameter(Parameter.LAST_NAME);
                 String isActivated = request.getParameter(Parameter.IS_ACTIVATED);
 
-                Set<String> inconsistencies = performValidation(username, email, firstName, lastName, isActivated, currentUser);
+                Set<String> inconsistencies = performValidation(username, email, firstName, lastName, user);
 
+                boolean isLoggedUser = currentUser.getUuid().equals(user.getUuid());
+                if (!isLoggedUser && ParameterValidator.isNotValidBoolean(isActivated)) {
+                    inconsistencies.add("isActivated");
+                }
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid user credentials");
-                    request.setAttribute(Attribute.USER, currentUser);
+                    request.setAttribute(Attribute.USER, user);
                     request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                     return new CommandResult(Path.EDIT_USER_PAGE);
                 }
                 UserDto userDto = UserDto.builder()
                         .setUuid(uuid)
                         .setUsername(username)
-                        .setPassword(password)
                         .setEmail(email)
                         .setFirstName(firstName)
                         .setLastName(lastName)
                         .setIsActivated(BooleanUtils.toBoolean(isActivated))
                         .build();
-                if (userService.update(userDto)) {
+                if (userService.update(userDto, isLoggedUser)) {
+                    if (isLoggedUser) {
+                        UserDto updatedUser = userService.findByUuid(UUID.fromString(uuid)).get();
+                        request.getSession().setAttribute(SessionConstant.CURRENT_USER, updatedUser);
+                    }
                     LOG.debug("The user {} has been updated successfully", userDto);
                     return new CommandResult(Path.USERS, true);
                 }
@@ -78,7 +86,6 @@ public class EditUserCommand implements ActionCommand {
             String email,
             String firstName,
             String lastName,
-            String isActivated,
             UserDto currentUser) throws ServiceException {
 
         Set<String> inconsistencies = new HashSet<>();
@@ -100,9 +107,6 @@ public class EditUserCommand implements ActionCommand {
         }
         if (ParameterValidator.isNotValidLastName(lastName)) {
             inconsistencies.add("lastName");
-        }
-        if (ParameterValidator.isNotValidBoolean(isActivated)) {
-            inconsistencies.add("isActivated");
         }
         return inconsistencies;
     }
