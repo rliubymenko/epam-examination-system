@@ -52,6 +52,14 @@
                               </span>
                                     </c:if>
                                 </p>
+                                <div class="mt-3">
+                                    <a href="${pageContext.request.contextPath}/admins/users/user?uuid=${current_user.uuid}"
+                                       type="button"
+                                       class="btn btn-rounded btn-outline-info"
+                                       data-mdb-ripple-color="dark">
+                                        <fmt:message key="table.edit"/>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

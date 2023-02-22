@@ -117,6 +117,16 @@
                                                 <fmt:message key="login.invalid_password"/>
                                             </div>
                                         </div>
+                                        <div class="form-check mb-4">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   id="showPassword"
+                                                   onclick="showHidePassword()"
+                                            />
+                                            <label class="form-check-label" for="showPassword">
+                                                <fmt:message key="login.show_password"/>
+                                            </label>
+                                        </div>
                                         <div class="mb-4">
                                             <div class="g-recaptcha"
                                                  data-sitekey="6LcBlUAkAAAAADijqF9MDF83_KaaTnmJ5HYYuMjA"></div>

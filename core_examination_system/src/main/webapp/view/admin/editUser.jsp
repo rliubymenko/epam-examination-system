@@ -31,20 +31,82 @@
                             <div class="d-flex justify-content-start align-items-start">
                                 <fmt:message key="user.edit"/>
                             </div>
-                            <div class="d-flex justify-content-end align-items-start">
-                                <a href="${pageContext.request.contextPath}/admins/users"
-                                   type="button"
-                                   class="btn btn-success">
-                                    <fmt:message key="edit.go_back_to_table"/>
-                                </a>
-                            </div>
+                            <c:if test="${current_user.uuid == param.uuid}">
+                                <div class="d-flex justify-content-end align-items-start">
+                                    <a href="${pageContext.request.contextPath}/passwordChange"
+                                       type="button"
+                                       class="btn btn-secondary me-2">
+                                        <fmt:message key="password_change.password_change"/>
+                                    </a>
+                                    <a type="button"
+                                       data-mdb-toggle="modal"
+                                       data-mdb-target="#resetPassword"
+                                       data-mdb-ripple-color="dark"
+                                       class="btn btn-success me-2">
+                                        <fmt:message key="edit.reset_password"/>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/admins/users"
+                                       type="button"
+                                       class="btn btn-success">
+                                        <fmt:message key="edit.go_back_to_table"/>
+                                    </a>
+                                </div>
+                                <div
+                                        class="modal fade"
+                                        id="resetPassword"
+                                        data-mdb-backdrop="static"
+                                        data-mdb-keyboard="false"
+                                        tabindex="-1"
+                                        aria-labelledby="staticBackdropLabel"
+                                        aria-hidden="true"
+                                >
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="modal-title" id="staticBackdropLabel">
+                                                    <fmt:message key="edit.reset_password"/>
+                                                </h3>
+                                                <button type="button" class="btn-close" data-mdb-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="text-center">
+                                                    <h6 class="text-warning">
+                                                        <fmt:message key="edit.reset_password_message"/>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a href="${pageContext.request.contextPath}/admins/users/reset/password"
+                                                   type="button"
+                                                   class="btn btn-secondary me-2">
+                                                    <fmt:message key="edit.send"/>
+                                                </a>
+                                                <button type="button" class="btn btn-secondary"
+                                                        data-mdb-dismiss="modal">
+                                                    <fmt:message key="table.close"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test="${current_user.uuid != param.uuid}">
+                                <div class="d-flex justify-content-end align-items-start">
+                                    <a href="${pageContext.request.contextPath}/admins/users"
+                                       type="button"
+                                       class="btn btn-success">
+                                        <fmt:message key="edit.go_back_to_table"/>
+                                    </a>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                     <div class="card-body">
                         <form id="edit-user-form" method="post"
                               action="${pageContext.request.contextPath}/admins/users/user?uuid=${user.uuid}">
 
-                            <div class="input-group form-outline mb-4">
+                            <div class="input-group form-outline mb-5">
                                 <span class="input-group-text" id="usernameGroup">@</span>
                                 <input
                                         type="text"
@@ -69,7 +131,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-outline mb-4">
+                            <div class="form-outline mb-5">
                                 <input
                                         type="email"
                                         id="email"
@@ -93,20 +155,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-outline mb-4">
-                                <input
-                                        type="password"
-                                        id="password"
-                                        name="password"
-                                        value="${user.password}"
-                                        class="form-control form-control-lg"
-                                        required
-                                />
-                                <label class="form-label" for="password">
-                                    <fmt:message key="user.password"/>
-                                </label>
-                            </div>
-                            <div class="form-outline mb-4">
+                            <div class="form-outline mb-5">
                                 <input
                                         type="text"
                                         id="firstname"
@@ -124,7 +173,7 @@
                                     <fmt:message key="user.invalid_firstname"/>
                                 </div>
                             </div>
-                            <div class="form-outline mb-4">
+                            <div class="form-outline mb-5">
                                 <input
                                         type="text"
                                         id="lastname"
@@ -142,20 +191,24 @@
                                     <fmt:message key="user.invalid_lastname"/>
                                 </div>
                             </div>
-                            <div class="form-check d-flex justify-content-center mb-4">
-                                <input
-                                        id="is_activated"
-                                        class="form-check-input me-2"
-                                        type="checkbox"
-                                        name="isActivated"
-                                ${user.isActivated ? 'checked' : ''}
-                                />
-                                <label class="form-check-label" for="is_activated">
-                                    <fmt:message key="user.is_activated"/>
-                                </label>
-                            </div>
-                            <button type="submit" class="btn btn-secondary btn-block"><fmt:message
-                                    key="edit.edit"/></button>
+                            <c:if test="${current_user.uuid != param.uuid}">
+                                <div class="form-check d-flex justify-content-center mb-5">
+                                    <input
+                                            id="is_activated"
+                                            class="form-check-input me-2"
+                                            type="checkbox"
+                                            name="isActivated"
+                                        ${user.isActivated ? 'checked' : ''}
+                                    />
+                                    <label class="form-check-label" for="is_activated">
+                                        <fmt:message key="user.is_activated"/>
+                                    </label>
+                                </div>
+                            </c:if>
+
+                            <button type="submit" class="btn btn-secondary btn-block">
+                                <fmt:message key="edit.edit"/>
+                            </button>
                         </form>
                     </div>
                 </div>
