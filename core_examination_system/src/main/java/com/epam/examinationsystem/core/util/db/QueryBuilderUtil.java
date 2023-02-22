@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public final class QueryBuilderUtil {
+public class QueryBuilderUtil {
 
     private QueryBuilderUtil() {
     }

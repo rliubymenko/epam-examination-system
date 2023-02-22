@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-public final class DaoMapperUtil {
+public class DaoMapperUtil {
 
     private DaoMapperUtil() {
     }

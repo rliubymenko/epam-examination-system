@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-public final class ParameterValidator {
+public class ParameterValidator {
 
     private static final Pattern UUID_REGEX_PATTERN = Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
     private static final String EMAIL_REGEX = "^([\\w\\-.]+)@([\\w\\-.]+)\\.([a-zA-Z]{2,10})$";
@@ -29,13 +29,15 @@ public final class ParameterValidator {
     }
 
     public static boolean isNotValidBoolean(String value) {
-        return value != null ||
-                !(value.equalsIgnoreCase("true") ||
-                        value.equalsIgnoreCase("false") ||
-                        value.equalsIgnoreCase("on") ||
-                        value.equalsIgnoreCase("off") ||
-                        value.equalsIgnoreCase("yes") ||
-                        value.equalsIgnoreCase("no"));
+        if (value == null) {
+            return false;
+        }
+        return !(value.equalsIgnoreCase("true") ||
+                value.equalsIgnoreCase("false") ||
+                value.equalsIgnoreCase("on") ||
+                value.equalsIgnoreCase("off") ||
+                value.equalsIgnoreCase("yes") ||
+                value.equalsIgnoreCase("no"));
     }
 
     public static boolean isNotValidEmail(String email) {

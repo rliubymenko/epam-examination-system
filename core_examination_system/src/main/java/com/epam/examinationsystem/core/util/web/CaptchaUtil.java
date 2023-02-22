@@ -10,7 +10,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-public final class CaptchaUtil {
+public class CaptchaUtil {
 
     private static final String SECRET_PARAM = "secret";
     private static final String RESPONSE_PARAM = "response";

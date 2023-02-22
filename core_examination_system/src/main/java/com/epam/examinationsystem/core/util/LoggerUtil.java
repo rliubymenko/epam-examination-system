@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import java.text.MessageFormat;
 import java.util.UUID;
 
-public final class LoggerUtil {
+public class LoggerUtil {
 
     private LoggerUtil() {
     }

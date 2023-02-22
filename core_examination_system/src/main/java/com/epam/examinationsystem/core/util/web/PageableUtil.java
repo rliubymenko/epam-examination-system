@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
-public final class PageableUtil {
+public class PageableUtil {
 
     public static final String DEFAULT_SORT_VALUE = "created";
     public static final String DEFAULT_ORDER_VALUE = "desc";
