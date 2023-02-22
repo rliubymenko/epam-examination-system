@@ -38,7 +38,7 @@ public class AuthFilter implements Filter {
         String path = getPathWithoutContext(requestPath);
         LOG.debug("Current path is {}", requestPath);
         Boolean isLoggedIn = (Boolean) request.getSession().getAttribute(SessionConstant.IS_LOGGED_IN);
-        if (BooleanUtils.toBoolean(isLoggedIn)) {
+        if (BooleanUtils.toBoolean(isLoggedIn) && !path.startsWith(RootPath.PASSWORD_CHANGE)) {
             UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             LOG.debug("Current user is {}", currentUser);
             boolean validPath = checkPathContainingForUsers(path);
@@ -79,6 +79,7 @@ public class AuthFilter implements Filter {
         return path.equals(RootPath.HOME) || path.equals(RootPath.HOME + "/") ||
                 path.equals(RootPath.LOGIN) || path.equals(RootPath.LOGIN + "/") ||
                 path.equals(RootPath.REGISTRATION) || path.equals(RootPath.REGISTRATION + "/") ||
+                path.equals(RootPath.PASSWORD_CHANGE) || path.equals(RootPath.PASSWORD_CHANGE + "/") ||
                 path.equals(RootPath.LOCALE) || path.equals(RootPath.LOGOUT) ||
                 path.equals(RootPath.CONTEXT_PATH) || path.equals(RootPath.ROOT) ||
                 path.startsWith(RootPath.STATIC);

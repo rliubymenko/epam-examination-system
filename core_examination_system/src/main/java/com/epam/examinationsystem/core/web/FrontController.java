@@ -21,7 +21,8 @@ import java.io.IOException;
         RootPath.LOCALE,
         RootPath.HOME,
         RootPath.ADMINS_ALL,
-        RootPath.STUDENTS_ALL
+        RootPath.STUDENTS_ALL,
+        RootPath.PASSWORD_CHANGE
 })
 public class FrontController extends HttpServlet {
 
