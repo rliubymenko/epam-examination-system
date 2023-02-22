@@ -14,4 +14,5 @@ public interface RootPath {
     String ADMINS = "/admins";
     String STUDENTS = "/students";
     String STATIC = "/static";
+    String PASSWORD_CHANGE = "/passwordChange";
 }

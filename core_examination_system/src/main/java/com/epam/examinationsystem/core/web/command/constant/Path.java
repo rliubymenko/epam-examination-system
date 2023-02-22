@@ -20,6 +20,7 @@ public interface Path {
     String HOME_PAGE = "/view/shared/home.jsp";
     String LOGIN_PAGE = "/view/shared/login.jsp";
     String REGISTRATION_PAGE = "/view/shared/registration.jsp";
+    String PASSWORD_CHANGE_PAGE = "/view/shared/passwordChange.jsp";
     String USERS_PAGE = "/view/admin/users.jsp";
     String ADMIN_ACCOUNT_PAGE = "/view/admin/account.jsp";
     String STUDENT_ACCOUNT_PAGE = "/view/student/account.jsp";

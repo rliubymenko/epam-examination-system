@@ -15,6 +15,7 @@ import com.epam.examinationsystem.core.web.command.impl.admin.test.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.EditUserCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetAllUsersByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.user.GetEditUserPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.user.ResetPasswordCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.usertest.GetAllUserTestsByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.auth.*;
 import com.epam.examinationsystem.core.web.command.impl.student.GetStudentAccountPageCommand;
@@ -36,10 +37,13 @@ public class ActionFactory {
         commands.put(CommandType.GET_HOME, ObjectProvider.getInstance(HomeCommand.class));
         commands.put(CommandType.GET_LOCALE, ObjectProvider.getInstance(LocaleCommand.class));
         commands.put(CommandType.GET_REGISTRATION, ObjectProvider.getInstance(GetRegistrationPageCommand.class));
+        commands.put(CommandType.GET_PASSWORDCHANGE, ObjectProvider.getInstance(GetPasswordChangePageCommand.class));
+        commands.put(CommandType.POST_PASSWORDCHANGE, ObjectProvider.getInstance(ChangePasswordCommand.class));
         commands.put(CommandType.GET_LOGIN, ObjectProvider.getInstance(GetLoginPageCommand.class));
         commands.put(CommandType.GET_LOGOUT, ObjectProvider.getInstance(LogoutCommand.class));
 
         commands.put(CommandType.GET_ADMINS_USERS, ObjectProvider.getInstance(GetAllUsersByParametersCommand.class));
+        commands.put(CommandType.GET_ADMINS_USERS_RESET_PASSWORD, ObjectProvider.getInstance(ResetPasswordCommand.class));
         commands.put(CommandType.GET_ADMINS_USERS_USER, ObjectProvider.getInstance(GetEditUserPageCommand.class));
 
         commands.put(CommandType.GET_ADMINS_SUBJECTS, ObjectProvider.getInstance(GetAllSubjectsByParametersCommand.class));

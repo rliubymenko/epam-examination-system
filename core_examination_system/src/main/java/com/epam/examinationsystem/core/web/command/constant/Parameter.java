@@ -6,6 +6,8 @@ public interface Parameter {
     String SEARCH_UUID = "search_uuid";
     String USERNAME = "username";
     String PASSWORD = "password";
+    String OLD_PASSWORD = "oldPassword";
+    String NEW_PASSWORD = "newPassword";
     String REPEATED_PASSWORD = "repeatedPassword";
     String EMAIL = "email";
     String FIRST_NAME = "firstname";
