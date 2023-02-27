@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @PleaseService
@@ -64,6 +65,20 @@ public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDa
             return getById(lastGeneratedId);
         } catch (SQLException e) {
             String message = LoggerUtil.createEntityErrorLogging(LOG, ENTITY_NAME);
+            throw new DaoException(message, e);
+        }
+    }
+
+    @Override
+    public void setStartTime(UUID uuid, LocalDateTime startTime) throws DaoException {
+        LoggerUtil.updateEntityStartLogging(LOG, ENTITY_NAME, uuid);
+        List<String> columnNames = List.of("start_time");
+        String updateQuery = QueryBuilderUtil.updateQueryByUuid(DaoConstant.USER_TEST_TABLE_NAME.getValue(), uuid, columnNames);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+            QueryBuilderUtil.populatePreparedStatement(preparedStatement, startTime);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            String message = LoggerUtil.updateEntityErrorLogging(LOG, ENTITY_NAME, uuid);
             throw new DaoException(message, e);
         }
     }
