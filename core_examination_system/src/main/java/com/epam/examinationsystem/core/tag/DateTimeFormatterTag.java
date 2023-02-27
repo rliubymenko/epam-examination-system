@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Locale;
 
 public class DateTimeFormatterTag extends TagSupport {
 
@@ -21,9 +20,7 @@ public class DateTimeFormatterTag extends TagSupport {
     @Override
     public int doStartTag() throws JspException {
         try {
-            DateTimeFormatter pattern = DateTimeFormatter
-                    .ofLocalizedDateTime(FormatStyle.MEDIUM)
-                    .withLocale(Locale.getDefault());
+            DateTimeFormatter pattern = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
             String formattedDate = LocalDateTime.parse(datetime).format(pattern);
             JspWriter writer = pageContext.getOut();
             writer.print(formattedDate);
