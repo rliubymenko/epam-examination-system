@@ -117,11 +117,11 @@ public class AnswerServiceImpl implements AnswerService {
                 Answer currentAnswer = maybeAnswer.get();
                 QuestionType currentType = currentAnswer.getQuestion().getType();
                 boolean isCorrectDto = BooleanUtils.toBoolean(answerDto.getIsCorrect());
-
+                boolean isTextOrNumericalAnswer = currentType.equals(QuestionType.TEXT) || currentType.equals(QuestionType.NUMERICAL);
                 Answer toUpdate = Answer.builder()
                         .setUuid(UUID.fromString(answerDto.getUuid()))
                         .setContent(answerDto.getContent())
-                        .setIsCorrect(isCorrectDto)
+                        .setIsCorrect(isTextOrNumericalAnswer ? true : isCorrectDto)
                         .setQuestion(currentAnswer.getQuestion())
                         .build();
 
@@ -205,7 +205,8 @@ public class AnswerServiceImpl implements AnswerService {
             List<Answer> answers = answerDao.findAll(request);
             List<Answer> allAnswers = answerDao.findAll();
             Map<UUID, String> questionForSearch = getQuestionsForSearch(allAnswers);
-            DataTableResponse<AnswerDto> response = PageableUtil.calculatePageableData(request, answerDao);
+            long countOfEntities = answerDao.count(request);
+            DataTableResponse<AnswerDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<AnswerDto> answerDtos = answers.stream()
                     .map(AnswerDto.builder()::fromAnswer)
                     .toList();
