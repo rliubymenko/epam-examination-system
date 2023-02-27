@@ -11,6 +11,7 @@ public interface Path {
     String QUESTIONS = "/admins/questions";
     String ANSWERS = "/admins/answers";
     String TESTS_FOR_STUDENT = "/students/tests";
+    String STUDENT_ACCOUNT = "/students/account";
     String LOGOUT = "/logout";
 
     String POST_METHOD = "POST";
@@ -25,6 +26,7 @@ public interface Path {
     String ADMIN_ACCOUNT_PAGE = "/view/admin/account.jsp";
     String STUDENT_ACCOUNT_PAGE = "/view/student/account.jsp";
     String EDIT_USER_PAGE = "/view/admin/editUser.jsp";
+    String EDIT_STUDENT_PAGE = "/view/student/editStudent.jsp";
     String SUBJECTS_PAGE = "/view/admin/subjects.jsp";
     String EDIT_SUBJECT_PAGE = "/view/admin/editSubject.jsp";
     String NEW_SUBJECT_PAGE = "/view/admin/newSubject.jsp";

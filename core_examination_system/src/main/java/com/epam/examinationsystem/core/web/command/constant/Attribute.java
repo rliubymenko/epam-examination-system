@@ -3,6 +3,7 @@ package com.epam.examinationsystem.core.web.command.constant;
 public interface Attribute {
 
     String WRONG_USERNAME = "wrong_username";
+    String LOGIN_DENIED = "login_denied";
     String WRONG_PASSWORD = "wrong_password";
     String WRONG_CAPTCHA = "wrong_captcha";
 
