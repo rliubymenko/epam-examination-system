@@ -57,10 +57,19 @@ $(document).ready(function () {
 
     cloneAndModifyInputGroupFields()
 
-    $("body").on("click", ".removeNodeBtnField", function () {
-        $(this).closest(".checkboxChoice").remove();
+    $("body").on("click", ".removeNodeBtnField", function (e) {
+        const selectedType = $("#questionType option:selected").attr('value');
+        const closestCheckbox = $(e.target).closest(".checkboxChoice").find('.form-check-input');
+        if (selectedType === 'single_choice') {
+            if (closestCheckbox.is(":checked")) {
+                $(e.target)
+                    .closest("#choiceToggler")
+                    .find("#choiceCheckbox_1")
+                    .prop('checked', true);
+            }
+        }
+        $(e.target).closest(".checkboxChoice").remove();
     });
-
 });
 
 function resetInputs() {
@@ -111,7 +120,8 @@ function cloneAndModifyInputGroupFields() {
             .find(".checkboxChoice")
             .last()
             .find("input")
-            .attr("id", "choiceCheckbox_" + index);
+            .attr("id", "choiceCheckbox_" + index)
+            .prop("value", index);
     });
 }
 

@@ -45,10 +45,19 @@ $(document).ready(function () {
 
     cloneAndModifyInputGroupFields()
 
-    $("body").on("click", ".removeNodeBtnField", function () {
-        $(this).closest(".checkboxChoice").remove();
+    $("body").on("click", ".removeNodeBtnField", function (e) {
+        const selectedType = $("#questionId option:selected").text().split("|")[0];
+        const closestCheckbox = $(e.target).closest(".checkboxChoice").find('.form-check-input');
+        if (selectedType.includes('Single choice')) {
+            if (closestCheckbox.is(":checked")) {
+                $(e.target)
+                    .closest("#choiceToggler")
+                    .find("#choiceCheckbox_1")
+                    .prop('checked', true);
+            }
+        }
+        $(e.target).closest(".checkboxChoice").remove();
     });
-
 });
 
 function resetInputs() {
@@ -64,8 +73,6 @@ function resetInputs() {
 }
 
 // Clone input group fields
-
-
 function cloneAndModifyInputGroupFields() {
 
     $("body").on("click", ".copyNodeBtnField", function (e) {
@@ -75,8 +82,6 @@ function cloneAndModifyInputGroupFields() {
         // Clone input row
         const clonedElement = $(e.target).closest(".checkboxChoice")
             .clone(true);
-
-        console.log(clonedElement)
 
         // Append data and remove disabled state from remove button
         $(e.target).closest("#choiceToggler")
@@ -103,7 +108,8 @@ function cloneAndModifyInputGroupFields() {
             .find(".checkboxChoice")
             .last()
             .find("input")
-            .attr("id", "choiceCheckbox_" + index);
+            .attr("id", "choiceCheckbox_" + index)
+            .prop("value", index);
     });
 }
 
