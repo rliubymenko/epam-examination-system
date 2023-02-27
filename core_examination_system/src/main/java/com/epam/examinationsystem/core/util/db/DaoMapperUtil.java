@@ -103,12 +103,13 @@ public class DaoMapperUtil {
     public static UserTest extractUserTest(ResultSet resultSet, UserDao userDao, TestDao testDao) throws SQLException, DaoException {
         Timestamp maybeStartTime = resultSet.getTimestamp("start_time");
         Timestamp maybeEndTime = resultSet.getTimestamp("end_time");
+        String maybeMarkValue = resultSet.getString("mark_value");
         return UserTest.builder()
                 .setId(resultSet.getLong("id"))
                 .setUuid(UUID.fromString(resultSet.getString("uuid")))
                 .setIsSelected(resultSet.getBoolean("is_selected"))
                 .setIsCompleted(resultSet.getBoolean("is_completed"))
-                .setMarkValue(resultSet.getFloat("mark_value"))
+                .setMarkValue(maybeMarkValue != null ? Float.parseFloat(maybeMarkValue) : null)
                 .setAttemptNumber(resultSet.getInt("attempt_number"))
                 .setStartTime(maybeStartTime != null ? maybeStartTime.toLocalDateTime() : null)
                 .setEndTime(maybeEndTime != null ? maybeEndTime.toLocalDateTime() : null)
