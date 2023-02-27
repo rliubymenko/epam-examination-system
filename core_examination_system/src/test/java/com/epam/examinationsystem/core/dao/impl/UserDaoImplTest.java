@@ -58,7 +58,7 @@ class UserDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", UserDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedRole = Role.builder()
                 .setUuid(uuid)
                 .setName(UserType.ADMIN)
@@ -228,6 +228,23 @@ class UserDaoImplTest {
     }
 
     @Test
+    void shouldResetPassword() throws DaoException, SQLException {
+        Mockito.when(connection.prepareStatement(Mockito.anyString())).thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        boolean isPasswordReset = userDao.resetPassword(uuid, "newEncryptedPassword");
+
+        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+        ArgumentCaptor<String> newPasswordCaptor = ArgumentCaptor.forClass(String.class);
+
+        Mockito.verify(userDao, Mockito.times(1)).resetPassword(uuidCaptor.capture(), newPasswordCaptor.capture());
+        Assertions.assertEquals(uuid, uuidCaptor.getValue());
+        Assertions.assertEquals("newEncryptedPassword", newPasswordCaptor.getValue());
+
+        Assertions.assertTrue(isPasswordReset);
+    }
+
+    @Test
     void shouldUpdateWithoutChangingActivation() throws DaoException, SQLException {
         Mockito.when(connection.prepareStatement(Mockito.anyString())).thenReturn(preparedStatement);
         Mockito.doNothing().when(userDao).populateUpdateWithoutChangingActivationQuery(preparedStatement, expectedUser);
@@ -307,7 +324,7 @@ class UserDaoImplTest {
 
     @Test
     void shouldReturnUserUpdateQuery() {
-        String expectedQuery = "UPDATE epam_user SET username = ?, password = ?, email = ?, first_name = ?, last_name = ?, is_activated = ? WHERE uuid = '00000000-0000-0000-0000-000000000001';";
+        String expectedQuery = "UPDATE epam_user SET username = ?, email = ?, first_name = ?, last_name = ?, is_activated = ? WHERE uuid = '00000000-0000-0000-0000-000000000001';";
         String actualQuery = userDao.getUpdateQuery(expectedUser);
         Assertions.assertEquals(expectedQuery, actualQuery);
     }
@@ -348,19 +365,38 @@ class UserDaoImplTest {
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.anyBoolean(),
-                    Mockito.anyLong()
+                    Mockito.anyBoolean()
             )).thenAnswer(invocation -> null);
             userDao.populateUpdateQuery(preparedStatement, expectedUser);
             queryBuilderUtil.verify(() -> QueryBuilderUtil.populatePreparedStatement(
                     Mockito.eq(preparedStatement),
                     Mockito.eq("username"),
-                    Mockito.eq("dsfdsfgsdgfdfghfdgh"),
                     Mockito.eq("email@dsf.ds"),
                     Mockito.eq("firstname"),
                     Mockito.eq("lastname"),
                     Mockito.eq(true)
+            ));
+        }
+    }
+
+    @Test
+    void shouldPopulateUpdateWithoutChangingActivationQuery() throws SQLException {
+        try (MockedStatic<QueryBuilderUtil> queryBuilderUtil = Mockito.mockStatic(QueryBuilderUtil.class)) {
+            queryBuilderUtil.when(() -> QueryBuilderUtil.populatePreparedStatement(
+                    Mockito.any(PreparedStatement.class),
+                    Mockito.anyString(),
+                    Mockito.anyString(),
+                    Mockito.anyString(),
+                    Mockito.anyString(),
+                    Mockito.anyBoolean()
+            )).thenAnswer(invocation -> null);
+            userDao.populateUpdateWithoutChangingActivationQuery(preparedStatement, expectedUser);
+            queryBuilderUtil.verify(() -> QueryBuilderUtil.populatePreparedStatement(
+                    Mockito.eq(preparedStatement),
+                    Mockito.eq("username"),
+                    Mockito.eq("email@dsf.ds"),
+                    Mockito.eq("firstname"),
+                    Mockito.eq("lastname")
             ));
         }
     }

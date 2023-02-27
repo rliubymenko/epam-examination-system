@@ -63,7 +63,7 @@ class UserTestDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", UserTestDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedUser = User.builder()
                 .setUuid(uuid)
                 .build();
@@ -332,6 +332,21 @@ class UserTestDaoImplTest {
         Assertions.assertEquals(expectedUserTest, userTestCaptor.getValue());
 
         Assertions.assertEquals(expectedUserTest, actualUserTest);
+    }
+
+    @Test
+    void shouldSetStartTime() throws DaoException, SQLException {
+        Mockito.when(connection.prepareStatement(Mockito.anyString())).thenReturn(preparedStatement);
+        Mockito.when(preparedStatement.executeUpdate()).thenReturn(1);
+
+        userTestDao.setStartTime(uuid, LocalDateTime.parse("2015-08-04T10:11:30"));
+
+        ArgumentCaptor<UUID> uuidCaptor = ArgumentCaptor.forClass(UUID.class);
+        ArgumentCaptor<LocalDateTime> startTimeCaptor = ArgumentCaptor.forClass(LocalDateTime.class);
+
+        Mockito.verify(userTestDao, Mockito.times(1)).setStartTime(uuidCaptor.capture(), startTimeCaptor.capture());
+        Assertions.assertEquals(uuid, uuidCaptor.getValue());
+        Assertions.assertEquals(LocalDateTime.parse("2015-08-04T10:11:30"), startTimeCaptor.getValue());
     }
 
     @Test

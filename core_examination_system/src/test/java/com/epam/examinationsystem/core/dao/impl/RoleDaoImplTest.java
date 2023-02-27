@@ -51,7 +51,7 @@ class RoleDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", RoleDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedRole = Role.builder()
                 .setUuid(uuid)
                 .setName(UserType.ADMIN)

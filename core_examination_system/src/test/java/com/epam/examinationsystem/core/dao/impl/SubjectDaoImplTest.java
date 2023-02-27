@@ -51,7 +51,7 @@ class SubjectDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", SubjectDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedSubject = Subject.builder()
                 .setUuid(uuid)
                 .setName("name")

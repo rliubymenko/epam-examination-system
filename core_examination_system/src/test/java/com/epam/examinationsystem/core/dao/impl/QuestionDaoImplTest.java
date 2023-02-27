@@ -58,7 +58,7 @@ class QuestionDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", QuestionDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedTest = com.epam.examinationsystem.core.entity.Test.builder().build();
         expectedQuestion = Question.builder()
                 .setUuid(uuid)

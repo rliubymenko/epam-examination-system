@@ -58,7 +58,7 @@ class TestDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", TestDaoImplTest.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedSubject = Subject.builder()
                 .setUuid(uuid)
                 .setName("name")
@@ -137,6 +137,17 @@ class TestDaoImplTest {
     }
 
     @Test
+    void shouldFindAllTestsForStudent() throws DaoException, SQLException {
+        Mockito.when(connection.createStatement()).thenReturn(statement);
+        Mockito.when(statement.executeQuery(Mockito.anyString())).thenReturn(resultSet);
+        Mockito.doReturn(expectedTests).when(testDao).extractEntities(resultSet);
+
+        List<com.epam.examinationsystem.core.entity.Test> actualTests = testDao.findAllForStudent();
+
+        Assertions.assertEquals(expectedTests, actualTests);
+    }
+
+    @Test
     void shouldFindAllTestsByRequest() throws DaoException, SQLException {
         Mockito.when(connection.createStatement()).thenReturn(statement);
         Mockito.when(statement.executeQuery(Mockito.anyString())).thenReturn(resultSet);
@@ -147,6 +158,22 @@ class TestDaoImplTest {
         ArgumentCaptor<DataTableRequest> requestCaptor = ArgumentCaptor.forClass(DataTableRequest.class);
 
         Mockito.verify(testDao, Mockito.times(1)).findAll(requestCaptor.capture());
+        Assertions.assertEquals(request, requestCaptor.getValue());
+
+        Assertions.assertEquals(expectedTests, actualTests);
+    }
+
+    @Test
+    void shouldFindAllTestsForStudentByRequest() throws DaoException, SQLException {
+        Mockito.when(connection.createStatement()).thenReturn(statement);
+        Mockito.when(statement.executeQuery(Mockito.anyString())).thenReturn(resultSet);
+        Mockito.doReturn(expectedTests).when(testDao).extractEntities(resultSet);
+
+        List<com.epam.examinationsystem.core.entity.Test> actualTests = testDao.findAllForStudent(request);
+
+        ArgumentCaptor<DataTableRequest> requestCaptor = ArgumentCaptor.forClass(DataTableRequest.class);
+
+        Mockito.verify(testDao, Mockito.times(1)).findAllForStudent(requestCaptor.capture());
         Assertions.assertEquals(request, requestCaptor.getValue());
 
         Assertions.assertEquals(expectedTests, actualTests);
@@ -226,6 +253,26 @@ class TestDaoImplTest {
         ArgumentCaptor<String> countCaptor = ArgumentCaptor.forClass(String.class);
 
         Mockito.verify(testDao, Mockito.times(1)).count(requestCaptor.capture());
+        Mockito.verify(resultSet, Mockito.times(1)).getLong(countCaptor.capture());
+        Assertions.assertEquals("count", countCaptor.getValue());
+        Assertions.assertEquals(request, requestCaptor.getValue());
+
+        Assertions.assertEquals(10L, actualNumber);
+    }
+
+    @Test
+    void shouldCountTestsForStudentByRequest() throws DaoException, SQLException {
+        Mockito.when(connection.createStatement()).thenReturn(statement);
+        Mockito.when(statement.executeQuery(Mockito.anyString())).thenReturn(resultSet);
+        Mockito.when(resultSet.next()).thenReturn(true);
+        Mockito.when(resultSet.getLong("count")).thenReturn(10L);
+
+        long actualNumber = testDao.countForStudent(request);
+
+        ArgumentCaptor<DataTableRequest> requestCaptor = ArgumentCaptor.forClass(DataTableRequest.class);
+        ArgumentCaptor<String> countCaptor = ArgumentCaptor.forClass(String.class);
+
+        Mockito.verify(testDao, Mockito.times(1)).countForStudent(requestCaptor.capture());
         Mockito.verify(resultSet, Mockito.times(1)).getLong(countCaptor.capture());
         Assertions.assertEquals("count", countCaptor.getValue());
         Assertions.assertEquals(request, requestCaptor.getValue());

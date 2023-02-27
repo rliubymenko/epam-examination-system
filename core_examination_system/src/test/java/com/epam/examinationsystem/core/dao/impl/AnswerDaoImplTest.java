@@ -58,7 +58,7 @@ class AnswerDaoImplTest {
     void setUp() {
         LOG.info("Start tests for {}", AnswerDaoImpl.class.getSimpleName());
         id = 1;
-        uuid = UUID.fromString("00000000-000-0000-0000-000000000001");
+        uuid = UUID.fromString("00000000-0000-0000-0000-000000000001");
         expectedQuestion = Question.builder()
                 .setUuid(uuid)
                 .setContent("content")
