@@ -86,7 +86,6 @@
                                                     aria-label="Username"
                                                     placeholder="<fmt:message key="registration.username"/>"
                                                     aria-describedby="usernameGroup"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('invalid_username'))}">
@@ -103,16 +102,15 @@
                                                     type="email"
                                                     id="email"
                                                     name="email"
-                                                    class="${not empty inconsistencies && inconsistencies.contains('email') ?
+                                                    class="${not empty inconsistencies && (inconsistencies.contains('email') || inconsistencies.contains('invalid_email')) ?
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
-                                                    required
                                             />
                                             <label class="form-label" for="email">
                                                 <fmt:message key="registration.email"/>
                                             </label>
                                             <div class="invalid-feedback">
-                                                <c:if test="${empty inconsistencies}">
+                                                <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('invalid_email'))}">
                                                     <fmt:message key="registration.invalid_email"/>
                                                 </c:if>
                                                 <c:if test="${not empty inconsistencies && inconsistencies.contains('email')}">
@@ -135,7 +133,6 @@
                                                     placeholder="<fmt:message key="login.password"/>"
                                                     aria-label="<fmt:message key="login.password"/>"
                                                     aria-describedby="passwordVisibility"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_password"/>
@@ -155,7 +152,6 @@
                                                    placeholder="<fmt:message key="registration.repeat_password"/>"
                                                    aria-label="<fmt:message key="registration.repeat_password"/>"
                                                    aria-describedby="repeatedPasswordVisibility"
-                                                   required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_passwords_match"/>
@@ -170,7 +166,6 @@
                                                     class="${not empty inconsistencies && inconsistencies.contains('firstName') ?
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
-                                                    required
                                             />
                                             <label class="form-label" for="firstname">
                                                 <fmt:message key="registration.firstname"/>
@@ -187,7 +182,6 @@
                                                     class="${not empty inconsistencies && inconsistencies.contains('lastName') ?
                                             'is-invalid form-control form-control-lg' :
                                             'form-control form-control-lg'}"
-                                                    required
                                             />
                                             <label class="form-label" for="lastname">
                                                 <fmt:message key="registration.lastname"/>

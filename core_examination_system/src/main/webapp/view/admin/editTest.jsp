@@ -123,9 +123,9 @@
                                         value="${test.expirationDate}"
                                         class="form-control form-control-lg"
                                 />
-                                <label class="form-label" for="expirationDate">
+                                <div class="form-helper">
                                     <fmt:message key="test.expirationDate"/>
-                                </label>
+                                </div>
                             </div>
 
                             <div class="mb-4">
@@ -144,8 +144,9 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-secondary btn-block"><fmt:message
-                                    key="edit.edit"/></button>
+                            <button type="submit" class="btn btn-secondary btn-block">
+                                <fmt:message key="edit.edit"/>
+                            </button>
                         </form>
                     </div>
                 </div>

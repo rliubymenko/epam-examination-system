@@ -66,7 +66,8 @@
                                   ${userTest.isCompleted}
                               </c:if>
                           </td>
-                          <td><c:if test="${empty userTest.markValue}">
+                          <td>
+                              <c:if test="${empty userTest.markValue}">
                                     <fmt:message key="user_test.not_graded_work"/>
                               </c:if>
                               <c:if test="${not empty userTest.markValue}">

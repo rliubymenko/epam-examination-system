@@ -118,34 +118,29 @@
                                         </c:if>
                                     </div>
                                 </div>
-
-                                <c:choose>
-                                    <c:when test="${type == 'true_false' or type == 'multiple_choice' or type == 'single_choice'}">
-                                        <div class="form-outline mb-4">
-                                            <label class="form-check-label" for="trueFalse">
-                                                <fmt:message key="question.true_false"/>
-                                            </label>
-                                            <input
-                                                    id="trueFalse"
-                                                    class="${error_change_single_choice_true_answer ?
+                                <div class="form-outline mb-2 mb-4">
+                                    <label class="form-check-label" for="trueFalse">
+                                        <fmt:message key="question.true_false"/>
+                                    </label>
+                                    <input
+                                            id="trueFalse"
+                                            class="${error_change_single_choice_true_answer ?
                                             'is-invalid form-check-input' :
                                             'form-check-input'}"
-                                                    type="checkbox"
-                                                    name="trueFalseAnswer"
-                                                ${answer.isCorrect ? 'checked' : ''}
-                                            />
-                                            <div class="invalid-feedback">
-                                                <c:if test="${error_change_single_choice_true_answer}">
-                                                    <fmt:message key="answer.error_change_single_choice_true_answer"/>
-                                                </c:if>
-                                            </div>
-                                        </div>
-                                    </c:when>
-                                </c:choose>
+                                            type="checkbox"
+                                            name="trueFalseAnswer"
+                                        ${answer.isCorrect ? 'checked' : ''}
+                                        ${(type == 'text' or type == 'numerical') ? 'disabled' : ''}
+                                    />
+                                    <div class="invalid-feedback">
+                                        <c:if test="${error_change_single_choice_true_answer}">
+                                            <fmt:message key="answer.error_change_single_choice_true_answer"/>
+                                        </c:if>
+                                    </div>
+                                </div>
                             </c:if>
 
                             <c:if test="${not empty answers}">
-
                                 <h6 class="text-warning mb-4">
                                     <fmt:message key="answer.change_single_choice_from_true_to_false"/>
                                 </h6>

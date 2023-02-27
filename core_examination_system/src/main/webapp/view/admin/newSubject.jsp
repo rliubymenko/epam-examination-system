@@ -50,16 +50,15 @@
                                         type="text"
                                         id="name"
                                         name="name"
-                                        class="${not empty inconsistencies && inconsistencies.contains('used_name') ?
+                                        class="${not empty inconsistencies && (inconsistencies.contains('name') || inconsistencies.contains('used_name')) ?
                                 'is-invalid form-control form-control-lg' :
                                 'form-control form-control-lg'}"
-                                        required
                                 />
                                 <label class="form-label" for="name">
                                     <fmt:message key="subject.name"/>
                                 </label>
                                 <div class="invalid-feedback">
-                                    <c:if test="${empty inconsistencies}">
+                                    <c:if test="${empty inconsistencies || (not empty inconsistencies && inconsistencies.contains('name'))}">
                                         <fmt:message key="subject.invalid_name"/>
                                     </c:if>
                                     <c:if test="${not empty inconsistencies && inconsistencies.contains('used_name')}">

@@ -53,7 +53,6 @@
                                         class="${not empty inconsistencies && (inconsistencies.contains('name') || inconsistencies.contains('used_name')) ?
                                 'is-invalid form-control form-control-lg' :
                                 'form-control form-control-lg'}"
-                                        required
                                 />
                                 <label class="form-label" for="name">
                                     <fmt:message key="subject.name"/>

@@ -116,28 +116,30 @@
                         </div>
                     </c:if>
                     <div class="d-flex justify-content-end align-items-start">
-                        <button id="reportDropdownButton"
-                                type="button"
-                                class="btn btn-rounded dropdown-toggle btn-sm fw-bold btn-outline-info"
-                                data-mdb-toggle="dropdown"
-                                data-mdb-ripple-color="dark"
-                                aria-expanded="false">
-                            <fmt:message key="table.report" bundle="${locale}"/>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="reportDropdownButton">
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}${reportPath}?type=download">
-                                    <fmt:message key="table.download" bundle="${locale}"/>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}${reportPath}?type=email">
-                                    <fmt:message key="table.send_to_email" bundle="${locale}"/>
-                                </a>
-                            </li>
-                        </ul>
+                        <c:if test="${current_user.role == 'admin'}">
+                            <button id="reportDropdownButton"
+                                    type="button"
+                                    class="btn btn-rounded dropdown-toggle btn-sm fw-bold btn-outline-info"
+                                    data-mdb-toggle="dropdown"
+                                    data-mdb-ripple-color="dark"
+                                    aria-expanded="false">
+                                <fmt:message key="table.report" bundle="${locale}"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="reportDropdownButton">
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="${pageContext.request.contextPath}${reportPath}?type=download">
+                                        <fmt:message key="table.download" bundle="${locale}"/>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       href="${pageContext.request.contextPath}${reportPath}?type=email">
+                                        <fmt:message key="table.send_to_email" bundle="${locale}"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </c:if>
                         <c:if test="${allowCreate}">
                             <a class="btn ms-2 btn-sm fw-bold btn-outline-success btn-rounded"
                                data-mdb-ripple-color="dark"

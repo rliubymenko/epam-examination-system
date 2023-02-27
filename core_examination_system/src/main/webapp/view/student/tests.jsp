@@ -92,14 +92,14 @@
                                                   data-mdb-ripple-color="dark"
                                           >
                                               <fmt:message key="test.start_testing"/>
-                                          </button
+                                          </button>
                                           <c:if test="${not test.isSelected}">
-                                               <a href="${pageContext.request.contextPath}/students/tests/test/select?uuid=${test.uuid}"
-                                                  type="button"
-                                                  class="btn btn-link text-warning btn-rounded btn-sm fw-bold"
-                                                  data-mdb-ripple-color="dark">
-                                                   <fmt:message key="test.select"/>
-                                               </a>
+                                              <a href="${pageContext.request.contextPath}/students/tests/test/select?uuid=${test.uuid}"
+                                                 type="button"
+                                                 class="btn btn-link text-warning btn-rounded btn-sm fw-bold"
+                                                 data-mdb-ripple-color="dark">
+                                                  <fmt:message key="test.select"/>
+                                              </a>
                                          </c:if>
                                       </div>
                                 <es:confirmationTestStartModal

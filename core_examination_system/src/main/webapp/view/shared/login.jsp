@@ -28,9 +28,11 @@
             const wrong_username = "${wrong_username}";
             const wrong_password = "${wrong_password}";
             const wrong_captcha = "${wrong_captcha}";
+            const login_denied = "${login_denied}";
             const wrong_username_message = "<fmt:message key="login.wrong_username"/>";
             const wrong_password_message = "<fmt:message key="login.wrong_password"/>";
             const wrong_captcha_message = "<fmt:message key="login.wrong_captcha"/>";
+            const wrong_login_denied = "<fmt:message key="login.login_denied"/>";
 
             toastr.options = {
                 "closeButton": true,
@@ -58,6 +60,9 @@
             }
             if (wrong_password === 'true') {
                 toastr["warning"](wrong_password_message)
+            }
+            if (login_denied === 'true') {
+                toastr["warning"](wrong_login_denied)
             }
         });
     </script>
@@ -95,7 +100,6 @@
                                                     aria-label="Username"
                                                     placeholder="<fmt:message key="login.username"/>"
                                                     aria-describedby="usernameGroup"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="login.invalid_username"/>
@@ -114,7 +118,6 @@
                                                     placeholder="<fmt:message key="login.password"/>"
                                                     aria-label="<fmt:message key="login.password"/>"
                                                     aria-describedby="passwordVisibility"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="login.invalid_password"/>

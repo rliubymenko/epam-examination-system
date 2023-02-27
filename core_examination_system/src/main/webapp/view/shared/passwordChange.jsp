@@ -55,7 +55,6 @@
                                                     placeholder="<fmt:message key="password_change.old_password"/>"
                                                     aria-label="<fmt:message key="password_change.old_password"/>"
                                                     aria-describedby="passwordVisibility"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="password_change.invalid_old_password"/>
@@ -76,7 +75,6 @@
                                                     placeholder="<fmt:message key="password_change.new_password"/>"
                                                     aria-label="<fmt:message key="password_change.new_password"/>"
                                                     aria-describedby="passwordVisibility"
-                                                    required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_password"/>
@@ -93,10 +91,9 @@
                                                    class="${not empty inconsistencies && inconsistencies.contains('repeatedPassword') ?
                                             'is-invalid rounded form-control form-control-lg' :
                                             'form-control rounded form-control-lg'}"
-                                                   placeholder="<fmt:message key="registration.repeat_password"/>"
-                                                   aria-label="<fmt:message key="registration.repeat_password"/>"
+                                                   placeholder="<fmt:message key="password_change.repeat_new_password"/>"
+                                                   aria-label="<fmt:message key="password_change.repeat_new_password"/>"
                                                    aria-describedby="passwordVisibility"
-                                                   required
                                             />
                                             <div class="invalid-feedback">
                                                 <fmt:message key="registration.invalid_passwords_match"/>
