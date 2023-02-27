@@ -1,12 +1,9 @@
 package com.epam.examinationsystem.core.util.web;
 
-import com.epam.examinationsystem.core.dao.common.CommonDao;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.AbstractDto;
 import com.epam.examinationsystem.core.dto.pageable.HeaderName;
-import com.epam.examinationsystem.core.entity.AbstractEntity;
-import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.web.command.constant.Parameter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -42,23 +39,22 @@ public class PageableUtil {
         return new DataTableRequest(pageNumber, sizeNumber, sortString, orderString, foreignUuidString, searchQueryString);
     }
 
-    public static <ENTITY extends AbstractEntity, DTO extends AbstractDto> DataTableResponse<DTO> calculatePageableData(
-            DataTableRequest request, CommonDao<ENTITY> dao) throws DaoException {
+    public static <DTO extends AbstractDto> DataTableResponse<DTO> calculatePageableData(
+            DataTableRequest request, long countOfEntities) {
 
         DataTableResponse<DTO> response = new DataTableResponse<>();
-        long count = dao.count(request);
         long entriesFrom = ((long) (request.getCurrentPage() - 1) * request.getPageSize()) + 1;
-        long entriesTo = Math.min((long) request.getCurrentPage() * request.getPageSize(), count);
+        long entriesTo = Math.min((long) request.getCurrentPage() * request.getPageSize(), countOfEntities);
         long totalPageSize;
-        if (count % request.getPageSize() == 0) {
-            totalPageSize = count / request.getPageSize();
+        if (countOfEntities % request.getPageSize() == 0) {
+            totalPageSize = countOfEntities / request.getPageSize();
         } else {
-            totalPageSize = count / request.getPageSize() + 1;
+            totalPageSize = countOfEntities / request.getPageSize() + 1;
         }
         response.setEntriesFrom(entriesFrom);
         response.setEntriesTo(entriesTo);
         response.setTotalPageSize(totalPageSize);
-        response.setEntitiesSize(count);
+        response.setEntitiesSize(countOfEntities);
         response.setSearchQuery(request.getSearchQuery());
         return response;
     }

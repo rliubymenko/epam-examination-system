@@ -145,7 +145,8 @@ public class QuestionServiceImpl implements QuestionService {
             List<Question> questions = questionDao.findAll(request);
             List<Question> allQuestions = questionDao.findAll();
             Map<UUID, String> testsForSearch = getTestsForSearch(allQuestions);
-            DataTableResponse<QuestionDto> response = PageableUtil.calculatePageableData(request, questionDao);
+            long countOfEntities = questionDao.count(request);
+            DataTableResponse<QuestionDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<QuestionDto> questionDtos = questions.stream()
                     .map(QuestionDto.builder()::fromQuestion)
                     .toList();

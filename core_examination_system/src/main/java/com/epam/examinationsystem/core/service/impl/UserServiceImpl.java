@@ -140,7 +140,8 @@ public class UserServiceImpl implements UserService {
         try {
             List<User> users = userDao.findAll(request);
             Map<UUID, String> rolesForSearch = getRolesForSearch();
-            DataTableResponse<UserDto> response = PageableUtil.calculatePageableData(request, userDao);
+            long countOfEntities = userDao.count(request);
+            DataTableResponse<UserDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<UserDto> userDtos = users.stream()
                     .map(UserDto.builder()::fromUser)
                     .toList();

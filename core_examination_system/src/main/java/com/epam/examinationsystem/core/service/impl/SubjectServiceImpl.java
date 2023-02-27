@@ -2,7 +2,10 @@ package com.epam.examinationsystem.core.service.impl;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;
-import com.epam.examinationsystem.core.dao.*;
+import com.epam.examinationsystem.core.dao.RoleDao;
+import com.epam.examinationsystem.core.dao.SubjectDao;
+import com.epam.examinationsystem.core.dao.UserDao;
+import com.epam.examinationsystem.core.dao.UserTestDao;
 import com.epam.examinationsystem.core.dao.common.TransactionManager;
 import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
@@ -13,6 +16,7 @@ import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.exception.DaoException;
 import com.epam.examinationsystem.core.exception.ServiceException;
 import com.epam.examinationsystem.core.service.SubjectService;
+import com.epam.examinationsystem.core.service.TestService;
 import com.epam.examinationsystem.core.service.UserTestService;
 import com.epam.examinationsystem.core.util.validation.DateUtil;
 import com.epam.examinationsystem.core.util.web.PageableUtil;
@@ -40,7 +44,7 @@ public class SubjectServiceImpl implements SubjectService {
     private RoleDao roleDao;
 
     @PleaseInject
-    private TestDao testDao;
+    private TestService testService;
 
     @PleaseInject
     private UserTestDao userTestDao;
@@ -152,7 +156,8 @@ public class SubjectServiceImpl implements SubjectService {
         transactionManager.beginWithAutoCommit(subjectDao, userDao, roleDao);
         try {
             List<Subject> subjects = subjectDao.findAll(request);
-            DataTableResponse<SubjectDto> response = PageableUtil.calculatePageableData(request, subjectDao);
+            long countOfEntities = subjectDao.count(request);
+            DataTableResponse<SubjectDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<SubjectDto> subjectDtos = subjects.stream()
                     .map(SubjectDto.builder()::fromSubject)
                     .toList();
@@ -168,13 +173,14 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public DataTableResponse<StudentSubjectDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException {
         LOG.debug("Find all subjects by {} for student", request);
-        transactionManager.beginWithAutoCommit(subjectDao, userDao, roleDao, testDao, userTestDao);
+        transactionManager.beginWithAutoCommit(subjectDao, userDao, roleDao, userTestDao);
         try {
             List<StudentSubjectDto> subjectDtos = new ArrayList<>();
             List<Subject> subjects = subjectDao.findAll(request);
-            DataTableResponse<StudentSubjectDto> response = PageableUtil.calculatePageableData(request, subjectDao);
+            long countOfEntities = subjectDao.count(request);
+            DataTableResponse<StudentSubjectDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             for (Subject subject : subjects) {
-                List<Test> tests = testDao.findAllBySubjectUuid(subject.getUuid());
+                List<Test> tests = testService.findAllBySubjectUuidForStudent(subject.getUuid());
                 List<StudentSubjectDto.TestForStudentSubjectDto> subjectTests = new ArrayList<>();
                 for (Test test : tests) {
                     int currentAttemptNumber = userTestService.getCurrentAttemptNumber(currentUserUuid, test.getUuid());
