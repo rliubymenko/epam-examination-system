@@ -13,6 +13,7 @@ import com.epam.examinationsystem.core.web.command.constant.Path;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ public class CreateSubjectCommand implements ActionCommand {
                     .setDescription(description)
                     .build();
 
+            LOG.debug("Trying to create subject: {}", subject);
             Set<String> inconsistencies = performValidation(name);
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid subject data");
@@ -58,6 +60,9 @@ public class CreateSubjectCommand implements ActionCommand {
 
     private Set<String> performValidation(String name) throws ServiceException {
         Set<String> inconsistencies = new HashSet<>();
+        if (StringUtils.isBlank(name)) {
+            inconsistencies.add("name");
+        }
         if (subjectService.existsByName(name)) {
             inconsistencies.add("used_name");
         }

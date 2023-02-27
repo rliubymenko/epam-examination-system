@@ -18,6 +18,7 @@ import com.epam.examinationsystem.core.web.command.constant.SessionConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,13 +105,16 @@ public class RegistrationCommand implements ActionCommand {
         if (userService.existsByUsername(username)) {
             inconsistencies.add("username");
         }
-        if (ParameterValidator.isNotValidEmail(email) || userService.existsByEmail(email)) {
+        if (ParameterValidator.isNotValidEmail(email)) {
+            inconsistencies.add("invalid_email");
+        }
+        if (userService.existsByEmail(email)) {
             inconsistencies.add("email");
         }
         if (ParameterValidator.isNotValidPassword(password)) {
             inconsistencies.add("password");
         }
-        if (!password.equals(repeatedPassword)) {
+        if (!StringUtils.equals(password, repeatedPassword)) {
             inconsistencies.add("repeatedPassword");
         }
         if (ParameterValidator.isNotValidFirstName(firstName)) {

@@ -73,7 +73,7 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                     .setDescription(description)
                     .setTest(new QuestionDto.TestForQuestion(testUuid, null))
                     .build();
-
+            LOG.debug("Trying to create question: {}", question);
             QuestionDto savedQuestion = questionService.create(question);
             LOG.debug("The question {} has been created successfully", savedQuestion);
             answerService.createAnswersForQuestion(answers, savedQuestion);
@@ -97,7 +97,7 @@ public class CreateQuestionForTestCommand implements ActionCommand {
         if (type.equals("-1")) {
             inconsistencies.add("type");
         }
-        if (testUuid.equals("-1")) {
+        if (testUuid == null || testUuid.equals("-1")) {
             inconsistencies.add("test");
         }
         return inconsistencies;
@@ -161,7 +161,10 @@ public class CreateQuestionForTestCommand implements ActionCommand {
                 String[] rightAnswerIndexes = request.getParameterValues(Parameter.ANSWERS_CHOICE);
                 String[] multipleChoiceAnswers = request.getParameterValues(Parameter.ANSWERS_ANSWER);
                 if (ParameterValidator.isNotEmptyArray(multipleChoiceAnswers)) {
-                    int[] correctChoices = Stream.of(rightAnswerIndexes).mapToInt(Integer::parseInt).toArray();
+                    int[] correctChoices = {};
+                    if (rightAnswerIndexes != null) {
+                        correctChoices = Stream.of(rightAnswerIndexes).mapToInt(Integer::parseInt).toArray();
+                    }
                     for (int answerIndex = 0; answerIndex < multipleChoiceAnswers.length; answerIndex++) {
                         AnswerDto answer;
                         if (ArrayUtils.contains(correctChoices, answerIndex + 1)) {

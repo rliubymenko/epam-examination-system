@@ -59,6 +59,7 @@ public class CreateTestCommand implements ActionCommand {
                     .setSubject(new TestDto.SubjectForTest(subjectUuid, null))
                     .build();
 
+            LOG.debug("Trying to create test: {}", test);
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid test data");
                 List<SubjectDto> subjects = subjectService.findAll();

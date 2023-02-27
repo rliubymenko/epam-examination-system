@@ -50,8 +50,8 @@ public class GetAllTestsByParametersCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching tests by parameters");
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching tests by parameters: {}", tableRequest);
         try {
             DataTableResponse<TestDto> subjectResponse = testService.findAll(tableRequest);
             PageableFacade<TestDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse, headerNames);

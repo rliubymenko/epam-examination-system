@@ -16,6 +16,7 @@ import com.epam.examinationsystem.core.web.command.constant.SessionConstant;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,7 @@ public class ChangePasswordCommand implements ActionCommand {
         if (ParameterValidator.isNotValidPassword(newPassword)) {
             inconsistencies.add("newPassword");
         }
-        if (!newPassword.equals(repeatedPassword)) {
+        if (!StringUtils.equals(newPassword, repeatedPassword)) {
             inconsistencies.add("repeatedPassword");
         }
         return inconsistencies;

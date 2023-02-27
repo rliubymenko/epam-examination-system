@@ -37,31 +37,27 @@ public class EditAnswerCommand implements ActionCommand {
         try {
             String uuid = request.getParameter(Parameter.UUID);
             String newTrueAnswerUuidString = request.getParameter(Parameter.NEW_TRUE_ANSWER_UUID);
-
+            LOG.debug("Edit answer with uuid: {}", uuid);
             if (ParameterValidator.isValidUUID(uuid) && answerService.existsByUuid(UUID.fromString(uuid))) {
                 AnswerDto currentAnswer = answerService.findByUuid(UUID.fromString(uuid)).get();
-
                 String content = request.getParameter(Parameter.CONTENT);
                 String isCorrect = request.getParameter(Parameter.TRUE_FALSE_ANSWER);
                 HttpSession session = request.getSession();
-
-                if (StringUtils.isNotBlank(newTrueAnswerUuidString)) {
-                    AnswerDto toUpdate = (AnswerDto) session.getAttribute(Attribute.ANSWER);
-                    answerService.updateAnswerAndSetNewTrueAnswer(toUpdate, UUID.fromString(newTrueAnswerUuidString));
-                    session.removeAttribute(Attribute.ANSWER);
-                    session.removeAttribute(Attribute.ANSWERS);
-                    return new CommandResult(Path.ANSWERS, true);
-                }
-
                 Set<String> inconsistencies = performValidation(content);
-
                 if (CollectionUtils.isNotEmpty(inconsistencies)) {
                     LOG.error("Invalid answer data");
                     request.setAttribute(Attribute.ANSWER, currentAnswer);
                     request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                     return new CommandResult(Path.EDIT_ANSWERS_PAGE);
                 }
-
+                if (StringUtils.isNotBlank(newTrueAnswerUuidString)) {
+                    AnswerDto toUpdate = (AnswerDto) session.getAttribute(Attribute.ANSWER);
+                    LOG.debug("Trying to update answer: {} and set new true answer", toUpdate);
+                    answerService.updateAnswerAndSetNewTrueAnswer(toUpdate, UUID.fromString(newTrueAnswerUuidString));
+                    session.removeAttribute(Attribute.ANSWER);
+                    session.removeAttribute(Attribute.ANSWERS);
+                    return new CommandResult(Path.ANSWERS, true);
+                }
                 AnswerDto answer = AnswerDto.builder()
                         .setUuid(uuid)
                         .setContent(content)

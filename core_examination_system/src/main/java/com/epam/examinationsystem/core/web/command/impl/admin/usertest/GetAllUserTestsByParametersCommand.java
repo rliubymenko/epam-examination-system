@@ -49,9 +49,9 @@ public class GetAllUserTestsByParametersCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching usertests by parameters");
         String page = Path.USER_TESTS_PAGE;
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching usertests by parameters: {}", tableRequest);
         try {
             DataTableResponse<UserTestDto> userTestResponse = userTestService.findAll(tableRequest);
             PageableFacade<UserTestDto> pageableFacade = new PageableFacade<>(tableRequest, userTestResponse, headerNames);

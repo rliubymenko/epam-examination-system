@@ -30,7 +30,7 @@ public class ResetPasswordCommand implements ActionCommand {
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
-        LOG.debug("Reset password in user {}", currentUser);
+        LOG.debug("Reset password for user {}", currentUser);
         try {
             String newPassword = PasswordEncoder.generateRandomPassword();
             if (userService.resetPassword(currentUser, newPassword)) {

@@ -43,9 +43,9 @@ public class GetAllSubjectsByParametersCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching subjects by parameters");
         String page = Path.SUBJECTS_PAGE;
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching subjects by parameters: {}", tableRequest);
         try {
             DataTableResponse<SubjectDto> subjectResponse = subjectService.findAll(tableRequest);
             PageableFacade<SubjectDto> pageableFacade = new PageableFacade<>(tableRequest, subjectResponse, headerNames);

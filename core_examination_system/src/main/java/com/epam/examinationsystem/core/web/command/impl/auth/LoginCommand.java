@@ -58,6 +58,11 @@ public class LoginCommand implements ActionCommand {
                 return new CommandResult(Path.LOGIN_PAGE);
             }
             UserDto userDto = userService.findByUsername(username).get();
+            if (!userDto.getIsActivated()) {
+                LOG.error("Login for user with current username: {} was denied ", username);
+                request.setAttribute(Attribute.LOGIN_DENIED, true);
+                return new CommandResult(Path.LOGIN_PAGE);
+            }
             if (PasswordEncoder.isMatched(password, userDto.getPassword())) {
                 LOG.debug("The user {} has been signed in successfully", userDto);
                 HttpSession session = request.getSession();

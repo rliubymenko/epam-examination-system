@@ -35,6 +35,7 @@ public class EditUserCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
             String uuid = request.getParameter(Parameter.UUID);
+            LOG.debug("Edit user with uuid: {}", uuid);
             UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             if (ParameterValidator.isValidUUID(uuid) && userService.existsByUuid(UUID.fromString(uuid))) {
                 UserDto user = userService.findByUuid(UUID.fromString(uuid)).get();

@@ -45,9 +45,9 @@ public class GetAllAnswersByParametersCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching answers by parameters");
         String page = Path.ANSWERS_PAGE;
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching answers by parameters: {}", tableRequest);
         try {
             DataTableResponse<AnswerDto> answerResponse = answerService.findAll(tableRequest);
             PageableFacade<AnswerDto> pageableFacade = new PageableFacade<>(tableRequest, answerResponse, headerNames);

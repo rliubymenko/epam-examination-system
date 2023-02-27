@@ -40,15 +40,13 @@ public class CreateAnswerCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
             String questionUuid = request.getParameter(Parameter.QUESTION_UUID);
-
+            LOG.debug("Trying to create answers for the question with uuid: {}", questionUuid);
             Set<String> inconsistencies = performValidation(questionUuid);
-
             if (CollectionUtils.isNotEmpty(inconsistencies)) {
                 LOG.error("Invalid answer data");
                 request.setAttribute(Attribute.INCONSISTENCIES, inconsistencies);
                 return new CommandResult(Path.NEW_ANSWER_PAGE);
             }
-
             QuestionDto question = questionService.findByUuid(UUID.fromString(questionUuid)).get();
             List<AnswerDto> answers = extractAnswers(request, question);
             answerService.createAnswersForQuestion(answers, question);
@@ -126,7 +124,10 @@ public class CreateAnswerCommand implements ActionCommand {
                 String[] rightAnswerIndexes = request.getParameterValues(Parameter.ANSWERS_CHOICE);
                 String[] multipleChoiceAnswers = request.getParameterValues(Parameter.ANSWERS_ANSWER);
                 if (ParameterValidator.isNotEmptyArray(multipleChoiceAnswers)) {
-                    int[] correctChoices = Stream.of(rightAnswerIndexes).mapToInt(Integer::parseInt).toArray();
+                    int[] correctChoices = {};
+                    if (rightAnswerIndexes != null) {
+                        correctChoices = Stream.of(rightAnswerIndexes).mapToInt(Integer::parseInt).toArray();
+                    }
                     for (int answerIndex = 0; answerIndex < multipleChoiceAnswers.length; answerIndex++) {
                         AnswerDto answer;
                         if (ArrayUtils.contains(correctChoices, answerIndex + 1)) {

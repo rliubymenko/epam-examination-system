@@ -32,10 +32,9 @@ public class EditQuestionCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-
         try {
             String uuid = request.getParameter(Parameter.UUID);
-
+            LOG.debug("Edit test with uuid: {}", uuid);
             if (ParameterValidator.isValidUUID(uuid) && questionService.existsByUuid(UUID.fromString(uuid))) {
                 QuestionDto currentQuestion = questionService.findByUuid(UUID.fromString(uuid)).get();
 

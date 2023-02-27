@@ -41,6 +41,7 @@ public class EditTestCommand implements ActionCommand {
             String expirationDate = request.getParameter(Parameter.EXPIRATION_DATE);
             String maxAttemptNumber = request.getParameter(Parameter.MAX_ATTEMPT_NUMBER);
 
+            LOG.debug("Edit test with uuid: {}", uuid);
             if (ParameterValidator.isValidUUID(uuid) && testService.existsByUuid(UUID.fromString(uuid))) {
                 TestDto currentTest = testService.findByUuid(UUID.fromString(uuid)).get();
 

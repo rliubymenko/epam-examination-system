@@ -14,6 +14,7 @@ import com.epam.examinationsystem.core.web.command.constant.Path;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +34,7 @@ public class EditSubjectCommand implements ActionCommand {
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
             String uuid = request.getParameter(Parameter.UUID);
+            LOG.debug("Edit subject with uuid: {}", uuid);
             if (ParameterValidator.isValidUUID(uuid) && subjectService.existsByUuid(UUID.fromString(uuid))) {
                 SubjectDto currentSubject = subjectService.findByUuid(UUID.fromString(uuid)).get();
 
@@ -66,6 +68,9 @@ public class EditSubjectCommand implements ActionCommand {
 
     private Set<String> performValidation(String name, SubjectDto currentSubject) throws ServiceException {
         Set<String> inconsistencies = new HashSet<>();
+        if (StringUtils.isBlank(name)) {
+            inconsistencies.add("name");
+        }
         if (subjectService.existsByName(name) && !currentSubject.getName().equals(name)) {
             inconsistencies.add("used_name");
         }
