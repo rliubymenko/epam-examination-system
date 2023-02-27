@@ -13,6 +13,7 @@ public class ParameterValidator {
     private static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{5,50}$";
     private static final String EN_US_REGEX = "^([A-Za-z])+$";
     private static final String UK_UA_REGEX = "^([А-Яа-яЁёЇїІіЄєҐґ'])+$";
+    private static final String EN_US_AND_DIGITS_REGEX = "^([A-Za-z0-9])+$";
 
     private ParameterValidator() {
     }
@@ -25,7 +26,7 @@ public class ParameterValidator {
     }
 
     public static boolean isNotValidUsername(String username) {
-        return StringUtils.isBlank(username);
+        return StringUtils.isBlank(username) || !Pattern.matches(EN_US_AND_DIGITS_REGEX, username);
     }
 
     public static boolean isNotValidBoolean(String value) {
