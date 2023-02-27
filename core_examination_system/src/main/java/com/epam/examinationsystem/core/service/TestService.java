@@ -4,6 +4,7 @@ import com.epam.examinationsystem.core.datatable.DataTableRequest;
 import com.epam.examinationsystem.core.datatable.DataTableResponse;
 import com.epam.examinationsystem.core.dto.StudentTestDto;
 import com.epam.examinationsystem.core.dto.TestDto;
+import com.epam.examinationsystem.core.entity.Test;
 import com.epam.examinationsystem.core.exception.ServiceException;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface TestService {
     boolean update(TestDto testDto) throws ServiceException;
 
     Optional<TestDto> findByUuid(UUID uuid) throws ServiceException;
+
+    List<Test> findAllBySubjectUuidForStudent(UUID uuid) throws ServiceException;
 
     Optional<StudentTestDto> findByUuidForTesting(UUID uuid) throws ServiceException;
 

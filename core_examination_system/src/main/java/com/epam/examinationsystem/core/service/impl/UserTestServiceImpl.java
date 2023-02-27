@@ -48,7 +48,7 @@ public class UserTestServiceImpl implements UserTestService {
     private TransactionManager<UserTest> transactionManager;
 
     @Override
-    public boolean create(UserTestDto userTestDto) throws ServiceException {
+    public UserTestDto create(UserTestDto userTestDto) throws ServiceException {
         LOG.debug("Creating userTest by dto {}", userTestDto);
         transactionManager.begin(userTestDao, testDao, userDao, roleDao);
         try {
@@ -61,9 +61,9 @@ public class UserTestServiceImpl implements UserTestService {
                     .setTest(currentTest.get())
                     .setIsSelected(true)
                     .build();
-            userTestDao.create(userTest);
+            UserTest savedUserTest = userTestDao.createAndSelect(userTest);
             transactionManager.commit();
-            return true;
+            return UserTestDto.builder().fromUserTest(savedUserTest);
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -73,53 +73,50 @@ public class UserTestServiceImpl implements UserTestService {
     }
 
     @Override
-    public boolean createAfterExam(UserTestDto userTestDto) throws ServiceException {
+    public boolean updateAfterExam(UserTestDto userTestDto) throws ServiceException {
         LOG.debug("Creating userTest by dto {}", userTestDto);
         transactionManager.begin(userTestDao, testDao, userDao, roleDao);
         try {
             boolean isCreated = false;
-            LocalDateTime startTime = DateUtil.parseDateTime(userTestDto.getStartTime());
             LocalDateTime endTime = DateUtil.parseDateTime(userTestDto.getEndTime());
             UUID userUuid = UUID.fromString(userTestDto.getUser().getUuid());
             UUID testUuid = UUID.fromString(userTestDto.getTest().getUuid());
             Optional<UserTest> maybeUserTest = userTestDao.findByUserAndTestUuid(userUuid, testUuid);
-            Optional<User> currentUser = userDao.findByUuid(userUuid);
             Optional<Test> currentTest = testDao.findByUuid(testUuid);
-            if (maybeUserTest.isPresent()) {
-                if (!Objects.equals(currentTest.get().getMaxAttemptNumber(), maybeUserTest.get().getAttemptNumber())) {
-                    UserTest currentUserTest = maybeUserTest.get();
-                    float currentMarkValue = Float.parseFloat(userTestDto.getMarkValue());
-                    float markValueToSave = currentUserTest.getMarkValue() != null && currentUserTest.getMarkValue() < currentMarkValue ? currentMarkValue : currentUserTest.getMarkValue();
-                    UserTest userTest = UserTest.builder()
-                            .setUuid(currentUserTest.getUuid())
-                            .setIsSelected(true)
-                            .setIsCompleted(true)
-                            .setMarkValue(markValueToSave)
-                            .setAttemptNumber(currentUserTest.getAttemptNumber() != null ? currentUserTest.getAttemptNumber() + 1 : 1)
-                            .setStartTime(startTime)
-                            .setEndTime(endTime)
-                            .build();
-                    userTestDao.update(userTest);
-                    isCreated = true;
-                }
-            } else {
-                Test test = currentTest.get();
+            if (!Objects.equals(currentTest.get().getMaxAttemptNumber(), maybeUserTest.get().getAttemptNumber())) {
+                UserTest currentUserTest = maybeUserTest.get();
+                float currentMarkValue = Float.parseFloat(userTestDto.getMarkValue());
+                float markValueToSave = currentUserTest.getMarkValue() != null && currentUserTest.getMarkValue() > currentMarkValue ? currentUserTest.getMarkValue() : currentMarkValue;
                 UserTest userTest = UserTest.builder()
-                        .setUser(currentUser.get())
-                        .setTest(test)
+                        .setUuid(currentUserTest.getUuid())
                         .setIsSelected(true)
                         .setIsCompleted(true)
-                        .setMarkValue(Float.parseFloat(userTestDto.getMarkValue()))
-                        .setAttemptNumber(1)
-                        .setStartTime(startTime)
+                        .setMarkValue(markValueToSave)
+                        .setAttemptNumber(currentUserTest.getAttemptNumber() + 1)
+                        .setStartTime(currentUserTest.getStartTime())
                         .setEndTime(endTime)
                         .build();
-                testDao.incrementTotalAttemptNumber(test);
-                userTestDao.create(userTest);
+                userTestDao.update(userTest);
+                testDao.incrementTotalAttemptNumber(currentTest.get());
                 isCreated = true;
             }
             transactionManager.commit();
             return isCreated;
+        } catch (DaoException e) {
+            transactionManager.rollback();
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public void setStartTime(UUID uuid, LocalDateTime startTime) throws ServiceException {
+        LOG.debug("Setting start time for usertest with uuid {}", uuid);
+        transactionManager.begin(userTestDao, testDao, userDao, roleDao);
+        try {
+            userTestDao.setStartTime(uuid, startTime);
+            transactionManager.commit();
         } catch (DaoException e) {
             transactionManager.rollback();
             throw new ServiceException(e);
@@ -138,6 +135,20 @@ public class UserTestServiceImpl implements UserTestService {
                     .stream()
                     .map(UserTestDto.builder()::fromUserTest)
                     .toList();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
+    public Optional<UserTestDto> findByUserAndTestUuid(UUID userUuid, UUID testUuid) throws ServiceException {
+        LOG.debug("Find user test by user uuid {} and test uuid {}", userUuid, testUuid);
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, roleDao);
+        try {
+            Optional<UserTest> userTest = userTestDao.findByUserAndTestUuid(userUuid, testUuid);
+            return userTest.map(UserTestDto.builder()::fromUserTest);
         } catch (DaoException e) {
             throw new ServiceException(e);
         } finally {
@@ -188,7 +199,8 @@ public class UserTestServiceImpl implements UserTestService {
             List<UserTest> allUserTests = userTestDao.findAll();
             Map<UUID, String> usersForSearch = getUsersForSearch(allUserTests);
             Map<UUID, String> testsForSearch = getTestsForSearch(allUserTests);
-            DataTableResponse<UserTestDto> response = PageableUtil.calculatePageableData(request, userTestDao);
+            long countOfEntities = userTestDao.count(request);
+            DataTableResponse<UserTestDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<UserTestDto> userDtos = userTests.stream()
                     .map(UserTestDto.builder()::fromUserTest)
                     .toList();

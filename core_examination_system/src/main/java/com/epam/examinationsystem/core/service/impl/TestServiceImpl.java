@@ -142,6 +142,19 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
+    public List<Test> findAllBySubjectUuidForStudent(UUID uuid) throws ServiceException {
+        LOG.debug("Find all tests for student with subject uuid: {}", uuid);
+        transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao);
+        try {
+            return testDao.findAllBySubjectUuid(uuid);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        } finally {
+            transactionManager.end();
+        }
+    }
+
+    @Override
     public Optional<StudentTestDto> findByUuidForTesting(UUID uuid) throws ServiceException {
         LOG.debug("Find test for testing by uuid {}", uuid);
         transactionManager.beginWithAutoCommit(testDao, questionDao, answerDao);
@@ -184,7 +197,8 @@ public class TestServiceImpl implements TestService {
             List<Test> tests = testDao.findAll(request);
             List<Test> allTests = testDao.findAll();
             Map<UUID, String> subjectsForSearch = getSubjectsForSearch(allTests);
-            DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, testDao);
+            long countOfEntities = testDao.count(request);
+            DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<TestDto> testDtos = tests.stream()
                     .map(TestDto.builder()::fromTest)
                     .toList();
@@ -206,10 +220,11 @@ public class TestServiceImpl implements TestService {
         LOG.debug("Find all tests by {}", request);
         transactionManager.beginWithAutoCommit(testDao, subjectDao, userDao, roleDao, userTestDao);
         try {
-            List<Test> tests = testDao.findAll(request);
-            List<Test> allTests = testDao.findAll();
+            List<Test> tests = testDao.findAllForStudent(request);
+            List<Test> allTests = testDao.findAllForStudent();
             Map<UUID, String> subjectsForSearch = getSubjectsForSearch(allTests);
-            DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, testDao);
+            long countOfEntities = testDao.countForStudent(request);
+            DataTableResponse<TestDto> response = PageableUtil.calculatePageableData(request, countOfEntities);
             List<TestDto> testDtos = new ArrayList<>();
             for (Test test : tests) {
                 int currentAttemptNumber = userTestService.getCurrentAttemptNumber(currentUserUuid, test.getUuid());
