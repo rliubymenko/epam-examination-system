@@ -53,8 +53,8 @@ public class GetAllTestsForStudentByParametersCommand implements ActionCommand {
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching tests by parameters");
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching tests by parameters: {}", tableRequest);
         try {
             UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             DataTableResponse<TestDto> subjectResponse = testService.findAllForStudent(

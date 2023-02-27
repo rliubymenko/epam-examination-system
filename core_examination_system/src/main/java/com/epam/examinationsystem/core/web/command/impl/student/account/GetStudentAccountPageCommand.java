@@ -1,4 +1,4 @@
-package com.epam.examinationsystem.core.web.command.impl.student;
+package com.epam.examinationsystem.core.web.command.impl.student.account;
 
 import com.epam.di.annotation.PleaseInject;
 import com.epam.di.annotation.PleaseService;

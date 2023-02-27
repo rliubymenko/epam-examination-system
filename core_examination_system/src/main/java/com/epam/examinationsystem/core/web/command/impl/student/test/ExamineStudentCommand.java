@@ -46,22 +46,20 @@ public class ExamineStudentCommand implements ActionCommand {
             if (ParameterValidator.isValidUUID(uuid) && testService.existsByUuid(UUID.fromString(uuid))) {
                 Optional<StudentTestDto> maybeTest = testService.findByUuidForTesting(UUID.fromString(uuid));
                 if (maybeTest.isPresent()) {
-
+                    request.getSession().removeAttribute(SessionConstant.START_TIME);
                     StudentTestDto test = maybeTest.get();
                     UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
-                    String startTime = request.getParameter(Parameter.START_TIME);
                     String endTime = request.getParameter(Parameter.END_TIME);
                     float percentageOfCorrectAnswers = calculateFinalMarkValue(request.getParameterMap(), test);
 
                     UserTestDto userTestDto = UserTestDto.builder()
                             .setTest(new UserTestDto.TestAdjacent(test.getUuid(), test.getName()))
                             .setUser(new UserTestDto.UserAdjacent(currentUser.getUuid(), currentUser.getUsername()))
-                            .setStartTime(startTime)
                             .setEndTime(endTime)
                             .setMarkValue(String.valueOf(percentageOfCorrectAnswers))
                             .build();
-
-                    if (userTestService.createAfterExam(userTestDto)) {
+                    LOG.debug("Examination of student: {}", userTestDto);
+                    if (userTestService.updateAfterExam(userTestDto)) {
                         LOG.debug("The user test {} has been created successfully", userTestDto);
                         return new CommandResult(Path.TESTS_FOR_STUDENT, true);
                     }
@@ -75,8 +73,8 @@ public class ExamineStudentCommand implements ActionCommand {
     }
 
     private float calculateFinalMarkValue(Map<String, String[]> parameters, StudentTestDto test) {
-        Integer correctAnswersAmount = 0;
-        Integer totalQuestionNumber = test.getQuestions().size();
+        int correctAnswersAmount = 0;
+        int totalQuestionNumber = test.getQuestions().size();
         for (StudentTestDto.QuestionForStudentTestDto question : test.getQuestions()) {
 
             switch (question.getType()) {
@@ -112,7 +110,7 @@ public class ExamineStudentCommand implements ActionCommand {
                 }
             }
         }
-        return correctAnswersAmount.floatValue() * 100 / totalQuestionNumber.floatValue();
+        return (float) correctAnswersAmount * 100 / totalQuestionNumber;
     }
 
     private Set<String> getAllCorrectAnswerUuids(List<StudentTestDto.QuestionForStudentTestDto.AnswerOnQuestionForStudentTestDto> answers) {

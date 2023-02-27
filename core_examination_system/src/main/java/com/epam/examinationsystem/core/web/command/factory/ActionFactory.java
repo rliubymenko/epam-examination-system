@@ -6,7 +6,7 @@ import com.epam.examinationsystem.core.web.command.constant.Path;
 import com.epam.examinationsystem.core.web.command.enumeration.CommandType;
 import com.epam.examinationsystem.core.web.command.impl.HomeCommand;
 import com.epam.examinationsystem.core.web.command.impl.LocaleCommand;
-import com.epam.examinationsystem.core.web.command.impl.admin.GetAdminAccountPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.admin.account.GetAdminAccountPageCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.answer.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.pdf.*;
 import com.epam.examinationsystem.core.web.command.impl.admin.question.*;
@@ -18,7 +18,10 @@ import com.epam.examinationsystem.core.web.command.impl.admin.user.GetEditUserPa
 import com.epam.examinationsystem.core.web.command.impl.admin.user.ResetPasswordCommand;
 import com.epam.examinationsystem.core.web.command.impl.admin.usertest.GetAllUserTestsByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.auth.*;
-import com.epam.examinationsystem.core.web.command.impl.student.GetStudentAccountPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.student.account.EditStudentCommand;
+import com.epam.examinationsystem.core.web.command.impl.student.account.GetEditStudentPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.student.account.GetStudentAccountPageCommand;
+import com.epam.examinationsystem.core.web.command.impl.student.account.ResetStudentPasswordCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.subject.GetAllSubjectsForStudentByParametersCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.test.ExamineStudentCommand;
 import com.epam.examinationsystem.core.web.command.impl.student.test.GetAllTestsForStudentByParametersCommand;
@@ -76,6 +79,9 @@ public class ActionFactory {
         commands.put(CommandType.GET_STUDENTS_TESTS, ObjectProvider.getInstance(GetAllTestsForStudentByParametersCommand.class));
         commands.put(CommandType.GET_STUDENTS_TESTS_TESTING, ObjectProvider.getInstance(GetTestingPageCommand.class));
         commands.put(CommandType.GET_STUDENTS_TESTS_TEST_SELECT, ObjectProvider.getInstance(SelectTestCommand.class));
+        commands.put(CommandType.GET_STUDENTS_ACCOUNT_RESET_PASSWORD, ObjectProvider.getInstance(ResetStudentPasswordCommand.class));
+        commands.put(CommandType.GET_STUDENTS_STUDENT, ObjectProvider.getInstance(GetEditStudentPageCommand.class));
+        commands.put(CommandType.POST_STUDENTS_STUDENT, ObjectProvider.getInstance(EditStudentCommand.class));
 
         commands.put(CommandType.POST_REGISTRATION, ObjectProvider.getInstance(RegistrationCommand.class));
         commands.put(CommandType.POST_LOGIN, ObjectProvider.getInstance(LoginCommand.class));

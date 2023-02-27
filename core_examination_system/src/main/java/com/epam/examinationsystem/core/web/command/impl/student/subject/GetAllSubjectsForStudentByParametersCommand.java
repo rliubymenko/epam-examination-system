@@ -46,9 +46,9 @@ public class GetAllSubjectsForStudentByParametersCommand implements ActionComman
 
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
-        LOG.debug("Searching subjects by parameters for students");
         String page = Path.SUBJECTS_FOR_STUDENT_PAGE;
         DataTableRequest tableRequest = PageableUtil.extractPageableData(request, headerNames);
+        LOG.debug("Searching subjects by parameters for students {}", tableRequest);
         try {
             UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
             DataTableResponse<StudentSubjectDto> subjectResponse = subjectService.findAllForStudent(

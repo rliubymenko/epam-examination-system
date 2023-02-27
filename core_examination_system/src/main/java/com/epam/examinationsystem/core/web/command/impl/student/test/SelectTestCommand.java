@@ -37,16 +37,14 @@ public class SelectTestCommand implements ActionCommand {
         try {
             if (ParameterValidator.isValidUUID(uuid) && testService.existsByUuid(UUID.fromString(uuid))) {
                 UserDto currentUser = (UserDto) request.getSession().getAttribute(SessionConstant.CURRENT_USER);
-
                 UserTestDto userTestDto = UserTestDto.builder()
                         .setTest(new UserTestDto.TestAdjacent(uuid, null))
                         .setUser(new UserTestDto.UserAdjacent(currentUser.getUuid(), currentUser.getUsername()))
                         .build();
-
-                if (userTestService.create(userTestDto)) {
-                    LOG.debug("The user test {} has been created successfully", userTestDto);
-                    return new CommandResult(page, true);
-                }
+                LOG.debug("Selecting test for user: {}", userTestDto);
+                userTestService.create(userTestDto);
+                LOG.debug("The user test {} has been created successfully", userTestDto);
+                return new CommandResult(page, true);
             }
         } catch (Exception e) {
             LOG.error("Error during selecting test has been occurred {}", e.getMessage());
