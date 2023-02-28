@@ -51,13 +51,13 @@ public class ParameterValidator {
 
     public static boolean isNotValidFirstName(String firstName) {
         return firstName == null ||
-                (firstName.length() < 1 || firstName.length() > 30) ||
+                (firstName.length() <= 1 || firstName.length() >= 30) ||
                 !BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, firstName), Pattern.matches(UK_UA_REGEX, firstName)});
     }
 
     public static boolean isNotValidLastName(String lastName) {
         return lastName == null ||
-                (lastName.length() < 1 || lastName.length() > 50) ||
+                (lastName.length() <= 1 || lastName.length() >= 50) ||
                 !BooleanUtils.xor(new boolean[]{Pattern.matches(EN_US_REGEX, lastName), Pattern.matches(UK_UA_REGEX, lastName)});
     }
 
