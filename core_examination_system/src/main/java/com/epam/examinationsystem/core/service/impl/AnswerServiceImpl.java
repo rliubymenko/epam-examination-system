@@ -281,6 +281,7 @@ public class AnswerServiceImpl implements AnswerService {
                         .build();
                 answerDao.update(newTrueAnswer);
                 answerDao.deleteByUuid(answerUuid);
+                isDeleted = true;
             }
             transactionManager.commit();
             return isDeleted;

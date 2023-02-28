@@ -156,9 +156,10 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    @Override
     public int getCurrentAttemptNumber(UUID userUuid, UUID testUuid) throws ServiceException {
         LOG.debug("Get current attempt number for user by user uuid {} and test uuid {}", userUuid, testUuid);
-        transactionManager.begin(userTestDao, testDao, userDao, roleDao);
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, roleDao);
         try {
             int currentAttemptNumber = 0;
             Optional<UserTest> maybeUserTest = userTestDao.findByUserAndTestUuid(userUuid, testUuid);
@@ -173,9 +174,10 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    @Override
     public boolean isSelected(UUID userUuid, UUID testUuid) throws ServiceException {
         LOG.debug("Get is selected value for user by user uuid {} and test uuid {}", userUuid, testUuid);
-        transactionManager.begin(userTestDao, testDao, userDao, roleDao);
+        transactionManager.beginWithAutoCommit(userTestDao, testDao, userDao, roleDao);
         try {
             boolean isSelected = false;
             Optional<UserTest> maybeUserTest = userTestDao.findByUserAndTestUuid(userUuid, testUuid);

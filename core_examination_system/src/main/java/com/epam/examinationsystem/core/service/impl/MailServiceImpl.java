@@ -35,6 +35,7 @@ public class MailServiceImpl implements MailService {
     private static final String WELCOME_SUBJECT_US = "Successful sign-up";
     private static final String REPORT_BODY_SUBJECT_US = "Please you can find queried report in the attached file";
     private static final String RESETTING_PASSWORD_BODY_SUBJECT_US = "Please use this password for next sign in to our system";
+
     @PleaseValue("mail.from")
     private String fromEmail;
 
