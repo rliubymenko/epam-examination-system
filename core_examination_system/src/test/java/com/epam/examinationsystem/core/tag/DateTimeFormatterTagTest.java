@@ -48,7 +48,7 @@ class DateTimeFormatterTagTest {
         int tagCode = tag.doStartTag();
         ArgumentCaptor<String> timeCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.verify(jspWriter, Mockito.times(1)).print(timeCaptor.capture());
-        Assertions.assertEquals("4 авг. 2015 г., 10:11:30", timeCaptor.getValue());
+        Assertions.assertEquals("4 серп. 2015 р., 10:11:30", timeCaptor.getValue());
         Assertions.assertEquals(0, tagCode);
     }
 }
