@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.OutputStream;
 import java.util.List;
 
+/**
+ * The class for generating user reports
+ */
 @PleaseService
 public class UserReportServiceImpl implements UserReportService {
 

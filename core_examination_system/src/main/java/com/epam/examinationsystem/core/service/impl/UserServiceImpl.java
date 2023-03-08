@@ -24,6 +24,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The service implementation for User entity.
+ */
 @PleaseService
 public class UserServiceImpl implements UserService {
 
@@ -38,6 +41,13 @@ public class UserServiceImpl implements UserService {
     @PleaseInject
     private TransactionManager<User> transactionManager;
 
+    /**
+     * The method for searching User by uuid.
+     *
+     * @param uuid an uuid of the user to search.
+     * @return an <code>Optional</code> with searched UserDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<UserDto> findByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find user by uuid {}", uuid);
@@ -52,6 +62,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for searching User by username.
+     *
+     * @param username a username of the user to search.
+     * @return an <code>Optional</code> with searched UserDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<UserDto> findByUsername(String username) throws ServiceException {
         LOG.debug("Find user by username {}", username);
@@ -69,6 +86,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for checking the existence of the user by given username.
+     *
+     * @param username the username of searchable user.
+     * @return true - if record exists by given username or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUsername(String username) throws ServiceException {
         LOG.debug("Check if exists by username {}", username);
@@ -85,6 +109,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for checking the existence of the user by given email.
+     *
+     * @param email the email of searchable user.
+     * @return true - if record exists by given email or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByEmail(String email) throws ServiceException {
         LOG.debug("Check if exists by email {}", email);
@@ -101,6 +132,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for checking the existence of the user by given uuid.
+     *
+     * @param uuid the uuid of searchable user.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);
@@ -117,6 +155,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for searching all users.
+     *
+     * @return a <code>List</code> with UserDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<UserDto> findAll() throws ServiceException {
         LOG.debug("Find all users");
@@ -133,6 +177,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for searching all users by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried UserDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<UserDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all users by {}", request);
@@ -157,6 +208,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for creating student after registration.
+     *
+     * @param userDto the UserDto instance.
+     * @return true if created successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean createStudent(UserDto userDto) throws ServiceException {
         LOG.debug("Creation user from user dto {}", userDto);
@@ -183,6 +241,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for resetting user password.
+     *
+     * @param userDto     the UserDto instance in which password be changed.
+     * @param newPassword the new password to change.
+     * @return true if reset successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean resetPassword(UserDto userDto, String newPassword) throws ServiceException {
         LOG.debug("Resetting password for user {}", userDto);
@@ -200,6 +266,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * The method for updating user.
+     *
+     * @param userDto the UserDto instance.
+     * @return true if updated successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean update(UserDto userDto, boolean isLoggedUser) throws ServiceException {
         LOG.debug("Updating user by user dto {}", userDto);

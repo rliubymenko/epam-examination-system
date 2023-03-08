@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+/**
+ * The util class for mapping data from ResultSet to a specific entity.
+ */
 public class DaoMapperUtil {
 
     private DaoMapperUtil() {

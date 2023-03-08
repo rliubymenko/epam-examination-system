@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to get the student edition page.
+ */
 @PleaseService
 public class GetEditStudentPageCommand implements ActionCommand {
 
@@ -27,6 +30,13 @@ public class GetEditStudentPageCommand implements ActionCommand {
     @PleaseInject
     private UserService userService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Forwarding to {}", Path.EDIT_STUDENT_PAGE);

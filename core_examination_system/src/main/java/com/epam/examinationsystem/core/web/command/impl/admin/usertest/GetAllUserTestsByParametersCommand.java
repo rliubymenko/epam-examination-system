@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Extends the ActionCommand interface to provide a command to get all usertests by parameters.
+ */
 @PleaseService
 public class GetAllUserTestsByParametersCommand implements ActionCommand {
 
@@ -47,6 +50,13 @@ public class GetAllUserTestsByParametersCommand implements ActionCommand {
         );
     }
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String page = Path.USER_TESTS_PAGE;

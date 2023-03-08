@@ -4,6 +4,9 @@ import com.epam.examinationsystem.core.dto.AbstractDto;
 
 import java.util.*;
 
+/**
+ * The class contains all the data necessary to display in a table.
+ */
 public class PageResponseDto<DTO extends AbstractDto> {
 
     private int currentPage;

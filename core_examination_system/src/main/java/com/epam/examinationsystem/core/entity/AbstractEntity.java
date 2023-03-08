@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The abstract entity class that contains fields common to all entities.
+ */
 public abstract class AbstractEntity implements Serializable {
 
     @Serial

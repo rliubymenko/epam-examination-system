@@ -20,6 +20,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * The dao implementation for Role entity.
+ */
 @PleaseService
 public class RoleDaoImpl extends AbstractDao<Role> implements RoleDao {
 

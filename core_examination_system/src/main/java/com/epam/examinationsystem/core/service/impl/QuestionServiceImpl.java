@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The service implementation for Question entity.
+ */
 @PleaseService
 public class QuestionServiceImpl implements QuestionService {
 
@@ -48,6 +51,13 @@ public class QuestionServiceImpl implements QuestionService {
     @PleaseInject
     private TransactionManager<Question> transactionManager;
 
+    /**
+     * The method for creating question.
+     *
+     * @param questionDto the QuestionDto instance.
+     * @return an <code>QuestionDto</code> that was created.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public QuestionDto create(QuestionDto questionDto) throws ServiceException {
         LOG.debug("Creating question by dto {}", questionDto);
@@ -75,6 +85,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for updating the question.
+     *
+     * @param questionDto the QuestionDto to update.
+     * @return true if updated successfully, otherwise false.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean update(QuestionDto questionDto) throws ServiceException {
         LOG.debug("Updating question by dto {}", questionDto);
@@ -104,6 +121,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for searching Question by uuid.
+     *
+     * @param uuid an uuid of the question to search.
+     * @return an <code>Optional</code> with searched QuestionDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<QuestionDto> findByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find question by uuid {}", uuid);
@@ -121,6 +145,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for checking the existence of the question by given uuid.
+     *
+     * @param uuid the uuid of searchable question.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);
@@ -137,6 +168,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for searching all questions by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried QuestionDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<QuestionDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all questions by {}", request);
@@ -162,6 +200,12 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for searching all questions.
+     *
+     * @return a <code>List</code> with QuestionDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<QuestionDto> findAll() throws ServiceException {
         LOG.debug("Find all questions");
@@ -178,6 +222,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for searching questions by test uuid.
+     *
+     * @param testUuid the test uuid.
+     * @return <code>List</code> with StudentTestDto.QuestionForStudentTestDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<StudentTestDto.QuestionForStudentTestDto> findAllByTestUuid(UUID testUuid) throws ServiceException {
         LOG.debug("Find all questions by test uuid {}", testUuid);
@@ -192,6 +243,12 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for searching questions opened for creating answers.
+     *
+     * @return <code>List</code> with QuestionDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<QuestionDto> findAllOpenToCreateAnswers() throws ServiceException {
         LOG.debug("Find all questions appropriate for creation answers");
@@ -214,6 +271,13 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    /**
+     * The method for deleting the question.
+     *
+     * @param uuid an uuid of the deletion question.
+     * @return true - is the deletion was successful, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Deleting question by uuid {}", uuid);

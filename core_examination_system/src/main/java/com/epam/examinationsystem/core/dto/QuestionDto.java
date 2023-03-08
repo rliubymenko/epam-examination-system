@@ -5,6 +5,9 @@ import com.epam.examinationsystem.core.entity.Test;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * QuestionDto for the question entity.
+ */
 public class QuestionDto extends AbstractDto {
 
     private final String type;

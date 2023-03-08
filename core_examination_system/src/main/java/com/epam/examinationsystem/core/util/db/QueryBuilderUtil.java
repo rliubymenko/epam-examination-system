@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * The SQL query builder util.
+ */
 public class QueryBuilderUtil {
 
     private QueryBuilderUtil() {

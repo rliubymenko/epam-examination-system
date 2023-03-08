@@ -10,6 +10,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * The util for verifying Captcha.
+ */
 public class CaptchaUtil {
 
     private static final String SECRET_PARAM = "secret";

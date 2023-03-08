@@ -11,6 +11,9 @@ import jakarta.servlet.annotation.WebListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The application listener is the starting point for creating the system structure and preparing ObjectProvider for use.
+ */
 @WebListener
 @PleaseService
 @PleaseComponentScan("com.epam.examinationsystem.core")

@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.OutputStream;
 import java.util.List;
 
+/**
+ * The class for generating test reports
+ */
 @PleaseService
 public class TestReportServiceImpl implements TestReportService {
 

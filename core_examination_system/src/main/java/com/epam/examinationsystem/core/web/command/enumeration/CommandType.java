@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.enumeration;
 
+/**
+ * Enumeration with all command path constants
+ */
 public enum CommandType {
     GET_HOME,
     GET_LOCALE,

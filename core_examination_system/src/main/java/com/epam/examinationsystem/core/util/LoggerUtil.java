@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import java.text.MessageFormat;
 import java.util.UUID;
 
+/**
+ * Dao logger util.
+ */
 public class LoggerUtil {
 
     private LoggerUtil() {

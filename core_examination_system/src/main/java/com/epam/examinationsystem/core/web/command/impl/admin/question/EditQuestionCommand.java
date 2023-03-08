@@ -22,6 +22,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to edit the question.
+ */
 @PleaseService
 public class EditQuestionCommand implements ActionCommand {
 
@@ -30,6 +33,13 @@ public class EditQuestionCommand implements ActionCommand {
     @PleaseInject
     private QuestionService questionService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -68,6 +78,11 @@ public class EditQuestionCommand implements ActionCommand {
         return new CommandResult(Path.HOME, true);
     }
 
+    /**
+     * Returns a set of strings containing the names of the parameters that failed the validation.
+     *
+     * @return the Set with strings.
+     */
     private Set<String> performValidation(String content) {
         Set<String> inconsistencies = new HashSet<>();
         if (StringUtils.isBlank(content)) {

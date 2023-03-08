@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+/**
+ * StudentSubjectDto for the subject entity to be represented for the student.
+ */
 public class StudentSubjectDto extends AbstractDto {
 
     private final String name;

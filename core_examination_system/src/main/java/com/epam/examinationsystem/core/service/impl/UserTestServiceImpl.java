@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The service implementation for UserTest entity.
+ */
 @PleaseService
 public class UserTestServiceImpl implements UserTestService {
 
@@ -47,6 +50,13 @@ public class UserTestServiceImpl implements UserTestService {
     @PleaseInject
     private TransactionManager<UserTest> transactionManager;
 
+    /**
+     * The method for creating UserTest.
+     *
+     * @param userTestDto the UserTest instance.
+     * @return true if created successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public UserTestDto create(UserTestDto userTestDto) throws ServiceException {
         LOG.debug("Creating userTest by dto {}", userTestDto);
@@ -72,6 +82,13 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for updating UserTest after an exam.
+     *
+     * @param userTestDto the UserTest instance.
+     * @return true if updated successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean updateAfterExam(UserTestDto userTestDto) throws ServiceException {
         LOG.debug("Creating userTest by dto {}", userTestDto);
@@ -110,6 +127,13 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for changing UserTest start time.
+     *
+     * @param uuid      the UserTest uuid.
+     * @param startTime the new start time to set.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public void setStartTime(UUID uuid, LocalDateTime startTime) throws ServiceException {
         LOG.debug("Setting start time for usertest with uuid {}", uuid);
@@ -125,6 +149,13 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for searching usertests by user uuid.
+     *
+     * @param uuid the user uuid.
+     * @return <code>List</code> with UserTestDto entities.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<UserTestDto> findByUserUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find user test by user uuid {}", uuid);
@@ -142,6 +173,14 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for searching usertests by the user uuid and the test uuid.
+     *
+     * @param userUuid the user uuid.
+     * @param testUuid the test uuid.
+     * @return <code>Optional</code> with UserTestDto entry.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<UserTestDto> findByUserAndTestUuid(UUID userUuid, UUID testUuid) throws ServiceException {
         LOG.debug("Find user test by user uuid {} and test uuid {}", userUuid, testUuid);
@@ -156,6 +195,14 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for retrieving current attempt number in the UserTest entry by the user uuid and the test uuid.
+     *
+     * @param userUuid the user uuid.
+     * @param testUuid the test uuid.
+     * @return the current attempt number.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public int getCurrentAttemptNumber(UUID userUuid, UUID testUuid) throws ServiceException {
         LOG.debug("Get current attempt number for user by user uuid {} and test uuid {}", userUuid, testUuid);
@@ -174,6 +221,14 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for retrieving selected status in the UserTest entry by the user uuid and the test uuid.
+     *
+     * @param userUuid the user uuid.
+     * @param testUuid the test uuid.
+     * @return the current attempt number.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean isSelected(UUID userUuid, UUID testUuid) throws ServiceException {
         LOG.debug("Get is selected value for user by user uuid {} and test uuid {}", userUuid, testUuid);
@@ -192,6 +247,13 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for searching all usertests by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried UserTestDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<UserTestDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all usertests by {}", request);
@@ -218,6 +280,12 @@ public class UserTestServiceImpl implements UserTestService {
         }
     }
 
+    /**
+     * The method for searching all usertests.
+     *
+     * @return a <code>List</code> with UserTestDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<UserTestDto> findAll() throws ServiceException {
         LOG.debug("Find all user tests ");

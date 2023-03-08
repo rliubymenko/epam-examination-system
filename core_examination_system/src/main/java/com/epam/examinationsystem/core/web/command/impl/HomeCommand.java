@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Extends the ActionCommand interface to provide a command to get home page.
+ */
 @PleaseService
 public class HomeCommand implements ActionCommand {
 
@@ -24,6 +27,13 @@ public class HomeCommand implements ActionCommand {
     @PleaseInject
     private SubjectService subjectService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {

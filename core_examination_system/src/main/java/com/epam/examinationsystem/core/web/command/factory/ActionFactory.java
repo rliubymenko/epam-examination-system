@@ -31,6 +31,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.EnumMap;
 
+/**
+ * Factory class serves as a router from a request to suitable command.
+ */
 public class ActionFactory {
 
     private static ActionFactory actionFactory;
@@ -116,6 +119,12 @@ public class ActionFactory {
         return actionFactory;
     }
 
+    /**
+     * The method for extraction of the command path from the request.
+     *
+     * @param request the HttpServletRequest instance
+     * @return Returns necessary ActionCommand
+     */
     public ActionCommand defineCommand(HttpServletRequest request) {
         String command = "";
         String path = request.getServletPath().replace("/", "");

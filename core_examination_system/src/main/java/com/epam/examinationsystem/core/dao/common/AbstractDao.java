@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The abstract dao class that contains common CRUD operations.
+ */
 public abstract class AbstractDao<ENTITY extends AbstractEntity> implements CommonDao<ENTITY> {
 
     private final Logger log;
@@ -28,10 +31,22 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         this.foreignTableNamesWithKeys = foreignTableNamesWithKeys;
     }
 
+    /**
+     * The method to inject a connection to a concrete dao.
+     *
+     * @param connection the connection to be injected.
+     */
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * The method to search entity by uuid.
+     *
+     * @param uuid the uuid of searchable record.
+     * @return <code>Optional</code> an Optional with the entity.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> or a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<ENTITY> findByUuid(UUID uuid) throws DaoException {
         Optional<ENTITY> maybeEntity;
@@ -49,6 +64,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return maybeEntity;
     }
 
+    /**
+     * The method to search entity by id.
+     *
+     * @param id the id of searchable record.
+     * @return a descendant of <code>AbstractEntity</code>.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public ENTITY getById(Long id) throws DaoException {
         ENTITY entity;
@@ -65,6 +87,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return entity;
     }
 
+    /**
+     * The method for checking the existence of the entity by given uuid.
+     *
+     * @param uuid the uuid of searchable record.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws DaoException {
         long count = 0;
@@ -83,6 +112,12 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return count == 1;
     }
 
+    /**
+     * The method for searching all entities.
+     *
+     * @return a <code>List</code> with all entities.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public List<ENTITY> findAll() throws DaoException {
         List<ENTITY> entities;
@@ -99,6 +134,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return entities;
     }
 
+    /**
+     * The method for searching all entities by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>List</code> with all entities.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public List<ENTITY> findAll(DataTableRequest request) throws DaoException {
         List<ENTITY> entities;
@@ -115,6 +157,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return entities;
     }
 
+    /**
+     * The method for creating the entity.
+     *
+     * @param entity the given entity that is a descendant of AbstractEntity.
+     * @return the created entity.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public ENTITY create(ENTITY entity) throws DaoException {
         LoggerUtil.createEntityStartLogging(log, entityName);
@@ -132,6 +181,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         }
     }
 
+    /**
+     * The method for updating the entity.
+     *
+     * @param entity the given entity that is a descendant of AbstractEntity.
+     * @return the updated entity.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public ENTITY update(ENTITY entity) throws DaoException {
         LoggerUtil.updateEntityStartLogging(log, entityName, entity.getUuid());
@@ -146,6 +202,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         }
     }
 
+    /**
+     * The method for deleting the entity.
+     *
+     * @param uuid an uuid of the deletion candidate.
+     * @return true - if the deletion was successful, false otherwise.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuid(UUID uuid) throws DaoException {
         LoggerUtil.deleteByUuidStartLogging(log, entityName, uuid);
@@ -158,6 +221,13 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         }
     }
 
+    /**
+     * The method for counting the entity number for the request params.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a count of existing entity that corresponds to the request params.
+     * @throws DaoException throws a <code>DaoException</code> if a <code>SQLException</code> is occurred.
+     */
     @Override
     public long count(DataTableRequest request) throws DaoException {
         LoggerUtil.countingRecordsStartLogging(log, entityName);
@@ -175,15 +245,43 @@ public abstract class AbstractDao<ENTITY extends AbstractEntity> implements Comm
         return 0;
     }
 
+    /**
+     * The abstract method for extracting entity from ResultSet.
+     *
+     * @param resultSet a ResultSet.
+     * @return the extracted entity.
+     */
     public abstract ENTITY extractEntity(ResultSet resultSet) throws SQLException, DaoException;
 
+    /**
+     * The abstract method for extracting entities from ResultSet.
+     *
+     * @param resultSet a ResultSet.
+     * @return the <code>List</code> with extracted entities.
+     */
     public abstract List<ENTITY> extractEntities(ResultSet resultSet) throws SQLException, DaoException;
 
+    /**
+     * The abstract method for getting insert SQL query for saving entity.
+     *
+     * @return the insert query.
+     */
     public abstract String getInsertQuery();
 
+    /**
+     * The abstract method for getting update SQL query for updating entity.
+     *
+     * @return the update query.
+     */
     public abstract String getUpdateQuery(ENTITY entity);
 
+    /**
+     * The abstract method for populating insert a SQL query by fitting the necessary gaps.
+     */
     public abstract void populateInsertQuery(PreparedStatement preparedStatement, ENTITY entity) throws SQLException;
 
+    /**
+     * The abstract method for populating update a SQL query by fitting the necessary gaps.
+     */
     public abstract void populateUpdateQuery(PreparedStatement preparedStatement, ENTITY entity) throws SQLException;
 }

@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.constant;
 
+/**
+ * The Path constants
+ */
 public interface Path {
 
     String HOME = "/home";

@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * The main controller in the system.
+ */
 @WebServlet(urlPatterns = {
         RootPath.REGISTRATION,
         RootPath.LOGIN,

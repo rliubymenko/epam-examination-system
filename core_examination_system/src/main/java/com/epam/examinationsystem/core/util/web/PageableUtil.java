@@ -11,6 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The pageable util for extraction filters from an incoming request and calculation current state of these filters.
+ */
 public class PageableUtil {
 
     public static final String DEFAULT_SORT_VALUE = "created";

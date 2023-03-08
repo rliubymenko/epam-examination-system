@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Password encoder util.
+ */
 public class PasswordEncoder {
 
     private static final int SALT = 12;

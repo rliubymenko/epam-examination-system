@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.constant;
 
+/**
+ * The Attribute constants
+ */
 public interface Attribute {
 
     String WRONG_USERNAME = "wrong_username";

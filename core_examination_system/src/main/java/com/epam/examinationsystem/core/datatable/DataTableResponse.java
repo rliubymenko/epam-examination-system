@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.*;
 
+/**
+ * Saved state of filters extracted from a query to filter data in a table, which is transferred back to the table representation.
+ */
 public class DataTableResponse<DTO extends AbstractDto> {
 
     private List<DTO> dtos;

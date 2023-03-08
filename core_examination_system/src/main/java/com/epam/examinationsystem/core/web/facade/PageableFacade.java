@@ -11,6 +11,9 @@ import com.epam.examinationsystem.core.util.web.PageableUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Facade for DTO packages all necessary data to PageResponseDto.
+ */
 public class PageableFacade<DTO extends AbstractDto> {
 
     private final List<HeaderName> headerNames;

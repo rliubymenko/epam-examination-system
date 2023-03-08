@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The test entity
+ */
 public class Test extends AbstractEntity {
 
     private final String name;

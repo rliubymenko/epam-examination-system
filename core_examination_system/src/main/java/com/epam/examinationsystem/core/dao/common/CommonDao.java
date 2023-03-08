@@ -29,6 +29,10 @@ public interface CommonDao<ENTITY extends AbstractEntity> {
 
     long count(DataTableRequest request) throws DaoException;
 
-    // --- Method for transaction manager
+    /**
+     * Uses to set connection to dao instance.
+     *
+     * @param connection the connection from Connection pool.
+     */
     void setConnection(Connection connection);
 }

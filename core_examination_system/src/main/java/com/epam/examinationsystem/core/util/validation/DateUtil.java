@@ -3,6 +3,9 @@ package com.epam.examinationsystem.core.util.validation;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
+/**
+ * The date validation util.
+ */
 public class DateUtil {
 
     private DateUtil() {

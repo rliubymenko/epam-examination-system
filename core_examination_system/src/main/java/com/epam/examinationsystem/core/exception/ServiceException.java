@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.exception;
 
+/**
+ * The exception for service layer.
+ */
 public class ServiceException extends Exception {
 
     public ServiceException() {

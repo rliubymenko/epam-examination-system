@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command;
 
+/**
+ * Container for the current page and the redirect flag.
+ */
 public class CommandResult {
 
     private final String page;

@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.constant;
 
+/**
+ * The RootPath constants needs to validate the incoming requests
+ */
 public interface RootPath {
 
     String ROOT = "/";

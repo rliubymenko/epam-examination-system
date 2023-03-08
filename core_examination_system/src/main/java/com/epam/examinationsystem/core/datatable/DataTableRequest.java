@@ -2,6 +2,9 @@ package com.epam.examinationsystem.core.datatable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * Filters extracted from a query to filter data in a table.
+ */
 public class DataTableRequest {
 
     private int currentPage;

@@ -26,6 +26,9 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
+/**
+ * The service for mailing to the current system user massages about the system states.
+ */
 @PleaseService
 public class MailServiceImpl implements MailService {
 
@@ -54,6 +57,11 @@ public class MailServiceImpl implements MailService {
     @PleaseValue("mail.smtp.starttls.enable")
     private String isStarttlsEnabled;
 
+    /**
+     * @param toEmail      an email of the recipient.
+     * @param language     an appropriate language: English = en_US or Ukrainian = uk_UA.
+     * @param userFullName a full name of the user.
+     */
     @Override
     public void sendWelcomeMail(String toEmail, String language, String userFullName) {
         String welcomeTemplateContent = readFromFile(WELCOME_FILE_PATH);
@@ -66,12 +74,22 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * @param toEmail     an email of the recipient.
+     * @param newPassword a new password to send.
+     */
     @Override
     public void sendNewPassword(String toEmail, String newPassword) {
         String message = RESETTING_PASSWORD_BODY_SUBJECT_US + ": " + newPassword;
         sendEmail(toEmail, "Resetting password", message);
     }
 
+    /**
+     * @param toEmail      an email of the recipient.
+     * @param reportName   a  report name.
+     * @param fileName     a file to send name.
+     * @param outputStream the stream that contains the send file in a byte structure.
+     */
     @Override
     public void sendMailWithAttachment(String toEmail, String reportName, String fileName, OutputStream outputStream) {
         Properties properties = getSmtpProperties();

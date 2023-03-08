@@ -25,6 +25,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Extends the ActionCommand interface to provide a command to examine the student after passing the test.
+ */
 @PleaseService
 public class ExamineStudentCommand implements ActionCommand {
 
@@ -39,6 +42,13 @@ public class ExamineStudentCommand implements ActionCommand {
     @PleaseInject
     private UserTestService userTestService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String uuid = request.getParameter(Parameter.UUID);
@@ -72,6 +82,13 @@ public class ExamineStudentCommand implements ActionCommand {
         return new CommandResult(Path.HOME, true);
     }
 
+    /**
+     * The method for calculation final mark for student
+     *
+     * @param parameters the answers answered by student
+     * @param test the current passing test
+     * @return Final mark
+     */
     private float calculateFinalMarkValue(Map<String, String[]> parameters, StudentTestDto test) {
         int correctAnswersAmount = 0;
         int totalQuestionNumber = test.getQuestions().size();

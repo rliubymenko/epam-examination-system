@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The service implementation for Subject entity.
+ */
 @PleaseService
 public class SubjectServiceImpl implements SubjectService {
 
@@ -55,6 +58,13 @@ public class SubjectServiceImpl implements SubjectService {
     @PleaseInject
     private TransactionManager<Subject> transactionManager;
 
+    /**
+     * The method for creating subject.
+     *
+     * @param subjectDto the SubjectDto instance.
+     * @return true if created successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean create(SubjectDto subjectDto) throws ServiceException {
         LOG.debug("Creating subject by dto {}", subjectDto);
@@ -75,6 +85,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for updating the subject.
+     *
+     * @param subjectDto the SubjectDto to update.
+     * @return true if updated successfully, otherwise false.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean update(SubjectDto subjectDto) throws ServiceException {
         LOG.debug("Updating subject by dto {}", subjectDto);
@@ -104,6 +121,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for searching Subject by uuid.
+     *
+     * @param uuid an uuid of the subject to search.
+     * @return an <code>Optional</code> with searched SubjectDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<SubjectDto> findByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find subject by uuid {}", uuid);
@@ -118,6 +142,12 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for searching all subjects.
+     *
+     * @return a <code>List</code> with SubjectDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<SubjectDto> findAll() throws ServiceException {
         LOG.debug("Find all subjects");
@@ -134,6 +164,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for checking the existence of the subject by given uuid.
+     *
+     * @param uuid the uuid of searchable subject.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);
@@ -150,6 +187,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for searching all subjects by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried SubjectDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<SubjectDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all subjects by {}", request);
@@ -170,6 +214,14 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for searching all subjects by parameters for the student table representation.
+     *
+     * @param request         the DataTableRequest instance.
+     * @param currentUserUuid the uuid of current user.
+     * @return a <code>DataTableResponse</code> with the queried SubjectDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<StudentSubjectDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException {
         LOG.debug("Find all subjects by {} for student", request);
@@ -209,6 +261,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for checking the existence of the subject by given name.
+     *
+     * @param name the name of searchable subject.
+     * @return true - if record exists by given name or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByName(String name) throws ServiceException {
         LOG.debug("Check if exists by name {}", name);
@@ -225,6 +284,13 @@ public class SubjectServiceImpl implements SubjectService {
         }
     }
 
+    /**
+     * The method for deleting the subject.
+     *
+     * @param uuid an uuid of the deletion subject.
+     * @return true - is the deletion was successful, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Deleting subject by uuid {}", uuid);

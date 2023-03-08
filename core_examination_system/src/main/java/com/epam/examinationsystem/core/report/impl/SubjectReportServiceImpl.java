@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.OutputStream;
 import java.util.List;
 
+/**
+ * The class for generating subject reports
+ */
 @PleaseService
 public class SubjectReportServiceImpl implements SubjectReportService {
 

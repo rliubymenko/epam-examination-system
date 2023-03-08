@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The user entity
+ */
 public class User extends AbstractEntity {
 
     private final String username;

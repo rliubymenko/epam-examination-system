@@ -15,6 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * The authorization filter provides access to the common pages in not authorized cases and for fixed commands by roles.
+ */
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 

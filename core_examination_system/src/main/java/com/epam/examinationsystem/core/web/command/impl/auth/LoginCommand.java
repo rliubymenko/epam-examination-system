@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * Extends the ActionCommand interface to provide a command to log in the user.
+ */
 @PleaseService
 public class LoginCommand implements ActionCommand {
 
@@ -40,6 +43,13 @@ public class LoginCommand implements ActionCommand {
     @PleaseInject
     private UserService userService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Trying to login user");

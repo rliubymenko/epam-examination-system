@@ -25,6 +25,9 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * The dao implementation for UserTest entity.
+ */
 @PleaseService
 public class UserTestDaoImpl extends AbstractDao<UserTest> implements UserTestDao {
 

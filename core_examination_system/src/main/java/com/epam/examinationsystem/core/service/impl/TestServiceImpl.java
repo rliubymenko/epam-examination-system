@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The service implementation for Test entity.
+ */
 @PleaseService
 public class TestServiceImpl implements TestService {
 
@@ -63,6 +66,13 @@ public class TestServiceImpl implements TestService {
     @PleaseInject
     private TransactionManager<Test> transactionManager;
 
+    /**
+     * The method for creating test.
+     *
+     * @param testDto the TestDto instance.
+     * @return true if created successfully, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean create(TestDto testDto) throws ServiceException {
         LOG.debug("Creating subject by dto {}", testDto);
@@ -94,6 +104,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for updating the test.
+     *
+     * @param testDto the TestDto to update.
+     * @return true if updated successfully, otherwise false.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean update(TestDto testDto) throws ServiceException {
         LOG.debug("Updating test by dto {}", testDto);
@@ -127,6 +144,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for searching Test by uuid.
+     *
+     * @param uuid an uuid of the test to search.
+     * @return an <code>Optional</code> with searched TestDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<TestDto> findByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find test by uuid {}", uuid);
@@ -141,6 +165,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for searching tests by subject uuid.
+     *
+     * @param uuid the subject uuid.
+     * @return <code>List</code> with Test entities.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<Test> findAllBySubjectUuidForStudent(UUID uuid) throws ServiceException {
         LOG.debug("Find all tests for student with subject uuid: {}", uuid);
@@ -154,6 +185,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for searching test for testing.
+     *
+     * @param uuid the test uuid.
+     * @return <code>Optional</code> with StudentTestDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<StudentTestDto> findByUuidForTesting(UUID uuid) throws ServiceException {
         LOG.debug("Find test for testing by uuid {}", uuid);
@@ -173,6 +211,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for checking the existence of the test by given uuid.
+     *
+     * @param uuid the uuid of searchable test.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);
@@ -189,6 +234,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for searching all tests by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried TestDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<TestDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all tests by {}", request);
@@ -214,7 +266,14 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-
+    /**
+     * The method for searching all tests by parameters for the student table representation.
+     *
+     * @param request         the DataTableRequest instance.
+     * @param currentUserUuid the current user uuid.
+     * @return a <code>DataTableResponse</code> with the queried TestDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<TestDto> findAllForStudent(DataTableRequest request, UUID currentUserUuid) throws ServiceException {
         LOG.debug("Find all tests by {}", request);
@@ -263,6 +322,12 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for searching all tests.
+     *
+     * @return a <code>List</code> with TestDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<TestDto> findAll() throws ServiceException {
         LOG.debug("Find all tests");
@@ -279,6 +344,13 @@ public class TestServiceImpl implements TestService {
         }
     }
 
+    /**
+     * The method for deleting the test.
+     *
+     * @param uuid an uuid of the deletion test.
+     * @return true - is the deletion was successful, false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Deleting test by uuid {}", uuid);

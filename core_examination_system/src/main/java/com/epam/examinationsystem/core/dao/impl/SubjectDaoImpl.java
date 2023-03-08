@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The dao implementation for Subject entity.
+ */
 @PleaseService
 public class SubjectDaoImpl extends AbstractDao<Subject> implements SubjectDao {
 

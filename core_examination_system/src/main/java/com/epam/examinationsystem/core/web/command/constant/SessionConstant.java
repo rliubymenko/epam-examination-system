@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.constant;
 
+/**
+ * The Session constants
+ */
 public interface SessionConstant {
 
     String LOCALE = "locale";

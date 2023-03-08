@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * AnswerDto for the answer entity.
+ */
 public class AnswerDto extends AbstractDto {
 
     private final String content;

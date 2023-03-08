@@ -1,5 +1,8 @@
 package com.epam.examinationsystem.core.web.command.constant;
 
+/**
+ * The Parameter constants
+ */
 public interface Parameter {
 
     String UUID = "uuid";

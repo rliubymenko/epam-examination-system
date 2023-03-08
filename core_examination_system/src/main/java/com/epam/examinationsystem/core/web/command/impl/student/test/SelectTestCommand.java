@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to select the chosen test.
+ */
 @PleaseService
 public class SelectTestCommand implements ActionCommand {
 
@@ -30,6 +33,13 @@ public class SelectTestCommand implements ActionCommand {
     @PleaseInject
     private UserTestService userTestService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String uuid = request.getParameter(Parameter.UUID);

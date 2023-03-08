@@ -8,6 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The role entity
+ */
 public class Role extends AbstractEntity {
 
     private final UserType name;

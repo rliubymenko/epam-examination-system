@@ -22,6 +22,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Extends the ActionCommand interface to provide a command to generate a pdf report for questions.
+ */
 @PleaseService
 public class GenerateQuestionPdfReportCommand implements ActionCommand {
 
@@ -33,6 +36,13 @@ public class GenerateQuestionPdfReportCommand implements ActionCommand {
     @PleaseInject
     private MailService mailService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Starting generation question pdf report");

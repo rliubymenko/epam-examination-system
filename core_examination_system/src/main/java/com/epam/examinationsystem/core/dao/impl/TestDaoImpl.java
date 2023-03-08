@@ -24,6 +24,9 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * The dao implementation for Test entity.
+ */
 @PleaseService
 public class TestDaoImpl extends AbstractDao<Test> implements TestDao {
 

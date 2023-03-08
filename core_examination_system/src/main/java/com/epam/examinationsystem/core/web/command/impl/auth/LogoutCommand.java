@@ -11,11 +11,21 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Extends the ActionCommand interface to provide to log out the user.
+ */
 @PleaseService
 public class LogoutCommand implements ActionCommand {
 
     private static final Logger LOG = LoggerFactory.getLogger(LogoutCommand.class);
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();

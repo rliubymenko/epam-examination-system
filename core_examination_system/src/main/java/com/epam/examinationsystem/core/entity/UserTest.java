@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * The usertest entity
+ */
 public class UserTest extends AbstractEntity {
 
     private final User user;

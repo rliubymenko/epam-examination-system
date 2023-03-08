@@ -25,6 +25,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * Extends the ActionCommand interface to provide a command to create the answer
+ */
 @PleaseService
 public class CreateAnswerCommand implements ActionCommand {
 
@@ -36,6 +39,13 @@ public class CreateAnswerCommand implements ActionCommand {
     @PleaseInject
     private QuestionService questionService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -58,6 +68,11 @@ public class CreateAnswerCommand implements ActionCommand {
         }
     }
 
+    /**
+     * Returns a set of strings containing the names of the parameters that failed the validation.
+     *
+     * @return the Set with strings.
+     */
     private Set<String> performValidation(String questionUuid) {
         Set<String> inconsistencies = new HashSet<>();
         if (questionUuid.equals("-1")) {
@@ -66,6 +81,13 @@ public class CreateAnswerCommand implements ActionCommand {
         return inconsistencies;
     }
 
+    /**
+     * Returns a list of AnswerDto extracted from the request.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param question the QuestionDto instance.
+     * @return the List with created AnswerDtos.
+     */
     private List<AnswerDto> extractAnswers(HttpServletRequest request, QuestionDto question) {
         List<AnswerDto> answers = new ArrayList<>();
         AnswerDto.QuestionForAnswer questionForAnswer = new AnswerDto.QuestionForAnswer(

@@ -27,6 +27,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The service implementation for Answer entity.
+ */
 @PleaseService
 public class AnswerServiceImpl implements AnswerService {
 
@@ -47,6 +50,13 @@ public class AnswerServiceImpl implements AnswerService {
     @PleaseInject
     private TransactionManager<Answer> transactionManager;
 
+    /**
+     * The method for searching Answer by uuid.
+     *
+     * @param uuid an uuid of the answer to search.
+     * @return an <code>Optional</code> with searched AnswerDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public Optional<AnswerDto> findByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find answer by uuid {}", uuid);
@@ -64,6 +74,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for searching answers by question uuid.
+     *
+     * @param uuid a question uuid.
+     * @return an <code>List</code> with AnswerDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<AnswerDto> findAllByQuestionUuid(UUID uuid) throws ServiceException {
         LOG.debug("Find answer by question uuid {}", uuid);
@@ -80,6 +97,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for creating the answers for the question.
+     *
+     * @param questionDto the QuestionDto for which be created the answers.
+     * @param answers     the answers that be attached to the question.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public void createAnswersForQuestion(List<AnswerDto> answers, QuestionDto questionDto) throws ServiceException {
         LOG.debug("Creating answers {} for question {}", answers, questionDto);
@@ -105,6 +129,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for updating the answer.
+     *
+     * @param answerDto the AnswerDto to update.
+     * @return true if updated successfully, otherwise false.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean update(AnswerDto answerDto) throws ServiceException {
         LOG.debug("Updating answer by dto {}", answerDto);
@@ -160,6 +191,14 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for updating the answer in Single-Choice case and set new true answer by uuid.
+     *
+     * @param answerDto         the AnswerDto to update.
+     * @param newTrueAnswerUuid the new uuid for a true answer.
+     * @return true if updated successfully, otherwise false.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean updateAnswerAndSetNewTrueAnswer(AnswerDto answerDto, UUID newTrueAnswerUuid) throws ServiceException {
         LOG.debug("Updating answer by uuid {} and set new true answer by uuid {}", answerDto, newTrueAnswerUuid);
@@ -197,6 +236,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for searching all answers by parameters for the table representation.
+     *
+     * @param request the DataTableRequest instance.
+     * @return a <code>DataTableResponse</code> with the queried AnswerDto and the calculated filters.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public DataTableResponse<AnswerDto> findAll(DataTableRequest request) throws ServiceException {
         LOG.debug("Find all answers by {}", request);
@@ -222,6 +268,12 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for searching all answers.
+     *
+     * @return a <code>List</code> with AnswerDto.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public List<AnswerDto> findAll() throws ServiceException {
         LOG.debug("Find all answers");
@@ -238,6 +290,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for deleting the answer.
+     *
+     * @param answerUuid   the answer uuid.
+     * @param questionUuid the question uuid.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuidAndQuestionUuid(UUID answerUuid, UUID questionUuid) throws ServiceException {
         LOG.debug("Deleting answer by uuid {} and question uuid {}", answerUuid, questionUuid);
@@ -263,6 +322,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for deleting the answer in Single-Choice case and set new true answer by uuid.
+     *
+     * @param answerUuid        the current true answer uuid.
+     * @param newTrueAnswerUuid the new uuid for a true answer.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean deleteByUuidAndSetNewTrueAnswer(UUID answerUuid, UUID newTrueAnswerUuid) throws ServiceException {
         LOG.debug("Deleting answer by uuid {} and set new true answer by uuid {}", answerUuid, newTrueAnswerUuid);
@@ -293,6 +359,13 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    /**
+     * The method for checking the existence of the answer by given uuid.
+     *
+     * @param uuid the uuid of searchable answer.
+     * @return true - if record exists by given uuid or false otherwise.
+     * @throws ServiceException if a <code>DaoException</code> is occurred.
+     */
     @Override
     public boolean existsByUuid(UUID uuid) throws ServiceException {
         LOG.debug("Check if exists by uuid {}", uuid);

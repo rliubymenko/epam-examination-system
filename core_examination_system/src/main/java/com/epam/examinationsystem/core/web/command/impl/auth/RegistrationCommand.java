@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Extends the ActionCommand interface to provide a command to register the user.
+ */
 @PleaseService
 public class RegistrationCommand implements ActionCommand {
 
@@ -46,6 +49,13 @@ public class RegistrationCommand implements ActionCommand {
     @PleaseInject
     private MailService mailService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Trying to register user");
@@ -90,6 +100,11 @@ public class RegistrationCommand implements ActionCommand {
         return new CommandResult(Path.HOME, true);
     }
 
+    /**
+     * Returns a set of strings containing the names of the parameters that failed the validation.
+     *
+     * @return the Set with strings.
+     */
     private Set<String> performValidation(
             String username,
             String email,

@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * SubjectDto for the subject entity.
+ */
 public class SubjectDto extends AbstractDto {
 
     private final String name;

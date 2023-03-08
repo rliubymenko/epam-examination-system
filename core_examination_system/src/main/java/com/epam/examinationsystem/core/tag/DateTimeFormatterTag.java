@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * The tag for formatting date and time.
+ */
 public class DateTimeFormatterTag extends TagSupport {
 
     private String datetime;

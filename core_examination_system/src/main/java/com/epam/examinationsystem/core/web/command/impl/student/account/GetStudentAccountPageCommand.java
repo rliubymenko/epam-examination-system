@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to get the student account page.
+ */
 @PleaseService
 public class GetStudentAccountPageCommand implements ActionCommand {
 
@@ -27,6 +30,13 @@ public class GetStudentAccountPageCommand implements ActionCommand {
     @PleaseInject
     private UserTestService userTestService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Forwarding to {}", Path.STUDENT_ACCOUNT_PAGE);

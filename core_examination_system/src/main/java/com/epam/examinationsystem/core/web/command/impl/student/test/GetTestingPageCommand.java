@@ -24,6 +24,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to get the page for the testing.
+ */
 @PleaseService
 public class GetTestingPageCommand implements ActionCommand {
 
@@ -35,6 +38,13 @@ public class GetTestingPageCommand implements ActionCommand {
     @PleaseInject
     private UserTestService userTestService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         LOG.debug("Forwarding to {}", Path.STUDENT_TESTING_PAGE);

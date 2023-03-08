@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
+/**
+ * Extends the ActionCommand interface to provide a command to the answer single-choice deletion.
+ */
 @PleaseService
 public class SingleChoiceDeleteAnswerCommand implements ActionCommand {
 
@@ -24,6 +27,13 @@ public class SingleChoiceDeleteAnswerCommand implements ActionCommand {
     @PleaseInject
     private AnswerService answerService;
 
+    /**
+     * Returns the CommandResult instance that contains the following page and the redirect flag.
+     *
+     * @param request  the HttpServletRequest instance.
+     * @param response the HttpServletResponse instance.
+     * @return the CommandResult instance.
+     */
     @Override
     public CommandResult execute(HttpServletRequest request, HttpServletResponse response) {
         String uuid = request.getParameter(Parameter.UUID);

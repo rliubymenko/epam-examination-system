@@ -20,6 +20,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
 
+/**
+ * The dao implementation for User entity.
+ */
 @PleaseService
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
 

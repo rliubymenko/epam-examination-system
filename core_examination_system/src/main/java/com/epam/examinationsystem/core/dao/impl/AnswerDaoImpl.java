@@ -22,6 +22,9 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * The dao implementation for Answer entity.
+ */
 @PleaseService
 public class AnswerDaoImpl extends AbstractDao<Answer> implements AnswerDao {
 

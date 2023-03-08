@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+/**
+ * StudentTestDto for the test entity to be represented for the student.
+ */
 public class StudentTestDto extends AbstractDto {
 
     private final String name;
