@@ -60,3 +60,7 @@ It allows us to create a fully connected tree with all dependencies that object 
 ## Usage
 
 The application will be accessible on [the following path](http://localhost:8080/examination-system)
+
+## Database schema diagram
+
+![Screenshot](final_version_exam_sys.png)
